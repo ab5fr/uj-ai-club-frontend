@@ -1,4 +1,5 @@
 import LeaderboardCarousel from "./components/LeaderboardCarousel";
+import ContactSection from "./components/ContactSection";
 
 export default function Home() {
   return (
@@ -59,6 +60,8 @@ export default function Home() {
       </div>
       {/* Leaderboard Section */}
       <LeaderboardCarousel />
+      {/* Contact Section */}
+      <ContactSection />
     </main>
   );
 }
