@@ -55,7 +55,7 @@ export default function LeaderboardCarousel() {
       }}
     >
       <div className="container mx-auto px-4 text-center w-full">
-        <h2 className="text-5xl font-extrabold mb-12 text-white drop-shadow-lg">
+        <h2 className="text-7xl font-extrabold mb-12 text-white drop-shadow-lg">
           Leaderboards
         </h2>
 
@@ -81,11 +81,11 @@ export default function LeaderboardCarousel() {
                   }}
                 >
                   <div
-                    className={`bg-[#162144] backdrop-blur-sm rounded-2xl p-8 border border-gray-700/80 shadow-2xl w-[50vw] transition-all duration-500 ${
+                    className={`bg-[#16214470] backdrop-blur-sm rounded-2xl p-8 border border-gray-700/80 shadow-2xl w-[50vw] transition-all duration-500 ${
                       !isActive && "brightness-50"
                     }`}
                   >
-                    <h3 className="text-3xl font-semibold mb-6 text-blue-400">
+                    <h3 className="text-3xl font-semibold mb-6 text-white">
                       {board.title}
                     </h3>
 
@@ -95,9 +95,11 @@ export default function LeaderboardCarousel() {
                       <div>
                         {/* Left Table Headers */}
                         <div className="bg-gray-700/60 rounded-lg p-3 mb-4">
-                          <div className="grid grid-cols-[60px_1fr_100px] font-light text-white text-sm uppercase tracking-wider">
-                            <span>Rank</span>
-                            <span>Name</span>
+                          <div className="grid grid-cols-[1fr_100px] font-light text-white text-sm uppercase tracking-wider">
+                            <div className="flex items-center gap-2">
+                              <span className="w-20">Rank</span>
+                              <span>Name</span>
+                            </div>
                             <span className="text-right">Points</span>
                           </div>
                         </div>
@@ -106,12 +108,14 @@ export default function LeaderboardCarousel() {
                           {board.entries.slice(0, 3).map((entry) => (
                             <div
                               key={entry.rank}
-                              className="grid grid-cols-[60px_1fr_100px] items-center bg-gray-700/50 p-4 rounded-lg hover:bg-gray-700/70 transition-colors"
+                              className="grid grid-cols-[1fr_100px] items-center bg-gray-700/50 p-4 rounded-lg hover:bg-gray-700/70 transition-colors"
                             >
-                              <span className="text-white/90">
-                                #{entry.rank}
-                              </span>
-                              <span className="text-white">{entry.name}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-white/90 w-20">
+                                  #{entry.rank}
+                                </span>
+                                <span className="text-white">{entry.name}</span>
+                              </div>
                               <span className="text-right text-[#0087d3]">
                                 {entry.points}
                               </span>
@@ -124,9 +128,11 @@ export default function LeaderboardCarousel() {
                       <div>
                         {/* Right Table Headers */}
                         <div className="bg-gray-700/60 rounded-lg p-3 mb-4">
-                          <div className="grid grid-cols-[60px_1fr_100px] font-light text-white text-sm uppercase tracking-wider">
-                            <span>Rank</span>
-                            <span>Name</span>
+                          <div className="grid grid-cols-[1fr_100px] font-light text-white text-sm uppercase tracking-wider">
+                            <div className="flex items-center gap-2">
+                              <span className="w-20">Rank</span>
+                              <span>Name</span>
+                            </div>
                             <span className="text-right">Points</span>
                           </div>
                         </div>
@@ -135,12 +141,14 @@ export default function LeaderboardCarousel() {
                           {board.entries.slice(3, 6).map((entry) => (
                             <div
                               key={entry.rank}
-                              className="grid grid-cols-[60px_1fr_100px] items-center bg-gray-700/50 p-4 rounded-lg hover:bg-gray-700/70 transition-colors"
+                              className="grid grid-cols-[1fr_100px] items-center bg-gray-700/50 p-4 rounded-lg hover:bg-gray-700/70 transition-colors"
                             >
-                              <span className="text-white/90">
-                                #{entry.rank}
-                              </span>
-                              <span className="text-white">{entry.name}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-white/90 w-20">
+                                  #{entry.rank}
+                                </span>
+                                <span className="text-white">{entry.name}</span>
+                              </div>
                               <span className="text-right text-[#0087d3]">
                                 {entry.points}
                               </span>

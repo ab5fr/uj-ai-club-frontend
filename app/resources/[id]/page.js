@@ -39,31 +39,27 @@ export default function ResourcePage({ params }) {
         <div className="flex justify-between items-start mb-8">
           <div className="max-w-2xl">
             <h1 className="text-5xl font-bold mb-4">{resource.title}</h1>
-            <div className="flex items-center gap-3">
-              <p className="text-gray-400">by {resource.provider}</p>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full overflow-hidden border border-blue-900/50">
-                  <img
-                    src={resource.instructor.image}
-                    alt={resource.instructor.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <span className="text-sm text-gray-300">
-                  {resource.instructor.name}
-                </span>
+            <p className="text-gray-400 mb-3">by {resource.provider}</p>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full overflow-hidden border border-blue-900/50">
+                <img
+                  src={resource.instructor.image}
+                  alt={resource.instructor.name}
+                  className="w-full h-full object-cover"
+                />
               </div>
+              <span className="text-sm text-gray-300">
+                {resource.instructor.name}
+              </span>
             </div>
           </div>
 
           {/* Quote Box */}
           <div className="bg-[#7CD0F9] rounded-3xl p-6 max-w-md">
-            <p className="text-[#010617] text-xl font-medium mb-2">
+            <p className="text-white text-xl font-medium mb-2">
               {resource.quote.text}
             </p>
-            <p className="text-[#010617]/80 text-sm">
-              — {resource.quote.author}
-            </p>
+            <p className="text-white/90 text-sm">— {resource.quote.author}</p>
           </div>
         </div>
 

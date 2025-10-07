@@ -11,6 +11,12 @@ export default function Navbar() {
         </Link>
         <div className="flex gap-6 lg:gap-8 text-sm tracking-wide">
           <Link
+            href="/"
+            className="font-medium hover:text-blue-400 transition-colors"
+          >
+            Home
+          </Link>
+          <Link
             href="/challanges"
             className="font-medium hover:text-blue-400 transition-colors"
           >

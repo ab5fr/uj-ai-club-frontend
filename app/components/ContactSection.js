@@ -23,7 +23,14 @@ export default function ContactSection() {
   };
 
   return (
-    <section className="w-full h-screen relative overflow-hidden flex items-center bg-gradient-to-br from-cyan-400 via-sky-300 to-blue-400">
+    <section
+      className="w-full h-screen relative overflow-hidden flex items-center"
+      style={{
+        backgroundImage: "url('/feedback.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className="container mx-auto w-full max-w-5xl relative">
         {/* Heading */}
         <div className="mb-12 absolute right-8 md:right-12 lg:right-16 text-right">
@@ -40,38 +47,54 @@ export default function ContactSection() {
         <form onSubmit={handleSubmit} className="space-y-6 mt-48 px-4">
           {/* Name and Email Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <input
-              type="text"
-              name="name"
-              placeholder="name ="
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full px-6 py-4 rounded-2xl bg-white/30 backdrop-blur-sm border-2 border-white/40 text-white placeholder-white/70 text-lg focus:outline-none focus:border-white/60 focus:bg-white/40 transition-all"
-              required
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="e-mail ="
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-6 py-4 rounded-2xl bg-white/30 backdrop-blur-sm border-2 border-white/40 text-white placeholder-white/70 text-lg focus:outline-none focus:border-white/60 focus:bg-white/40 transition-all"
-              required
-            />
+            <div className="relative">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-white text-lg font-bold z-10">
+                name = "
+              </span>
+              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-white text-lg font-bold z-10">
+                "
+              </span>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[#93cff0] backdrop-blur-sm text-white text-lg focus:outline-none transition-all"
+                required
+              />
+            </div>
+            <div className="relative">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-white text-lg font-bold z-10">
+                email = "
+              </span>
+              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-white text-lg font-bold z-10">
+                "
+              </span>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[#93cff0] backdrop-blur-sm text-white text-lg focus:outline-none transition-all"
+                required
+              />
+            </div>
           </div>
 
           {/* Message Field */}
           <div className="relative">
+            <span className="absolute left-6 top-[1.7rem] -translate-y-1/2 text-white text-lg font-bold z-10">
+              return {' { "'}
+            </span>
             <textarea
               name="message"
-              placeholder='return { "'
               value={formData.message}
               onChange={handleChange}
               rows={6}
-              className="w-full px-6 py-4 rounded-2xl bg-white/30 backdrop-blur-sm border-2 border-white/40 text-white placeholder-white/70 text-lg focus:outline-none focus:border-white/60 focus:bg-white/40 transition-all resize-none"
+              className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[#93cff0] backdrop-blur-sm text-white text-lg focus:outline-none transition-all resize-none"
               required
             />
-            <div className="absolute bottom-4 right-4 text-white/70 text-lg font-mono">
+            <div className="absolute bottom-4 right-4 text-white text-lg font-bold">
               {'" }'}
             </div>
           </div>
