@@ -12,7 +12,7 @@ export default function Home() {
           style={{
             height: "calc(100% - 15.5rem)",
             backgroundImage:
-              "linear-gradient(rgba(10,10,10,0.65), rgba(10,10,10,0.8)), url('/bg.png')",
+              "linear-gradient(rgba(10,10,10,0), rgba(10,10,10,0)), url('/bg.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -43,28 +43,16 @@ export default function Home() {
         </section>
         {/* Panorama Banner with blue line */}
         <div className="absolute bottom-0 left-0 right-0">
-          <div className="w-full h-[16rem] relative">
-            <img
-              src="/panorama.png"
-              alt="Panorama"
-              className="w-full h-full object-fill"
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                zIndex: 0,
-              }}
-            />
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.6))",
-                zIndex: 1,
-              }}
-            />
+          <div
+            className="w-full h-[15rem] relative overflow-hidden"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.6)), url('/panorama.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          >
             {/* Optional: caption or overlay content can go here */}
           </div>
           <div className="w-full h-2 bg-blue-600" />
