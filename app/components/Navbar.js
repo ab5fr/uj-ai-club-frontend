@@ -45,7 +45,7 @@ export default function Navbar() {
       {/* Auth Buttons pushed to right */}
       <div className="flex gap-3 ml-auto">
         <Link href="/login">
-          <button className="px-6 py-2.5 rounded-full font-medium bg-blue-500/90 text-white hover:bg-blue-400 focus:ring-2 focus:ring-blue-300/50 focus:outline-none transition-colors shadow shadow-blue-700/30">
+          <button className="px-6 py-2.5 rounded-full bg-blue-500/90 text-white hover:bg-blue-400 focus:ring-2 focus:ring-blue-300/50 focus:outline-none transition-colors shadow shadow-blue-700/30 font-medium">
             Login
           </button>
         </Link>

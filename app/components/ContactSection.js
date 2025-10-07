@@ -24,20 +24,20 @@ export default function ContactSection() {
 
   return (
     <section className="w-full h-screen relative overflow-hidden flex items-center bg-gradient-to-br from-cyan-400 via-sky-300 to-blue-400">
-      <div className="container mx-auto px-4 text-center w-full max-w-3xl">
+      <div className="container mx-auto w-full max-w-5xl relative">
         {/* Heading */}
-        <div className="mb-12">
-          <h2 className="text-6xl md:text-7xl font-bold text-white mb-2">
+        <div className="mb-12 absolute right-8 md:right-12 lg:right-16 text-right">
+          <h2 className="text-6xl md:text-7xl font-extrabold text-white mb-2">
             We would love
           </h2>
           <p className="text-3xl md:text-4xl font-light text-white/90">
             to hear from{" "}
-            <span className="font-semibold text-gray-800">you</span>
+            <span className="font-semibold text-[#040b1f]">you</span>
           </p>
         </div>
 
         {/* Contact Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 mt-48 px-4">
           {/* Name and Email Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <input
