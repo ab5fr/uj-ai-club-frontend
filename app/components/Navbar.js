@@ -11,10 +11,10 @@ export default function Navbar() {
         </Link>
         <div className="flex gap-6 lg:gap-8 text-sm tracking-wide">
           <Link
-            href="/competetions"
+            href="/challanges"
             className="font-medium hover:text-blue-400 transition-colors"
           >
-            Competetions
+            Challanges
           </Link>
           <Link
             href="/resources"
@@ -22,24 +22,24 @@ export default function Navbar() {
           >
             Resources
           </Link>
-          <Link
+          {/* <Link
             href="/learning-plans"
             className="font-medium hover:text-blue-400 transition-colors"
           >
             Learning Plans
-          </Link>
+          </Link> */}
           <Link
             href="/ai-types"
             className="font-medium hover:text-blue-400 transition-colors"
           >
             AI Types
           </Link>
-          <Link
+          {/* <Link
             href="/the-club"
             className="font-medium hover:text-blue-400 transition-colors"
           >
             The Club
-          </Link>
+          </Link> */}
         </div>
       </div>
       {/* Auth Buttons pushed to right */}

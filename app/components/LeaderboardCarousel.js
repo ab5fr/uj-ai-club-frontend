@@ -17,7 +17,7 @@ const leaderboards = [
   },
   {
     id: 1,
-    title: "Weekly Challenge",
+    title: "Veterans",
     entries: [
       { rank: 1, name: "Fatima", points: "210" },
       { rank: 2, name: "David", points: "195" },
@@ -90,56 +90,68 @@ export default function LeaderboardCarousel() {
                       {board.title}
                     </h3>
 
-                    {/* Table Headers */}
-                    <div className="grid grid-cols-2 gap-6 mb-4">
-                      <div className="bg-gray-700/60 rounded-lg p-3">
-                        <div className="flex justify-between font-bold text-white text-sm uppercase tracking-wider">
-                          <span>Name</span>
-                          <span>Score</span>
-                        </div>
-                      </div>
-                      <div className="bg-gray-700/60 rounded-lg p-3">
-                        <div className="flex justify-between font-bold text-white text-sm uppercase tracking-wider">
-                          <span>Name</span>
-                          <span>Score</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Table Content - 2 columns */}
+                    {/* Two Column Layout */}
                     <div className="grid grid-cols-2 gap-6">
                       {/* Left Column - Ranks 1-3 */}
-                      <div className="space-y-3">
-                        {board.entries.slice(0, 3).map((entry) => (
-                          <div
-                            key={entry.rank}
-                            className="flex items-center justify-between bg-gray-700/50 p-4 rounded-lg hover:bg-gray-700/70 transition-colors"
-                          >
-                            <span className="text-white font-medium">
-                              {entry.rank}. {entry.name}
-                            </span>
-                            <span className="font-semibold text-green-400">
-                              {entry.points}
-                            </span>
+                      <div>
+                        {/* Left Table Headers */}
+                        <div className="bg-gray-700/60 rounded-lg p-3 mb-4">
+                          <div className="grid grid-cols-[60px_1fr_100px] font-bold text-white text-sm uppercase tracking-wider">
+                            <span>Rank</span>
+                            <span>Name</span>
+                            <span className="text-right">Points</span>
                           </div>
-                        ))}
+                        </div>
+                        {/* Left Table Content */}
+                        <div className="space-y-3">
+                          {board.entries.slice(0, 3).map((entry) => (
+                            <div
+                              key={entry.rank}
+                              className="grid grid-cols-[60px_1fr_100px] items-center bg-gray-700/50 p-4 rounded-lg hover:bg-gray-700/70 transition-colors"
+                            >
+                              <span className="text-white/90 font-medium">
+                                #{entry.rank}
+                              </span>
+                              <span className="text-white font-medium">
+                                {entry.name}
+                              </span>
+                              <span className="text-right font-semibold text-green-400">
+                                {entry.points}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
 
                       {/* Right Column - Ranks 4-6 */}
-                      <div className="space-y-3">
-                        {board.entries.slice(3, 6).map((entry) => (
-                          <div
-                            key={entry.rank}
-                            className="flex items-center justify-between bg-gray-700/50 p-4 rounded-lg hover:bg-gray-700/70 transition-colors"
-                          >
-                            <span className="text-white font-medium">
-                              {entry.rank}. {entry.name}
-                            </span>
-                            <span className="font-semibold text-green-400">
-                              {entry.points}
-                            </span>
+                      <div>
+                        {/* Right Table Headers */}
+                        <div className="bg-gray-700/60 rounded-lg p-3 mb-4">
+                          <div className="grid grid-cols-[60px_1fr_100px] font-bold text-white text-sm uppercase tracking-wider">
+                            <span>Rank</span>
+                            <span>Name</span>
+                            <span className="text-right">Points</span>
                           </div>
-                        ))}
+                        </div>
+                        {/* Right Table Content */}
+                        <div className="space-y-3">
+                          {board.entries.slice(3, 6).map((entry) => (
+                            <div
+                              key={entry.rank}
+                              className="grid grid-cols-[60px_1fr_100px] items-center bg-gray-700/50 p-4 rounded-lg hover:bg-gray-700/70 transition-colors"
+                            >
+                              <span className="text-white/90 font-medium">
+                                #{entry.rank}
+                              </span>
+                              <span className="text-white font-medium">
+                                {entry.name}
+                              </span>
+                              <span className="text-right font-semibold text-green-400">
+                                {entry.points}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
