@@ -25,7 +25,7 @@ export default function AITypesPage() {
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="ml-auto max-w-2xl">
-            <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9]">
+            <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9] text-right">
               Deep Learning (DL)
             </h2>
             <p className="text-lg text-gray-300 leading-relaxed">
@@ -59,7 +59,7 @@ export default function AITypesPage() {
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="ml-auto max-w-2xl">
-            <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9]">
+            <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9] text-right">
               Computer Vision
             </h2>
             <p className="text-lg text-gray-300 leading-relaxed">
@@ -83,7 +83,7 @@ export default function AITypesPage() {
               backgroundPosition: "center",
             }}
           >
-            <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
                 <h3 className="text-3xl font-bold mb-4">
                   All the specializations are connected
@@ -93,11 +93,11 @@ export default function AITypesPage() {
                   major
                 </p>
               </div>
-              <div className="flex-1 relative">
+              <div className="flex-1 relative flex justify-end">
                 <img
                   src="/AI-specializations.png"
                   alt="AI Specializations Diagram"
-                  className="w-full h-auto"
+                  className="w-4/6 h-auto"
                 />
               </div>
             </div>
