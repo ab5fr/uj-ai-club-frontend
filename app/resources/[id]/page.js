@@ -33,7 +33,14 @@ export default function ResourcePage({ params }) {
   };
 
   return (
-    <main className="min-h-screen bg-[#010617] text-white pt-24">
+    <main
+      className="min-h-screen text-white pt-24 bg-no-repeat bg-[#0a1225]"
+      style={{
+        backgroundImage: "url('/project.jpg')",
+        backgroundSize: "150%",
+        backgroundPosition: "center 70%",
+      }}
+    >
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Content Header */}
         <div className="flex justify-between items-start mb-8">
@@ -41,7 +48,7 @@ export default function ResourcePage({ params }) {
             <h1 className="text-5xl font-bold mb-4">{resource.title}</h1>
             <p className="text-gray-400 mb-3">by {resource.provider}</p>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full overflow-hidden border border-blue-900/50">
+              <div className="w-8 h-8 rounded-full overflow-hidden">
                 <img
                   src={resource.instructor.image}
                   alt={resource.instructor.name}
@@ -64,20 +71,19 @@ export default function ResourcePage({ params }) {
         </div>
 
         {/* Notion Section */}
-        <div className="relative mt-12 rounded-2xl overflow-hidden bg-[#0a1225] border border-blue-900/20">
+        <div className="relative mt-12 rounded-2xl bg-[#0a1225]">
           {/* Notion Logo */}
           <button
             onClick={openNotion}
-            className="absolute top-4 left-4 z-10 bg-white/10 backdrop-blur-sm p-2 rounded-lg hover:bg-white/20 transition-colors"
+            className="absolute top-[-0.5rem] left-[-0.5rem] z-10 bg-white backdrop-blur-sm p-7 rounded-br-3xl rounded-tl-3xl transition-colors cursor-pointer"
           >
-            <img src="/file.svg" alt="Open in Notion" className="w-6 h-6" />
+            <img src="/notion.svg" alt="Open in Notion" className="w-15 h-15" />
           </button>
 
           {/* Notion Embed */}
           <iframe
             src={resource.notionUrl}
-            className="w-full h-[800px] bg-white"
-            frameBorder="0"
+            className="w-full h-[500px] bg-white rounded-2xl"
             allowFullScreen
           />
         </div>
