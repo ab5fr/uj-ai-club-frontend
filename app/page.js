@@ -26,7 +26,7 @@ export default function Home() {
             {/* Text Block */}
             <div className="flex flex-col max-w-5xl pr-[22rem] h-full justify-center">
               <h1 className="text-6xl mb-10 leading-[1.03] tracking-tight whitespace-nowrap font-extrabold">
-                Chose Your Path
+                Choose Your Path
               </h1>
               <p className="text-xl md:text-3xl mb-12 font-light text-gray-200/95 leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)] max-w-4xl">
                 Learn the difference between AI types we will help you whatever
