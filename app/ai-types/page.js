@@ -10,7 +10,7 @@ export default function AITypesPage() {
             <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9]">
               Machine Learning (ML)
             </h2>
-            <p className="text-lg text-gray-300 leading-relaxed">
+            <p className="text-2xl text-gray-300 leading-relaxed">
               Often used interchangeably with AI, machine learning is a
               fundamental subfield that focuses on developing algorithms that
               allow computers to learn from and make predictions or decisions
@@ -28,7 +28,7 @@ export default function AITypesPage() {
             <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9] text-right">
               Deep Learning (DL)
             </h2>
-            <p className="text-lg text-gray-300 leading-relaxed">
+            <p className="text-2xl text-gray-300 leading-relaxed">
               A subfield of machine learning, deep learning utilizes artificial
               neural networks with many layers (hence "deep") to learn from vast
               amounts of data. This approach has been particularly successful in
@@ -45,7 +45,7 @@ export default function AITypesPage() {
             <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9]">
               Natural Language Processing (NLP)
             </h2>
-            <p className="text-lg text-gray-300 leading-relaxed">
+            <p className="text-2xl text-gray-300 leading-relaxed">
               This specialization is dedicated to enabling computers to
               understand, interpret, and generate human language. NLP is the
               technology behind chatbots, language translation services, and
@@ -62,7 +62,7 @@ export default function AITypesPage() {
             <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9] text-right">
               Computer Vision
             </h2>
-            <p className="text-lg text-gray-300 leading-relaxed">
+            <p className="text-2xl text-gray-300 leading-relaxed">
               As the name suggests, this field aims to give computers the
               ability to "see" and interpret the visual world. Computer vision
               is at the heart of facial recognition systems, self-driving cars,
@@ -86,18 +86,15 @@ export default function AITypesPage() {
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
                 <h3 className="text-3xl font-bold mb-4">
-                  All the specializations are connected
+                  All the specializations are connected but there are some
+                  differences of skills you need in each major
                 </h3>
-                <p className="text-lg">
-                  but there are some differences of skills you need in each
-                  major
-                </p>
               </div>
               <div className="flex-1 relative flex justify-end">
                 <img
                   src="/AI-specializations.png"
                   alt="AI Specializations Diagram"
-                  className="w-4/6 h-auto"
+                  className="w-3/6 h-auto"
                 />
               </div>
             </div>
@@ -110,7 +107,7 @@ export default function AITypesPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-2xl">
             <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9]">Robotics</h2>
-            <p className="text-lg text-gray-300 leading-relaxed">
+            <p className="text-2xl text-gray-300 leading-relaxed">
               This interdisciplinary field combines AI, engineering, and
               computer science to design, build, and operate robots. AI plays a
               crucial role in enabling robots to perceive their environment,

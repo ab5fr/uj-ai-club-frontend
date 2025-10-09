@@ -1,7 +1,25 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { HomeIcon } from "@heroicons/react/24/solid";
 
 export default function Navbar() {
+  const pathname = usePathname();
+  const isChallenges = pathname?.startsWith("/challanges");
+
+  if (isChallenges) {
+    // Minimal nav for challenges page: only a home icon linking to '/'
+    return (
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center px-6 py-4 w-full bg-transparent text-white">
+        <Link href="/" aria-label="Home" className="inline-flex items-center">
+          <HomeIcon className="h-7 w-7 text-white hover:opacity-80 transition-opacity" />
+        </Link>
+      </nav>
+    );
+  }
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center px-8 py-4 w-full bg-transparent text-white">
       {/* Left cluster: Logo + Links */}
