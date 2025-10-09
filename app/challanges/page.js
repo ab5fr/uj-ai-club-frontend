@@ -12,7 +12,7 @@ const fredoka = Fredoka({
 });
 
 export default function CompetitionsPage() {
-  const [activeTab, setActiveTab] = useState("challenges"); // 'leaderboard' | 'challenges' | 'profile'
+  const [activeTab, setActiveTab] = useState("leaderboard"); // 'leaderboard' | 'challenges' | 'profile'
 
   // Mock data - replace with actual data from your API when ready
   const players = [
@@ -50,16 +50,14 @@ export default function CompetitionsPage() {
 
   return (
     <main
-      className={`${fredoka.className} relative flex flex-col items-center pt-32 text-white pb-20`}
+      className={`${fredoka.className} min-h-screen relative flex flex-col items-center pt-32 text-white pb-20`}
       style={{
         backgroundImage: "url('/challenges-bg.jpg')",
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundPosition: "top center",
+        backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/50" />
-
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
         {/* Header Text */}
@@ -87,36 +85,39 @@ export default function CompetitionsPage() {
           </p>
         </div>{" "}
         {/* Navigation Buttons */}
-        <div className="flex justify-center gap-8 mb-20">
+        <div className="flex justify-center gap-1 mb-20">
           <button
             onClick={() => setActiveTab("leaderboard")}
-            className={`px-8 py-3 rounded-xl text-lg font-semibold transition-colors border ${
+            className={`py-3 px-10 text-white font-semibold uppercase tracking-wider transition-colors ${
               activeTab === "leaderboard"
-                ? "bg-white/15 border-white/30"
-                : "bg-white/5 hover:bg-white/10 border-white/10"
+                ? "bg-[#222]"
+                : "bg-[#111] hover:bg-[#1a1a1a]"
             }`}
+            style={{ clipPath: "polygon(0 0, 100% 0, 90% 100%, 0% 100%)" }}
             aria-pressed={activeTab === "leaderboard"}
           >
             Leaderboard
           </button>
           <button
             onClick={() => setActiveTab("challenges")}
-            className={`px-8 py-3 rounded-xl text-lg font-semibold transition-colors border ${
+            className={`py-3 px-10 text-white font-semibold uppercase tracking-wider transition-colors ${
               activeTab === "challenges"
-                ? "bg-white/15 border-white/30"
-                : "bg-white/5 hover:bg-white/10 border-white/10"
+                ? "bg-[#222]"
+                : "bg-[#111] hover:bg-[#1a1a1a]"
             }`}
+            style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
             aria-pressed={activeTab === "challenges"}
           >
             Challenges
           </button>
           <button
             onClick={() => setActiveTab("profile")}
-            className={`px-8 py-3 rounded-xl text-lg font-semibold transition-colors border ${
+            className={`py-3 px-10 text-white font-semibold uppercase tracking-wider transition-colors ${
               activeTab === "profile"
-                ? "bg-white/15 border-white/30"
-                : "bg-white/5 hover:bg-white/10 border-white/10"
+                ? "bg-[#222]"
+                : "bg-[#111] hover:bg-[#1a1a1a]"
             }`}
+            style={{ clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0% 100%)" }}
             aria-pressed={activeTab === "profile"}
           >
             Profile
