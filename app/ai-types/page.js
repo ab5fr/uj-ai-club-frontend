@@ -6,7 +6,7 @@ export default function AITypesPage() {
       {/* Machine Learning Section - Left Aligned */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
-          <div className="max-w-2xl">
+          <div className="w-full lg:w-11/12">
             <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9]">
               Machine Learning (ML)
             </h2>
@@ -24,11 +24,11 @@ export default function AITypesPage() {
       {/* Deep Learning Section - Right Aligned */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
-          <div className="ml-auto max-w-2xl">
+          <div className="ml-auto w-full lg:w-11/12">
             <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9] text-right">
               Deep Learning (DL)
             </h2>
-            <p className="text-2xl text-gray-300 leading-relaxed">
+            <p className="text-2xl text-gray-300 leading-relaxed text-right">
               A subfield of machine learning, deep learning utilizes artificial
               neural networks with many layers (hence "deep") to learn from vast
               amounts of data. This approach has been particularly successful in
@@ -41,7 +41,7 @@ export default function AITypesPage() {
       {/* NLP Section - Left Aligned */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
-          <div className="max-w-2xl">
+          <div className="w-full lg:w-11/12">
             <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9]">
               Natural Language Processing (NLP)
             </h2>
@@ -58,11 +58,11 @@ export default function AITypesPage() {
       {/* Computer Vision Section - Right Aligned */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
-          <div className="ml-auto max-w-2xl">
+          <div className="ml-auto w-full lg:w-11/12">
             <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9] text-right">
               Computer Vision
             </h2>
-            <p className="text-2xl text-gray-300 leading-relaxed">
+            <p className="text-2xl text-gray-300 leading-relaxed text-right">
               As the name suggests, this field aims to give computers the
               ability to "see" and interpret the visual world. Computer vision
               is at the heart of facial recognition systems, self-driving cars,
@@ -85,7 +85,7 @@ export default function AITypesPage() {
           >
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
-                <h3 className="text-3xl font-bold mb-4">
+                <h3 className="text-4xl font-bold mb-4">
                   All the specializations are connected but there are some
                   differences of skills you need in each major
                 </h3>
@@ -105,7 +105,7 @@ export default function AITypesPage() {
       {/* Robotics Section - Left Aligned */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
-          <div className="max-w-2xl">
+          <div className="w-full lg:w-11/12">
             <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9]">Robotics</h2>
             <p className="text-2xl text-gray-300 leading-relaxed">
               This interdisciplinary field combines AI, engineering, and

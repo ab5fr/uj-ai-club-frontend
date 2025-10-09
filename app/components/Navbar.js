@@ -21,7 +21,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center px-8 py-4 w-full bg-transparent text-white">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center px-8 py-4 w-full text-white bg-[#121522]">
       {/* Left cluster: Logo + Links */}
       <div className="flex items-center gap-10">
         <Link href="/" className="shrink-0">
