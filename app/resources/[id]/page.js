@@ -12,7 +12,7 @@ const resourcesData = {
       image: "/instructor-abdullah.jpg",
     },
     notionUrl:
-      "https://foggy-fuchsia-671.notion.site/ebd/279744d75f5e8081a034dd8e3e5c8fe6",
+      "https://rune-exhaust-ad3.notion.site/ebd/27692c82e84e80529007da7b46e0cd50",
     quote: {
       text: "The day is what you make it! So why not make it a great one?",
       author: "Steve Schulte",
@@ -83,7 +83,7 @@ export default function ResourcePage({ params }) {
           {/* Notion Embed */}
           <iframe
             src={resource.notionUrl}
-            className="w-full h-[500px] bg-white rounded-2xl"
+            className="w-full h-[400px] bg-white rounded-2xl"
             allowFullScreen
           />
         </div>
