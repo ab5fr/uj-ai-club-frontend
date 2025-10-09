@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const resources = [
   {
@@ -47,6 +48,7 @@ const resources = [
 
 export default function ResourcesPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
 
   const filteredResources = resources.filter(
     (resource) =>
@@ -93,7 +95,8 @@ export default function ResourcesPage() {
           {filteredResources.map((resource) => (
             <div
               key={resource.id}
-              className="bg-[#0a1225] rounded-[3rem] overflow-hidden border border-blue-900/20 hover:border-blue-700/50 transition-all group"
+              onClick={() => router.push(`/resources/${resource.id}`)}
+              className="bg-[#0a1225] rounded-[3rem] overflow-hidden border border-blue-900/20 hover:border-blue-700/50 transition-all group cursor-pointer"
             >
               {/* Card Image */}
               <div className="h-48 relative overflow-hidden">
