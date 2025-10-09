@@ -79,7 +79,7 @@ export default function TopPlayers({ topPlayers }) {
             )}
 
             {/* Player Name split across two lines at first space */}
-            <h3 className="mt-2 text-white text-center font-medium leading-tight">
+            <h3 className="mt-2 text-white text-center font-light leading-tight">
               <span className="block">{firstLine}</span>
               {secondLine && <span className="block">{secondLine}</span>}
             </h3>

@@ -62,12 +62,13 @@ export default function CompetitionsPage() {
       <div className="container mx-auto px-4 relative z-10">
         {/* Header Text */}
         <div className="text-center mb-16">
-          <h1 className="text-7xl font-bold mb-4">ARCADE</h1>
-          <p className="text-2xl mb-2 text-gray-300">
-            everyone is tough until they face
+          <h1 className="text-8xl font-bold mb-4">ARCADE</h1>
+          <p className="text-5xl mb-2 text-gray-300">
+            everyone is tough
+            <br /> until they face
           </p>
           <p
-            className="text-[10rem] bg-gradient-to-r from-[#c13d21] to-[#dd4e00] text-transparent bg-clip-text"
+            className="text-[5rem] bg-gradient-to-r from-[#c13d21] to-[#dd4e00] text-transparent bg-clip-text"
             style={{
               fontFamily: "DK Face Your Fears",
             }}
@@ -88,10 +89,10 @@ export default function CompetitionsPage() {
         <div className="flex justify-center gap-1 mb-20">
           <button
             onClick={() => setActiveTab("leaderboard")}
-            className={`py-3 px-10 text-white font-semibold uppercase tracking-wider transition-colors ${
+            className={`py-3 px-10 text-white font-light uppercase tracking-wider transition-colors ${
               activeTab === "leaderboard"
-                ? "bg-[#222]"
-                : "bg-[#111] hover:bg-[#1a1a1a]"
+                ? "bg-[#08090a]"
+                : "bg-[#191919] hover:bg-[#1a1a1a]"
             }`}
             style={{ clipPath: "polygon(0 0, 100% 0, 90% 100%, 0% 100%)" }}
             aria-pressed={activeTab === "leaderboard"}
@@ -100,10 +101,10 @@ export default function CompetitionsPage() {
           </button>
           <button
             onClick={() => setActiveTab("challenges")}
-            className={`py-3 px-10 text-white font-semibold uppercase tracking-wider transition-colors ${
+            className={`py-3 px-10 text-white font-light uppercase tracking-wider transition-colors ${
               activeTab === "challenges"
-                ? "bg-[#222]"
-                : "bg-[#111] hover:bg-[#1a1a1a]"
+                ? "bg-[#08090a]"
+                : "bg-[#191919] hover:bg-[#1a1a1a]"
             }`}
             style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
             aria-pressed={activeTab === "challenges"}
@@ -112,10 +113,10 @@ export default function CompetitionsPage() {
           </button>
           <button
             onClick={() => setActiveTab("profile")}
-            className={`py-3 px-10 text-white font-semibold uppercase tracking-wider transition-colors ${
+            className={`py-3 px-10 text-white font-light uppercase tracking-wider transition-colors ${
               activeTab === "profile"
-                ? "bg-[#222]"
-                : "bg-[#111] hover:bg-[#1a1a1a]"
+                ? "bg-[#08090a]"
+                : "bg-[#191919] hover:bg-[#1a1a1a]"
             }`}
             style={{ clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0% 100%)" }}
             aria-pressed={activeTab === "profile"}
@@ -127,9 +128,9 @@ export default function CompetitionsPage() {
         <div className="w-full">
           {activeTab === "challenges" && (
             // Challenge Section
-            <div className="max-w-4xl mx-auto backdrop-blur-sm rounded-3xl p-10 border border-white/10 bg-black/30">
-              <h2 className="text-3xl font-bold mb-2 text-white">
-                Week 1 - The Wumpus World
+            <div className="max-w-4xl mx-auto backdrop-blur-sm rounded-3xl p-10">
+              <h2 className="text-3xl font-lite mb-2 text-white text-center">
+                <span className="font-bold">Week 1</span> - The Wumpus World
               </h2>
               <p className="text-lg text-gray-300 mb-8 leading-relaxed">
                 Enter the mysterious Wumpus World, a classic AI challenge that
@@ -145,9 +146,14 @@ export default function CompetitionsPage() {
                   href="https://example.com/challenge/wumpus-world"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-10 py-4 bg-gradient-to-r bg-white/5 hover:bg-white/10 rounded-2xl text-xl font-bold transition-opacity shadow-lg"
+                  className="px-10 py-4 bg-[#191919] hover:bg-[#1a1a1a] rounded-2xl text-xl font-bold transition-opacity shadow-lg"
+                  style={{
+                    clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)",
+                  }}
                 >
-                  Start Hunting
+                  <span className="bg-gradient-to-r from-[#c13d21] to-[#dd4e00] text-transparent bg-clip-text">
+                    Start Hunting
+                  </span>
                 </a>
               </div>
             </div>
