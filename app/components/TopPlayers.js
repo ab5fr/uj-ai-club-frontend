@@ -72,7 +72,7 @@ export default function TopPlayers({ topPlayers }) {
             {rank === "1st" && (
               <p
                 className="font-bold text-4xl mb-1 bg-gradient-to-r from-[#c13d21] to-[#dd4e00] text-transparent bg-clip-text"
-                style={{ fontFamily: "DK Face Your Fears II" }}
+                style={{ fontFamily: "DK Face Your Fears" }}
               >
                 THE BEAST
               </p>

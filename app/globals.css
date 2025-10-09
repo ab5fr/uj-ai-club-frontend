@@ -1,8 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wdth,wght@87.5,100..900&display=swap");
+
 @import "tailwindcss";
 
 @font-face {
-  font-family: "DK Face Your Fears II";
+  font-family: "DK Face Your Fears";
   src: url("/fonts/DKFaceYourFears.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
@@ -12,10 +13,6 @@ body {
   background-color: #000;
   color: #fff;
   min-height: 100vh;
-}
-
-* {
-  font-family: "Noto Sans", sans-serif;
 }
 
 /* Ensure main content doesn't show scroll bleed artifacts on some browsers */

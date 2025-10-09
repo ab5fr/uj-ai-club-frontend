@@ -4,6 +4,12 @@ import { useState } from "react";
 import TopPlayers from "../components/TopPlayers";
 import LeaderboardTable from "../components/LeaderboardTable";
 import ProfileSection from "../components/ProfileSection";
+import { Fredoka } from "next/font/google";
+
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
 
 export default function CompetitionsPage() {
   const [activeTab, setActiveTab] = useState("challenges"); // 'leaderboard' | 'challenges' | 'profile'
@@ -44,7 +50,7 @@ export default function CompetitionsPage() {
 
   return (
     <main
-      className="relative flex flex-col items-center pt-32 text-white pb-20"
+      className={`${fredoka.className} relative flex flex-col items-center pt-32 text-white pb-20`}
       style={{
         backgroundImage: "url('/challenges-bg.jpg')",
         backgroundSize: "cover",
@@ -65,13 +71,13 @@ export default function CompetitionsPage() {
           <p
             className="text-[10rem] bg-gradient-to-r from-[#c13d21] to-[#dd4e00] text-transparent bg-clip-text"
             style={{
-              fontFamily: "DK Face Your Fears II",
+              fontFamily: "DK Face Your Fears",
             }}
           >
             THE BEA
             <span
               style={{
-                fontFamily: "DK Face Your Fears II",
+                fontFamily: "DK Face Your Fears",
                 fontWeight: "bold",
               }}
             >

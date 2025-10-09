@@ -19,7 +19,7 @@ const leaderboards = [
     id: 1,
     title: "Veterans",
     entries: [
-      { rank: 1, name: "Fatima", points: "210" },
+      { rank: 1, name: "Rimas", points: "210" },
       { rank: 2, name: "David", points: "195" },
       { rank: 3, name: "Yasmine", points: "180" },
       { rank: 4, name: "Hassan", points: "165" },
