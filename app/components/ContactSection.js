@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { contactApi, ApiError } from "@/lib/api";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -8,11 +9,36 @@ export default function ContactSection() {
     email: "",
     message: "",
   });
+  const [status, setStatus] = useState({ type: "", message: "" });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted:", formData);
+    setStatus({ type: "", message: "" });
+    setLoading(true);
+
+    try {
+      await contactApi.send(formData.name, formData.email, formData.message);
+      setStatus({
+        type: "success",
+        message: "Message sent successfully! We'll get back to you soon.",
+      });
+      setFormData({ name: "", email: "", message: "" });
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setStatus({
+          type: "error",
+          message: err.message || "Failed to send message. Please try again.",
+        });
+      } else {
+        setStatus({
+          type: "error",
+          message: "An unexpected error occurred. Please try again.",
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -45,6 +71,19 @@ export default function ContactSection() {
 
         {/* Contact Form */}
         <form onSubmit={handleSubmit} className="space-y-6 mt-48 px-4">
+          {/* Status Message */}
+          {status.message && (
+            <div
+              className={`px-6 py-4 rounded-2xl ${
+                status.type === "success"
+                  ? "bg-green-500/20 border border-green-500 text-green-200"
+                  : "bg-red-500/20 border border-red-500 text-red-200"
+              }`}
+            >
+              {status.message}
+            </div>
+          )}
+
           {/* Name and Email Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="relative">
@@ -103,9 +142,10 @@ export default function ContactSection() {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-8 py-4 bg-gray-900 hover:bg-gray-800 text-white rounded-2xl font-semibold text-lg transition-all shadow-xl hover:shadow-2xl"
+              disabled={loading}
+              className="px-8 py-4 bg-gray-900 hover:bg-gray-800 text-white rounded-2xl font-semibold text-lg transition-all shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Send
+              {loading ? "Sending..." : "Send"}
             </button>
           </div>
         </form>

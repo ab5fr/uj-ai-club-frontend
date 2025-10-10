@@ -4,10 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HomeIcon } from "@heroicons/react/24/solid";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
   const pathname = usePathname();
   const isChallenges = pathname?.startsWith("/challanges");
+  const { user, isAuthenticated, logout } = useAuth();
 
   if (isChallenges) {
     // Minimal nav for challenges page: only a home icon linking to '/'
@@ -67,17 +69,33 @@ export default function Navbar() {
         </div>
       </div>
       {/* Auth Buttons pushed to right */}
-      <div className="flex gap-3 ml-auto">
-        <Link href="/login">
-          <button className="px-6 py-2.5 rounded-full bg-blue-500/90 text-white hover:bg-blue-400 focus:ring-2 focus:ring-blue-300/50 focus:outline-none transition-colors shadow shadow-blue-700/30 font-medium">
-            Login
-          </button>
-        </Link>
-        <Link href="/signup">
-          <button className="px-6 py-2.5 rounded-full font-medium bg-gray-200/90 text-gray-900 hover:bg-gray-100 focus:ring-2 focus:ring-gray-300/60 focus:outline-none transition-colors shadow">
-            Sign Up
-          </button>
-        </Link>
+      <div className="flex gap-3 ml-auto items-center">
+        {isAuthenticated() ? (
+          <>
+            <span className="text-sm text-gray-300">
+              Welcome, {user?.fullName || user?.email}
+            </span>
+            <button
+              onClick={logout}
+              className="px-6 py-2.5 rounded-full bg-red-500/90 text-white hover:bg-red-400 focus:ring-2 focus:ring-red-300/50 focus:outline-none transition-colors shadow shadow-red-700/30 font-medium"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link href="/login">
+              <button className="px-6 py-2.5 rounded-full bg-blue-500/90 text-white hover:bg-blue-400 focus:ring-2 focus:ring-blue-300/50 focus:outline-none transition-colors shadow shadow-blue-700/30 font-medium">
+                Login
+              </button>
+            </Link>
+            <Link href="/signup">
+              <button className="px-6 py-2.5 rounded-full font-medium bg-gray-200/90 text-gray-900 hover:bg-gray-100 focus:ring-2 focus:ring-gray-300/60 focus:outline-none transition-colors shadow">
+                Sign Up
+              </button>
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );

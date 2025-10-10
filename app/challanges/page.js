@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import TopPlayers from "../components/TopPlayers";
 import LeaderboardTable from "../components/LeaderboardTable";
 import ProfileSection from "../components/ProfileSection";
+import { challengesApi, userApi, ApiError } from "@/lib/api";
 import { Fredoka } from "next/font/google";
 
 const fredoka = Fredoka({
@@ -11,42 +13,43 @@ const fredoka = Fredoka({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-export default function CompetitionsPage() {
-  const [activeTab, setActiveTab] = useState("leaderboard"); // 'leaderboard' | 'challenges' | 'profile'
+function CompetitionsContent() {
+  const [activeTab, setActiveTab] = useState("leaderboard");
+  const [leaderboardData, setLeaderboardData] = useState([]);
+  const [currentChallenge, setCurrentChallenge] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Mock data - replace with actual data from your API when ready
-  const players = [
-    {
-      id: 1,
-      name: "Abdulrahman Al ssaggaf",
-      points: 320,
-      image: "/cat-violin.webp",
-      rank: 1,
-    },
-    {
-      id: 2,
-      name: "Abdulrahman Al ssaggaf",
-      points: 320,
-      image: "/scary-face.webp",
-      rank: 2,
-    },
-    {
-      id: 3,
-      name: "Abdulrahman Al ssaggaf",
-      points: 320,
-      image: "/reaper.webp",
-      rank: 3,
-    },
-    // Rest of the leaderboard
-    ...Array(7)
-      .fill(null)
-      .map((_, index) => ({
-        id: index + 4,
-        name: "Abdulrahman Al ssaggaf",
-        points: 320,
-        rank: 4,
-      })),
-  ];
+  useEffect(() => {
+    fetchData();
+  }, [activeTab]);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      if (activeTab === "leaderboard") {
+        const data = await challengesApi.getLeaderboard();
+        setLeaderboardData(data);
+      } else if (activeTab === "challenges") {
+        const data = await challengesApi.getCurrent();
+        setCurrentChallenge(data);
+      } else if (activeTab === "profile") {
+        const data = await userApi.getProfile();
+        setUserProfile(data);
+      }
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError("Failed to load data");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main
@@ -126,51 +129,81 @@ export default function CompetitionsPage() {
         </div>
         {/* Content Section */}
         <div className="w-full">
-          {activeTab === "challenges" && (
+          {error && (
+            <div className="bg-red-500/20 border border-red-500 text-red-200 px-6 py-4 rounded-2xl mb-8 max-w-4xl mx-auto">
+              {error}
+            </div>
+          )}
+
+          {loading ? (
+            <div className="text-center py-20">
+              <div className="text-2xl text-white">Loading...</div>
+            </div>
+          ) : activeTab === "challenges" ? (
             // Challenge Section
             <div className="max-w-4xl mx-auto backdrop-blur-sm rounded-3xl p-10">
-              <h2 className="text-3xl font-lite mb-2 text-white text-center">
-                <span className="font-bold">Week 1</span> - The Wumpus World
-              </h2>
-              <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-                Enter the mysterious Wumpus World, a classic AI challenge that
-                tests your ability to navigate through uncertainty. Your task is
-                to guide an agent through a treacherous cave, avoiding deadly
-                pits and the fearsome Wumpus, while searching for gold. Using
-                logical reasoning and probability, can you create an AI that
-                survives and conquers this dangerous realm?
-              </p>
+              {currentChallenge ? (
+                <>
+                  <h2 className="text-3xl font-lite mb-2 text-white text-center">
+                    <span className="font-bold">
+                      Week {currentChallenge.week}
+                    </span>{" "}
+                    - {currentChallenge.title}
+                  </h2>
+                  <p className="text-lg text-gray-300 mb-8 leading-relaxed">
+                    {currentChallenge.description}
+                  </p>
 
-              <div className="flex justify-center">
-                <a
-                  href="https://example.com/challenge/wumpus-world"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-10 py-4 bg-[#191919] hover:bg-[#1a1a1a] rounded-2xl text-xl font-bold transition-opacity shadow-lg"
-                  style={{
-                    clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)",
-                  }}
-                >
-                  <span className="bg-gradient-to-r from-[#c13d21] to-[#dd4e00] text-transparent bg-clip-text">
-                    Start Hunting
-                  </span>
-                </a>
-              </div>
+                  <div className="flex justify-center">
+                    <a
+                      href={currentChallenge.challengeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-10 py-4 bg-[#191919] hover:bg-[#1a1a1a] rounded-2xl text-xl font-bold transition-opacity shadow-lg"
+                      style={{
+                        clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)",
+                      }}
+                    >
+                      <span className="bg-gradient-to-r from-[#c13d21] to-[#dd4e00] text-transparent bg-clip-text">
+                        Start Hunting
+                      </span>
+                    </a>
+                  </div>
+                </>
+              ) : (
+                <p className="text-2xl text-gray-400 text-center">
+                  No active challenge
+                </p>
+              )}
             </div>
-          )}
-          {activeTab === "leaderboard" && (
+          ) : activeTab === "leaderboard" ? (
             // Leaderboard Section
             <div className="container mx-auto max-w-4xl">
-              <TopPlayers topPlayers={players.slice(0, 3)} />
-              <LeaderboardTable players={players.slice(3)} />
+              {leaderboardData.length > 0 ? (
+                <>
+                  <TopPlayers topPlayers={leaderboardData.slice(0, 3)} />
+                  <LeaderboardTable players={leaderboardData.slice(3)} />
+                </>
+              ) : (
+                <p className="text-2xl text-gray-400 text-center">
+                  No leaderboard data available
+                </p>
+              )}
             </div>
-          )}
-          {activeTab === "profile" && (
+          ) : (
             // Profile Section
-            <ProfileSection />
+            <ProfileSection userProfile={userProfile} />
           )}
         </div>
       </div>
     </main>
+  );
+}
+
+export default function CompetitionsPage() {
+  return (
+    <ProtectedRoute>
+      <CompetitionsContent />
+    </ProtectedRoute>
   );
 }

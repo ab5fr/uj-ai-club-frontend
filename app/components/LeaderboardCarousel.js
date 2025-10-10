@@ -1,48 +1,92 @@
 "use client";
 
-import { useState } from "react";
-
-const leaderboards = [
-  {
-    id: 0,
-    title: "Top Contributors",
-    entries: [
-      { rank: 1, name: "Alex", points: "1,450" },
-      { rank: 2, name: "Samira", points: "1,230" },
-      { rank: 3, name: "Omar", points: "980" },
-      { rank: 4, name: "Layla", points: "875" },
-      { rank: 5, name: "Mohammed", points: "820" },
-      { rank: 6, name: "Sara", points: "750" },
-    ],
-  },
-  {
-    id: 1,
-    title: "Veterans",
-    entries: [
-      { rank: 1, name: "Rimas", points: "210" },
-      { rank: 2, name: "David", points: "195" },
-      { rank: 3, name: "Yasmine", points: "180" },
-      { rank: 4, name: "Hassan", points: "165" },
-      { rank: 5, name: "Nora", points: "150" },
-      { rank: 6, name: "Khalid", points: "140" },
-    ],
-  },
-  {
-    id: 2,
-    title: "Project MVPs",
-    entries: [
-      { rank: 1, name: "Team Phoenix", points: "8,900" },
-      { rank: 2, name: "AI Avengers", points: "8,250" },
-      { rank: 3, name: "Neural Ninjas", points: "7,600" },
-      { rank: 4, name: "Code Warriors", points: "7,200" },
-      { rank: 5, name: "Data Dynamos", points: "6,850" },
-      { rank: 6, name: "Tech Titans", points: "6,500" },
-    ],
-  },
-];
+import { useState, useEffect } from "react";
+import { leaderboardApi, ApiError } from "@/lib/api";
 
 export default function LeaderboardCarousel() {
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [leaderboards, setLeaderboards] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchLeaderboards();
+  }, []);
+
+  const fetchLeaderboards = async () => {
+    try {
+      setLoading(true);
+      const data = await leaderboardApi.getAll();
+      // Transform API data to match component format
+      const transformedData = data.map((board, index) => ({
+        id: board.id || index,
+        title: board.title,
+        entries: board.entries.map((entry, entryIndex) => ({
+          rank: entryIndex + 1, // Generate rank from index
+          name: entry.name,
+          points: entry.points,
+        })),
+      }));
+      setLeaderboards(transformedData);
+      if (transformedData.length > 0) {
+        setActiveIndex(Math.floor(transformedData.length / 2)); // Start in the middle
+      }
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError("Failed to load leaderboards");
+      }
+      // Fallback to empty array on error
+      setLeaderboards([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section
+        className="w-full h-screen relative overflow-hidden flex items-center"
+        style={{
+          backgroundImage: "url('/lbbg.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-7xl font-extrabold mb-12 text-white drop-shadow-lg">
+            Leaderboards
+          </h2>
+          <div className="text-2xl text-white">Loading...</div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error || leaderboards.length === 0) {
+    return (
+      <section
+        className="w-full h-screen relative overflow-hidden flex items-center"
+        style={{
+          backgroundImage: "url('/lbbg.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-7xl font-extrabold mb-12 text-white drop-shadow-lg">
+            Leaderboards
+          </h2>
+          <div className="text-2xl text-white/80">
+            {error || "No leaderboards available"}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section

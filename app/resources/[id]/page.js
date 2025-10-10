@@ -1,31 +1,63 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-// This data would typically come from an API or database
-const resourcesData = {
-  1: {
-    title: "Advanced Learning Algorithms",
-    provider: "DeepLearning.AI",
-    instructor: {
-      name: "Abdullah Albadri",
-      image: "/instructor-abdullah.jpg",
-    },
-    notionUrl:
-      "https://rune-exhaust-ad3.notion.site/ebd/27692c82e84e80529007da7b46e0cd50",
-    quote: {
-      text: "The day is what you make it! So why not make it a great one?",
-      author: "Steve Schulte",
-    },
-  },
-  // Add more resources as needed
-};
+import { useRouter } from "next/navigation";
+import { resourcesApi, ApiError } from "@/lib/api";
 
 export default function ResourcePage({ params }) {
-  const resource = resourcesData[params.id];
+  const [resource, setResource] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  if (!resource) {
-    return <div>Resource not found</div>;
+  useEffect(() => {
+    fetchResource();
+  }, [params.id]);
+
+  const fetchResource = async () => {
+    try {
+      setLoading(true);
+      const data = await resourcesApi.getById(params.id);
+      setResource(data);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        if (err.status === 404) {
+          setError("Resource not found");
+        } else {
+          setError(err.message);
+        }
+      } else {
+        setError("Failed to load resource");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-[#0a1225] text-white pt-24 flex items-center justify-center">
+        <div className="text-2xl text-gray-400">Loading...</div>
+      </main>
+    );
+  }
+
+  if (error || !resource) {
+    return (
+      <main className="min-h-screen bg-[#0a1225] text-white pt-24 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">
+            {error || "Resource not found"}
+          </h1>
+          <button
+            onClick={() => router.push("/resources")}
+            className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-semibold text-lg transition-all"
+          >
+            Back to Resources
+          </button>
+        </div>
+      </main>
+    );
   }
 
   const openNotion = () => {

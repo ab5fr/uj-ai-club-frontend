@@ -1,54 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
-const resources = [
-  {
-    id: 1,
-    title: "Introduction to Machine Learning",
-    provider: "DeepLearning.AI",
-    instructor: {
-      name: "Abdullah Albadri",
-      image: "/instructor-abdullah.jpg", // You'll need to add this image
-    },
-    coverImage: "/Notes.jpg", // Using the image from your design folder
-  },
-  {
-    id: 2,
-    title: "Advanced Machine Learning",
-    provider: "DeepLearning.AI",
-    instructor: {
-      name: "Abdullah Albadri",
-      image: "/instructor-abdullah.jpg",
-    },
-    coverImage: "/Notes.jpg",
-  },
-  {
-    id: 3,
-    title: "Face Recognition",
-    provider: "agelgey Adam Gelgey",
-    instructor: {
-      name: "Abdullah Albadri",
-      image: "/instructor-abdullah.jpg",
-    },
-    coverImage: "/project.jpg",
-  },
-  {
-    id: 4,
-    title: "Linear Algebra for Machine Learning",
-    provider: "DeepLearning.AI",
-    instructor: {
-      name: "Abdullah Albadri",
-      image: "/instructor-abdullah.jpg",
-    },
-    coverImage: "/Notes.jpg",
-  },
-];
+import { resourcesApi, ApiError } from "@/lib/api";
 
 export default function ResourcesPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [resources, setResources] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    fetchResources();
+  }, []);
+
+  const fetchResources = async () => {
+    try {
+      setLoading(true);
+      const data = await resourcesApi.getAll();
+      setResources(data);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError("Failed to load resources");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredResources = resources.filter(
     (resource) =>
@@ -90,49 +71,74 @@ export default function ResourcesPage() {
           Resources
         </h1>
 
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-500/20 border border-red-500 text-red-200 px-6 py-4 rounded-2xl mb-8">
+            {error}
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-20">
+            <div className="text-2xl text-gray-400">Loading resources...</div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && filteredResources.length === 0 && (
+          <div className="text-center py-20">
+            <div className="text-2xl text-gray-400">
+              {searchQuery ? "No resources found" : "No resources available"}
+            </div>
+          </div>
+        )}
+
         {/* Resources Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredResources.map((resource) => (
-            <div
-              key={resource.id}
-              onClick={() => router.push(`/resources/${resource.id}`)}
-              className="bg-[#0a1225] rounded-[3rem] overflow-hidden border border-blue-900/20 hover:border-blue-700/50 transition-all group cursor-pointer"
-            >
-              {/* Card Image */}
-              <div className="h-48 relative overflow-hidden">
-                <img
-                  src={resource.coverImage}
-                  alt={resource.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-              </div>
+        {!loading && filteredResources.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredResources.map((resource) => (
+              <div
+                key={resource.id}
+                onClick={() => router.push(`/resources/${resource.id}`)}
+                className="bg-[#0a1225] rounded-[3rem] overflow-hidden border border-blue-900/20 hover:border-blue-700/50 transition-all group cursor-pointer"
+              >
+                {/* Card Image */}
+                <div className="h-48 relative overflow-hidden">
+                  <img
+                    src={resource.coverImage}
+                    alt={resource.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
 
-              {/* Card Content */}
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2 text-white/90">
-                  {resource.title}
-                </h3>
-                <p className="text-sm text-gray-400 mb-4">
-                  by {resource.provider}
-                </p>
+                {/* Card Content */}
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2 text-white/90">
+                    {resource.title}
+                  </h3>
+                  <p className="text-sm text-gray-400 mb-4">
+                    by {resource.provider}
+                  </p>
 
-                {/* Instructor */}
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-900/50">
-                    <img
-                      src={resource.instructor.image}
-                      alt={resource.instructor.name}
-                      className="w-full h-full object-cover"
-                    />
+                  {/* Instructor */}
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-900/50">
+                      <img
+                        src={resource.instructor.image}
+                        alt={resource.instructor.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-sm text-gray-300">
+                      {resource.instructor.name}
+                    </span>
                   </div>
-                  <span className="text-sm text-gray-300">
-                    {resource.instructor.name}
-                  </span>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );
