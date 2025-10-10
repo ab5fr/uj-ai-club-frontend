@@ -69,7 +69,7 @@ export default function ResourcePage({ params }) {
       className="min-h-screen text-white pt-24 bg-no-repeat bg-[#121522]"
       style={{
         backgroundImage: "url('/project.jpg')",
-        backgroundSize: "150%",
+        backgroundSize: "100%",
         backgroundPosition: "center 70%",
       }}
     >
