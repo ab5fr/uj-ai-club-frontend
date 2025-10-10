@@ -73,10 +73,10 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Email Field */}
             <div className="relative">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
                 email = "
               </span>
-              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
+              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
                 "
               </span>
               <input
@@ -91,10 +91,10 @@ export default function LoginPage() {
 
             {/* Password Field */}
             <div className="relative">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
                 password = "
               </span>
-              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
+              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
                 "
               </span>
               <input

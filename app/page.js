@@ -1,5 +1,6 @@
 import LeaderboardCarousel from "./components/LeaderboardCarousel";
 import ContactSection from "./components/ContactSection";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -34,9 +35,12 @@ export default function Home() {
               </p>
             </div>
             {/* Call To Action Button on the right */}
-            <button className="font-extrabold absolute top-1/2 -translate-y-1/2 right-4 md:right-10 lg:right-16 xl:right-24 2xl:right-32 bg-blue-600 text-white px-12 py-5 rounded-full text-2xl hover:bg-blue-500 focus:ring-2 focus:ring-blue-400/50 focus:outline-none transition shadow-xl shadow-blue-800/30 tracking-wide">
+            <Link
+              href="/ai-specializations"
+              className="font-extrabold absolute top-1/2 -translate-y-1/2 right-4 md:right-10 lg:right-16 xl:right-24 2xl:right-32 bg-blue-600 text-white px-12 py-5 rounded-full text-2xl hover:bg-blue-500 focus:ring-2 focus:ring-blue-400/50 focus:outline-none transition shadow-xl shadow-blue-800/30 tracking-wide"
+            >
               Click Here
-            </button>
+            </Link>
           </div>
         </section>
         {/* Large Curly Brace */}

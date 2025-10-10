@@ -55,10 +55,10 @@ export default function Navbar() {
             Learning Plans
           </Link> */}
           <Link
-            href="/ai-types"
+            href="/ai-specializations"
             className="font-medium hover:text-blue-400 transition-colors"
           >
-            AI Types
+            AI Specializations
           </Link>
           {/* <Link
             href="/the-club"

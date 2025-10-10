@@ -77,6 +77,16 @@ export default function ResourcePage({ params }) {
         {/* Content Header */}
         <div className="flex justify-between items-start mb-8">
           <div className="max-w-2xl">
+            {/* Notes Label */}
+            <div className="relative inline-block mb-4 ml-8">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl w-50 h-15"></div>
+              <span
+                className="relative text-[#0087d3] text-9xl leading-none"
+                style={{ fontFamily: "'Freestyle Script', cursive" }}
+              >
+                Notes
+              </span>
+            </div>
             <h1 className="text-5xl font-bold mb-4">{resource.title}</h1>
             <p className="text-gray-400 mb-3">by {resource.provider}</p>
             <div className="flex items-center gap-2">

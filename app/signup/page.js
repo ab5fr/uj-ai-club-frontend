@@ -11,11 +11,43 @@ export default function SignUpPage() {
     phoneNum: "",
     email: "",
     password: "",
+    university: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { login } = useAuth();
+
+  const universities = [
+    "جامعة الملك سعود",
+    "جامعة الملك عبد العزيز",
+    "جامعة الملك فهد للبترول والمعادن",
+    "جامعة الإمام محمد بن سعود الإسلامية",
+    "الجامعة السعودية الإلكترونية",
+    "جامعة شقراء",
+    "جامعة المجمعة",
+    "جامعة جدة",
+    "جامعة الأميرة نورة بنت عبد الرحمن",
+    "جامعة الملك خالد",
+    "جامعة أم القرى",
+    "جامعة الإمام عبد الرحمن بن فيصل",
+    "جامعة القصيم",
+    "جامعة حائل",
+    "جامعة الطائف",
+    "جامعة تبوك",
+    "جامعة جازان",
+    "جامعة نجران",
+    "جامعة الحدود الشمالية",
+    "جامعة الأمير سلطان",
+    "جامعة الفيصل",
+    "جامعة الأعمال والتكنولوجيا",
+    "جامعة الأمير محمد بن فهد",
+    "كلية الباحة الأهلية للعلوم",
+    "كلية البترجي الطبية للعلوم والتكنولوجيا",
+    "كليات بريدة الأهلية",
+    "كلية دار الحكمة",
+    "كلية جدة العالمية الأهلية",
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +59,8 @@ export default function SignUpPage() {
         formData.fullName,
         formData.phoneNum,
         formData.email,
-        formData.password
+        formData.password,
+        formData.university
       );
       login(response.user, response.token);
       router.push("/challanges");
@@ -84,10 +117,10 @@ export default function SignUpPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Full Name Field */}
               <div className="relative">
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
                   full_name = "
                 </span>
-                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
+                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
                   "
                 </span>
                 <input
@@ -102,10 +135,10 @@ export default function SignUpPage() {
 
               {/* Phone Number Field */}
               <div className="relative">
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
                   phone_num = "
                 </span>
-                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
+                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
                   "
                 </span>
                 <input
@@ -123,10 +156,10 @@ export default function SignUpPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Email Field */}
               <div className="relative">
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
                   email = "
                 </span>
-                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
+                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
                   "
                 </span>
                 <input
@@ -141,10 +174,10 @@ export default function SignUpPage() {
 
               {/* Password Field */}
               <div className="relative">
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
                   password = "
                 </span>
-                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
+                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
                   "
                 </span>
                 <input
@@ -158,15 +191,41 @@ export default function SignUpPage() {
               </div>
             </div>
 
-            {/* Third Row: Return Statement */}
+            {/* Third Row: University */}
+            <div className="relative">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
+                university = "
+              </span>
+              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
+                "
+              </span>
+              <select
+                name="university"
+                value={formData.university}
+                onChange={handleChange}
+                className="w-full px-6 py-4 pl-[10.5rem] pr-[2rem] rounded-2xl bg-[#0d1b3a]/80 backdrop-blur-sm text-white text-lg focus:outline-none transition-all appearance-none cursor-pointer"
+                required
+              >
+                <option value="" disabled className="bg-[#0d1b3a]">
+                  اختر جامعتك
+                </option>
+                {universities.map((uni, index) => (
+                  <option key={index} value={uni} className="bg-[#0d1b3a]">
+                    {uni}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Fourth Row: Return Statement */}
             <div className="relative mt-12">
               <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
-                return full_name, phone_num, email, password?
+                return full_name, phone_num, email, password, university?
               </span>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-14 px-6 pl-[30rem] pr-20 rounded-full bg-[#0d1b3a]/80 hover:bg-[#0d1b3a] text-white text-lg transition-colors backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed text-left relative flex items-center"
+                className="w-full h-14 px-6 pl-[36rem] pr-20 rounded-full bg-[#0d1b3a]/80 hover:bg-[#0d1b3a] text-white text-lg transition-colors backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed text-left relative flex items-center"
               >
                 <span className="absolute right-0 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-[#93cff0] hover:bg-[#7ab8d9] flex items-center justify-center transition-colors pointer-events-none">
                   <svg
