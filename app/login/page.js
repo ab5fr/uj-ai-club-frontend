@@ -58,13 +58,12 @@ export default function LoginPage() {
         backgroundAttachment: "fixed",
       }}
     >
-      <div className="container mx-auto px-4 max-w-lg">
-        {/* Login Form */}
-        <div className="bg-[#0a1225]/40 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-blue-900/20">
-          <h1 className="text-5xl font-bold text-white mb-12 text-center">
-            def Log_In():
-          </h1>
+      <div className="container mx-auto px-4 max-w-2xl">
+        {/* Title outside the form */}
+        <h1 className="text-5xl font-bold text-white mb-8">def Log_In():</h1>
 
+        {/* Login Form */}
+        <div className="bg-[#0a1225]/60 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-blue-900/20">
           {error && (
             <div className="bg-red-500/20 border border-red-500 text-red-200 px-6 py-4 rounded-2xl mb-6">
               {error}
@@ -74,10 +73,10 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Email Field */}
             <div className="relative">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-white text-lg font-mono">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
                 email = "
               </span>
-              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-white text-lg font-mono">
+              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
                 "
               </span>
               <input
@@ -85,17 +84,17 @@ export default function LoginPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-6 py-4 pl-[7rem] pr-[2rem] rounded-2xl bg-[#93cff0]/20 backdrop-blur-sm text-white text-lg focus:outline-none transition-all"
+                className="w-full px-6 py-4 pl-[7rem] pr-[2rem] rounded-2xl bg-[#0d1b3a]/80 backdrop-blur-sm text-white text-lg focus:outline-none transition-all"
                 required
               />
             </div>
 
             {/* Password Field */}
             <div className="relative">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-white text-lg font-mono">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
                 password = "
               </span>
-              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-white text-lg font-mono">
+              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono">
                 "
               </span>
               <input
@@ -103,22 +102,37 @@ export default function LoginPage() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-6 py-4 pl-[9.5rem] pr-[2rem] rounded-2xl bg-[#93cff0]/20 backdrop-blur-sm text-white text-lg focus:outline-none transition-all"
+                className="w-full px-6 py-4 pl-[9.5rem] pr-[2rem] rounded-2xl bg-[#0d1b3a]/80 backdrop-blur-sm text-white text-lg focus:outline-none transition-all"
                 required
               />
             </div>
 
             {/* Return Statement */}
             <div className="relative mt-12">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-white text-lg font-mono">
-                return
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
+                return email, password?
               </span>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[#93cff0]/20 hover:bg-[#93cff0]/30 text-white text-lg font-bold transition-colors backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full h-14 px-6 pl-[16rem] pr-20 rounded-full bg-[#0d1b3a]/80 hover:bg-[#0d1b3a] text-white text-lg transition-colors backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed text-left relative flex items-center"
               >
-                {loading ? "Logging in..." : "email, password;"}
+                <span className="absolute right-0 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-[#93cff0] hover:bg-[#7ab8d9] flex items-center justify-center transition-colors pointer-events-none">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2.5}
+                    stroke="currentColor"
+                    className="w-6 h-6 text-[#0d1b3a]"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                    />
+                  </svg>
+                </span>
               </button>
             </div>
           </form>

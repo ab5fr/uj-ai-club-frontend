@@ -66,7 +66,7 @@ export default function ResourcePage({ params }) {
 
   return (
     <main
-      className="min-h-screen text-white pt-24 bg-no-repeat bg-[#0a1225]"
+      className="min-h-screen text-white pt-24 bg-no-repeat bg-[#121522]"
       style={{
         backgroundImage: "url('/project.jpg')",
         backgroundSize: "150%",

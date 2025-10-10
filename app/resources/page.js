@@ -38,7 +38,7 @@ export default function ResourcesPage() {
   );
 
   return (
-    <main className="min-h-screen bg-[#010617] text-white pt-24">
+    <main className="min-h-screen bg-[#121522] text-white pt-24">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Search Bar */}
         <div className="relative mb-16">

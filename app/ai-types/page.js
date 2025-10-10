@@ -2,7 +2,7 @@
 
 export default function AITypesPage() {
   return (
-    <main className="min-h-screen bg-[#010617] text-white pt-32">
+    <main className="min-h-screen bg-[#121522] text-white pt-32">
       {/* Machine Learning Section - Left Aligned */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
