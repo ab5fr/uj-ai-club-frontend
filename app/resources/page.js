@@ -41,7 +41,7 @@ export default function ResourcesPage() {
     <main className="min-h-screen bg-[#121522] text-white pt-24">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Search Bar */}
-        <div className="relative mb-16">
+        <div className="relative mb-16 mt-8">
           <input
             type="text"
             placeholder="Search resources..."

@@ -19,34 +19,35 @@ export default function SignUpPage() {
   const { login } = useAuth();
 
   const universities = [
-    "جامعة الملك سعود",
-    "جامعة الملك عبد العزيز",
-    "جامعة الملك فهد للبترول والمعادن",
-    "جامعة الإمام محمد بن سعود الإسلامية",
-    "الجامعة السعودية الإلكترونية",
-    "جامعة شقراء",
-    "جامعة المجمعة",
-    "جامعة جدة",
-    "جامعة الأميرة نورة بنت عبد الرحمن",
-    "جامعة الملك خالد",
-    "جامعة أم القرى",
-    "جامعة الإمام عبد الرحمن بن فيصل",
-    "جامعة القصيم",
-    "جامعة حائل",
-    "جامعة الطائف",
-    "جامعة تبوك",
-    "جامعة جازان",
-    "جامعة نجران",
-    "جامعة الحدود الشمالية",
-    "جامعة الأمير سلطان",
-    "جامعة الفيصل",
-    "جامعة الأعمال والتكنولوجيا",
-    "جامعة الأمير محمد بن فهد",
-    "كلية الباحة الأهلية للعلوم",
-    "كلية البترجي الطبية للعلوم والتكنولوجيا",
-    "كليات بريدة الأهلية",
-    "كلية دار الحكمة",
-    "كلية جدة العالمية الأهلية",
+    "King Saud University",
+    "King Abdulaziz University",
+    "King Fahd University of Petroleum and Minerals",
+    "Imam Muhammad ibn Saud Islamic University",
+    "Saudi Electronic University",
+    "Shaqra University",
+    "Majmaah University",
+    "University of Jeddah",
+    "Princess Nourah bint Abdulrahman University",
+    "King Khalid University",
+    "Umm Al-Qura University",
+    "Imam Abdulrahman Bin Faisal University",
+    "Qassim University",
+    "University of Hail",
+    "Taif University",
+    "University of Tabuk",
+    "Jazan University",
+    "Najran University",
+    "Northern Border University",
+    "Prince Sultan University",
+    "Alfaisal University",
+    "University of Business and Technology",
+    "Prince Mohammad Bin Fahd University",
+    "Al Baha Private College of Sciences",
+    "Batterjee Medical College for Sciences and Technology",
+    "Buraidah Private Colleges",
+    "Dar Al-Hekma College",
+    "Jeddah International Private College",
+    "Other",
   ];
 
   const handleSubmit = async (e) => {
@@ -203,14 +204,20 @@ export default function SignUpPage() {
                 name="university"
                 value={formData.university}
                 onChange={handleChange}
-                className="w-full px-6 py-4 pl-[10.5rem] pr-[2rem] rounded-2xl bg-[#0d1b3a]/80 backdrop-blur-sm text-white text-lg focus:outline-none transition-all appearance-none cursor-pointer"
+                className="w-full px-6 py-4 pl-[10.5rem] pr-[2rem] rounded-2xl bg-[#0d1b3a]/80 backdrop-blur-sm text-white text-lg font-mono focus:outline-none transition-all appearance-none cursor-pointer"
                 required
               >
-                <option value="" disabled className="bg-[#0d1b3a]">
-                  اختر جامعتك
-                </option>
+                <option
+                  value=""
+                  disabled
+                  className="bg-[#0d1b3a] font-mono"
+                ></option>
                 {universities.map((uni, index) => (
-                  <option key={index} value={uni} className="bg-[#0d1b3a]">
+                  <option
+                    key={index}
+                    value={uni}
+                    className="bg-[#0d1b3a] font-mono"
+                  >
                     {uni}
                   </option>
                 ))}
