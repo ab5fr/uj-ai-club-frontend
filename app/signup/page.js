@@ -226,13 +226,16 @@ export default function SignUpPage() {
 
             {/* Fourth Row: Return Statement */}
             <div className="relative mt-12">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-mono z-10">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-sm md:text-lg font-mono z-10 hidden md:block">
                 return full_name, phone_num, email, password, university?
+              </span>
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-mono z-10 md:hidden">
+                return?
               </span>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-14 px-6 pl-[36rem] pr-20 rounded-full bg-[#0d1b3a]/80 hover:bg-[#0d1b3a] text-white text-lg transition-colors backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed text-left relative flex items-center"
+                className="w-full h-14 px-6 pl-20 md:pl-[36rem] pr-20 rounded-full bg-[#0d1b3a]/80 hover:bg-[#0d1b3a] text-white text-lg transition-colors backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed text-left relative flex items-center"
               >
                 <span className="absolute right-0 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-[#93cff0] hover:bg-[#7ab8d9] flex items-center justify-center transition-colors pointer-events-none">
                   <svg
