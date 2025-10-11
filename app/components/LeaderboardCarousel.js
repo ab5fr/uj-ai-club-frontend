@@ -90,7 +90,7 @@ export default function LeaderboardCarousel() {
 
   return (
     <section
-      className="w-full h-screen relative overflow-hidden flex items-center"
+      className="w-full h-screen relative overflow-hidden flex items-start pt-15 md:pt-0 md:items-center"
       style={{
         backgroundImage: "url('/lbbg.jpg')",
         backgroundSize: "cover",
@@ -99,129 +99,54 @@ export default function LeaderboardCarousel() {
       }}
     >
       <div className="container mx-auto px-4 text-center w-full">
-        <h2 className="text-7xl font-extrabold mb-12 text-white drop-shadow-lg">
+        <h2 className="text-5xl md:text-7xl font-extrabold mb-6 md:mb-12 text-white drop-shadow-lg">
           Leaderboards
         </h2>
 
-        {/* Leaderboards Carousel Container */}
-        <div className="relative flex items-center justify-center mb-12">
-          <div className="flex items-center justify-center w-full max-w-7xl mx-auto relative h-[550px]">
-            {leaderboards.map((board, index) => {
-              const position = index - activeIndex;
-              const isActive = index === activeIndex;
-              const isVisible = Math.abs(position) <= 1;
+        {/* Single Leaderboard - First One */}
+        <div className="flex items-center justify-center w-full">
+          <div className="w-full max-w-2xl">
+            <div className="bg-[#16214470] backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-gray-700/80 shadow-2xl">
+              <h3 className="text-2xl md:text-3xl font-semibold mb-6 text-white">
+                {leaderboards[0].title}
+              </h3>
 
-              return (
-                <div
-                  key={board.id}
-                  className={`absolute transition-all duration-500 ease-out ${
-                    isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
-                  }`}
-                  style={{
-                    transform: `translateX(${position * 80}%) scale(${
-                      isActive ? 1.1 : 0.85
-                    })`,
-                    zIndex: isActive ? 20 : 10,
-                  }}
-                >
-                  <div
-                    className={`bg-[#16214470] backdrop-blur-sm rounded-2xl p-8 border border-gray-700/80 shadow-2xl w-[50vw] transition-all duration-500 ${
-                      !isActive && "brightness-50"
-                    }`}
-                  >
-                    <h3 className="text-3xl font-semibold mb-6 text-white">
-                      {board.title}
-                    </h3>
-
-                    {/* Two Column Layout */}
-                    <div className="grid grid-cols-2 gap-6">
-                      {/* Left Column - Ranks 1-3 */}
-                      <div>
-                        {/* Left Table Headers */}
-                        <div className="bg-gray-700/60 rounded-lg p-3 mb-4">
-                          <div className="grid grid-cols-[1fr_100px] font-light text-white text-sm uppercase tracking-wider">
-                            <div className="flex items-center gap-2">
-                              <span className="w-20">Rank</span>
-                              <span>Name</span>
-                            </div>
-                            <span className="text-right">Points</span>
-                          </div>
-                        </div>
-                        {/* Left Table Content */}
-                        <div className="space-y-3 font-light">
-                          {board.entries.slice(0, 3).map((entry) => (
-                            <div
-                              key={entry.rank}
-                              className="grid grid-cols-[1fr_100px] items-center bg-gray-700/50 p-4 rounded-lg hover:bg-gray-700/70 transition-colors"
-                            >
-                              <div className="flex items-center gap-2">
-                                <span className="text-white/90 w-20">
-                                  #{entry.rank}
-                                </span>
-                                <span className="text-white">{entry.name}</span>
-                              </div>
-                              <span className="text-right text-[#0087d3]">
-                                {entry.points}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Right Column - Ranks 4-6 */}
-                      <div>
-                        {/* Right Table Headers */}
-                        <div className="bg-gray-700/60 rounded-lg p-3 mb-4">
-                          <div className="grid grid-cols-[1fr_100px] font-light text-white text-sm uppercase tracking-wider">
-                            <div className="flex items-center gap-2">
-                              <span className="w-20">Rank</span>
-                              <span>Name</span>
-                            </div>
-                            <span className="text-right">Points</span>
-                          </div>
-                        </div>
-                        {/* Right Table Content */}
-                        <div className="space-y-3 font-light">
-                          {board.entries.slice(3, 6).map((entry) => (
-                            <div
-                              key={entry.rank}
-                              className="grid grid-cols-[1fr_100px] items-center bg-gray-700/50 p-4 rounded-lg hover:bg-gray-700/70 transition-colors"
-                            >
-                              <div className="flex items-center gap-2">
-                                <span className="text-white/90 w-20">
-                                  #{entry.rank}
-                                </span>
-                                <span className="text-white">{entry.name}</span>
-                              </div>
-                              <span className="text-right text-[#0087d3]">
-                                {entry.points}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+              {/* Single Column Layout - Top 3 Only */}
+              <div>
+                {/* Table Headers */}
+                <div className="bg-gray-700/60 rounded-lg p-3 mb-4">
+                  <div className="grid grid-cols-[1fr_100px] font-light text-white text-sm uppercase tracking-wider">
+                    <div className="flex items-center gap-2">
+                      <span className="w-12 md:w-20">Rank</span>
+                      <span>Name</span>
                     </div>
+                    <span className="text-right">Points</span>
                   </div>
                 </div>
-              );
-            })}
+                {/* Table Content - Top 3 */}
+                <div className="space-y-3 font-light">
+                  {leaderboards[0].entries.slice(0, 3).map((entry) => (
+                    <div
+                      key={entry.rank}
+                      className="grid grid-cols-[1fr_100px] items-center bg-gray-700/50 p-4 rounded-lg hover:bg-gray-700/70 transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-white/90 w-12 md:w-20">
+                          #{entry.rank}
+                        </span>
+                        <span className="text-white truncate">
+                          {entry.name}
+                        </span>
+                      </div>
+                      <span className="text-right text-[#0087d3]">
+                        {entry.points}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-
-        {/* Navigation Dots */}
-        <div className="flex justify-center items-center gap-4">
-          {leaderboards.map((board, index) => (
-            <button
-              key={board.id}
-              onClick={() => setActiveIndex(index)}
-              className={`w-6 h-6 rounded-md transition-all duration-300 ${
-                index === activeIndex
-                  ? "bg-blue-300 scale-125"
-                  : "bg-blue-600 hover:bg-blue-600/60"
-              }`}
-              aria-label={`View ${board.title}`}
-            />
-          ))}
         </div>
       </div>
     </section>
