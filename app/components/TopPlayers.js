@@ -1,3 +1,5 @@
+import { getImageUrl } from "@/lib/api";
+
 export default function TopPlayers({ topPlayers }) {
   const rankColors = {
     "1st": "border-yellow-500", // Gold
@@ -57,7 +59,7 @@ export default function TopPlayers({ topPlayers }) {
               `}
               >
                 <img
-                  src={player.image}
+                  src={getImageUrl(player.image)}
                   alt={`${player.name}'s profile`}
                   className="w-full h-full object-cover"
                 />
