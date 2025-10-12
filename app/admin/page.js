@@ -369,16 +369,37 @@ function ChallengesAdmin() {
   };
 
   const onEdit = (c) => {
+    console.log("Editing challenge:", c); // Debug log
     setEditingId(c.id);
-    setForm({
+
+    // Helper function to format date for input[type="date"]
+    const formatDateForInput = (dateString) => {
+      if (!dateString) return "";
+      try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return "";
+        // Format as YYYY-MM-DD
+        const formatted = date.toISOString().split("T")[0];
+        console.log("Formatted date:", dateString, "->", formatted); // Debug log
+        return formatted;
+      } catch (error) {
+        console.error("Date formatting error:", error);
+        return "";
+      }
+    };
+
+    const formData = {
       title: c.title || "",
       description: c.description || "",
-      week: c.week || "",
+      week: c.week !== null && c.week !== undefined ? String(c.week) : "",
       challengeUrl: c.challengeUrl || "",
-      startDate: c.startDate ? c.startDate.substring(0, 10) : "",
-      endDate: c.endDate ? c.endDate.substring(0, 10) : "",
+      startDate: formatDateForInput(c.startDate),
+      endDate: formatDateForInput(c.endDate),
       visible: c.visible !== false && c.isHidden !== true,
-    });
+    };
+
+    console.log("Setting form data:", formData); // Debug log
+    setForm(formData);
   };
 
   const onDelete = async (id) => {
