@@ -10,13 +10,13 @@ export default function LeaderboardTable({ players }) {
 
       {/* Player Rows */}
       <div className="space-y-2">
-        {players.map((player) => (
+        {players.map((player, index) => (
           <div
-            key={player.id}
+            key={player.id || index}
             className="grid grid-cols-12 items-center text-white p-3 bg-[#0d0e10] rounded-md"
           >
             <div className="col-span-2 text-gray-400 font-light">
-              #{player.rank}
+              #{index + 4}
             </div>
             <div className="col-span-7 font-light">{player.name}</div>
             <div className="col-span-3 text-right font-light">

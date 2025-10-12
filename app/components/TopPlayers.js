@@ -22,8 +22,9 @@ export default function TopPlayers({ topPlayers }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 items-end gap-6 mb-12">
       {topPlayers.map((player, index) => {
-        const rank = `${index + 1}${
-          index === 0 ? "st" : index === 1 ? "nd" : "rd"
+        const rankNumber = index + 1; // Automatic rank based on position
+        const rank = `${rankNumber}${
+          rankNumber === 1 ? "st" : rankNumber === 2 ? "nd" : "rd"
         }`;
         const fullName = player.name || "";
         const spaceIdx = fullName.indexOf(" ");
@@ -32,7 +33,7 @@ export default function TopPlayers({ topPlayers }) {
         const secondLine = spaceIdx === -1 ? "" : fullName.slice(spaceIdx + 1);
         return (
           <div
-            key={player.id}
+            key={player.id || index}
             className={`flex flex-col items-center ${rankPositions[rank]}`}
           >
             <div className="relative">

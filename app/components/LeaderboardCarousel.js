@@ -9,21 +9,6 @@ export default function LeaderboardCarousel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Demo leaderboard data
-  const demoLeaderboards = [
-    {
-      id: 1,
-      title: "AI Challenge Leaderboard",
-      entries: [
-        { rank: 1, name: "Alex Chen", points: 2850 },
-        { rank: 2, name: "Sarah Johnson", points: 2720 },
-        { rank: 3, name: "Mike Rodriguez", points: 2680 },
-        { rank: 4, name: "Emma Davis", points: 2540 },
-        { rank: 5, name: "James Wilson", points: 2410 },
-      ],
-    },
-  ];
-
   useEffect(() => {
     fetchLeaderboards();
   }, []);
@@ -43,21 +28,20 @@ export default function LeaderboardCarousel() {
         })),
       }));
 
-      // Use demo data if API returns empty or invalid data
-      const finalData =
-        transformedData.length > 0 ? transformedData : demoLeaderboards;
-
-      setLeaderboards(finalData);
-      if (finalData.length > 0) {
-        setActiveIndex(Math.floor(finalData.length / 2)); // Start in the middle
+      setLeaderboards(transformedData);
+      if (transformedData.length > 0) {
+        setActiveIndex(Math.floor(transformedData.length / 2)); // Start in the middle
       }
       setError(""); // Clear any previous errors
     } catch (err) {
-      console.warn("API failed, using demo data:", err.message);
-      // Use demo data on API failure
-      setLeaderboards(demoLeaderboards);
-      setActiveIndex(0); // Start at first item
-      setError(""); // Don't show error, use demo data instead
+      console.warn("API error:", err);
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError("Failed to load leaderboards");
+      }
+      setLeaderboards([]);
+      setActiveIndex(0);
     } finally {
       setLoading(false);
     }
@@ -84,7 +68,31 @@ export default function LeaderboardCarousel() {
     );
   }
 
-  // Always show leaderboard content (API data or demo data)
+  // Show error state if no data
+  if (!loading && (error || leaderboards.length === 0)) {
+    return (
+      <section
+        className="w-full min-h-screen md:h-screen relative overflow-hidden flex items-center"
+        style={{
+          backgroundImage: "url('/lbbg.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-7xl font-extrabold mb-12 text-white drop-shadow-lg">
+            Leaderboards
+          </h2>
+          <div className="text-2xl text-white/80">
+            {error || "No leaderboards available"}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Show leaderboard content
   return (
     <section
       className="w-full min-h-screen md:h-screen relative overflow-hidden flex items-start pt-8 md:pt-0 md:items-center"

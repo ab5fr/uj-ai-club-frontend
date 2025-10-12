@@ -320,6 +320,8 @@ function ChallengesAdmin() {
   const [form, setForm] = useState({
     title: "",
     description: "",
+    week: "",
+    challengeUrl: "",
     startDate: "",
     endDate: "",
     visible: true,
@@ -347,6 +349,8 @@ function ChallengesAdmin() {
     const payload = {
       title: form.title,
       description: form.description,
+      week: form.week ? parseInt(form.week) : null,
+      challengeUrl: form.challengeUrl || null,
       startDate: form.startDate || null,
       endDate: form.endDate || null,
       visible: form.visible,
@@ -369,6 +373,8 @@ function ChallengesAdmin() {
     setForm({
       title: c.title || "",
       description: c.description || "",
+      week: c.week || "",
+      challengeUrl: c.challengeUrl || "",
       startDate: c.startDate ? c.startDate.substring(0, 10) : "",
       endDate: c.endDate ? c.endDate.substring(0, 10) : "",
       visible: c.visible !== false && c.isHidden !== true,
@@ -399,6 +405,8 @@ function ChallengesAdmin() {
     setForm({
       title: "",
       description: "",
+      week: "",
+      challengeUrl: "",
       startDate: "",
       endDate: "",
       visible: true,
@@ -435,16 +443,29 @@ function ChallengesAdmin() {
             required
           />
           <Input
-            label="Start Date"
-            type="date"
-            value={form.startDate}
-            onChange={(v) => setForm({ ...form, startDate: v })}
+            label="Week (Number)"
+            type="number"
+            value={form.week}
+            onChange={(v) => setForm({ ...form, week: v })}
+            placeholder="e.g., 5"
           />
           <Textarea
             label="Description"
             value={form.description}
             onChange={(v) => setForm({ ...form, description: v })}
             className="md:col-span-2"
+          />
+          <Input
+            label="Challenge URL"
+            value={form.challengeUrl}
+            onChange={(v) => setForm({ ...form, challengeUrl: v })}
+            placeholder="e.g., https://github.com/uj-ai-club/challenge-5"
+          />
+          <Input
+            label="Start Date"
+            type="date"
+            value={form.startDate}
+            onChange={(v) => setForm({ ...form, startDate: v })}
           />
           <Input
             label="End Date"

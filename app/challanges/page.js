@@ -21,54 +21,6 @@ function CompetitionsContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Demo data for preview
-  const demoLeaderboardData = [
-    { rank: 1, name: "Ahmed Al-Mansour", points: 2450, avatar: "/avatar1.jpg" },
-    { rank: 2, name: "Sara Al-Qahtani", points: 2380, avatar: "/avatar2.jpg" },
-    {
-      rank: 3,
-      name: "Mohammed bin Saleh",
-      points: 2210,
-      avatar: "/avatar3.jpg",
-    },
-    {
-      rank: 4,
-      name: "Fatima Al-Zahrani",
-      points: 2100,
-      avatar: "/avatar4.jpg",
-    },
-    { rank: 5, name: "Khalid Al-Otaibi", points: 2050, avatar: "/avatar5.jpg" },
-    { rank: 6, name: "Noura Al-Harbi", points: 1980, avatar: "/avatar6.jpg" },
-    {
-      rank: 7,
-      name: "Abdullah Al-Shehri",
-      points: 1920,
-      avatar: "/avatar7.jpg",
-    },
-    { rank: 8, name: "Lama Al-Mutairi", points: 1850, avatar: "/avatar8.jpg" },
-  ];
-
-  const demoChallenge = {
-    week: 5,
-    title: "Neural Network from Scratch",
-    description:
-      "Build a simple neural network using only NumPy. Implement forward propagation, backpropagation, and gradient descent. Train your network on the MNIST dataset and achieve at least 85% accuracy. Document your approach and share your insights on optimization techniques.",
-    challengeUrl: "https://github.com/uj-ai-club/challenge-week-5",
-  };
-
-  const demoProfile = {
-    rank: 1,
-    name: "Ahmed Al-Mansour",
-    points: 2450,
-    image: "/avatar1.jpg",
-    stats: {
-      bestSubject: "Neural Networks",
-      improveable: "Data Preprocessing",
-      quickestHunter: 3,
-      challengesTaken: 12,
-    },
-  };
-
   useEffect(() => {
     fetchData();
   }, [activeTab]);
@@ -80,27 +32,29 @@ function CompetitionsContent() {
 
       if (activeTab === "leaderboard") {
         const data = await challengesApi.getLeaderboard();
-        setLeaderboardData(data.length > 0 ? data : demoLeaderboardData);
+        setLeaderboardData(data || []);
       } else if (activeTab === "challenges") {
         const data = await challengesApi.getCurrent();
-        // API returns the challenge object directly
-        setCurrentChallenge(data || demoChallenge);
+        setCurrentChallenge(data || null);
       } else if (activeTab === "profile") {
         const data = await userApi.getProfile();
-        // API returns profile object with rank, name, points, image, stats
-        setUserProfile(data || demoProfile);
+        setUserProfile(data || null);
       }
     } catch (err) {
-      console.warn("API failed, using demo data:", err);
-      // Fallback to demo data on error
-      if (activeTab === "leaderboard") {
-        setLeaderboardData(demoLeaderboardData);
-      } else if (activeTab === "challenges") {
-        setCurrentChallenge(demoChallenge);
-      } else if (activeTab === "profile") {
-        setUserProfile(demoProfile);
+      console.warn("API error:", err);
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError("Failed to load data");
       }
-      setError(""); // Don't show error to user, use demo data silently
+      // Clear data on error
+      if (activeTab === "leaderboard") {
+        setLeaderboardData([]);
+      } else if (activeTab === "challenges") {
+        setCurrentChallenge(null);
+      } else if (activeTab === "profile") {
+        setUserProfile(null);
+      }
     } finally {
       setLoading(false);
     }
