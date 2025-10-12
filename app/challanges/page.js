@@ -57,16 +57,14 @@ function CompetitionsContent() {
   };
 
   const demoProfile = {
-    name: "Ahmed Al-Mansour",
-    email: "ahmed.almansour@example.com",
-    university: "King Saud University",
     rank: 1,
+    name: "Ahmed Al-Mansour",
     points: 2450,
     image: "/avatar1.jpg",
     stats: {
       bestSubject: "Neural Networks",
       improveable: "Data Preprocessing",
-      quickestHunter: "Week 3",
+      quickestHunter: 3,
       challengesTaken: 12,
     },
   };
@@ -85,18 +83,16 @@ function CompetitionsContent() {
         setLeaderboardData(data.length > 0 ? data : demoLeaderboardData);
       } else if (activeTab === "challenges") {
         const data = await challengesApi.getCurrent();
+        // API returns the challenge object directly
         setCurrentChallenge(data || demoChallenge);
       } else if (activeTab === "profile") {
         const data = await userApi.getProfile();
+        // API returns profile object with rank, name, points, image, stats
         setUserProfile(data || demoProfile);
       }
     } catch (err) {
-      if (err instanceof ApiError) {
-        setError(err.message);
-      } else {
-        setError("Failed to load data");
-      }
-      // Fallback to demo data on error for leaderboard
+      console.warn("API failed, using demo data:", err);
+      // Fallback to demo data on error
       if (activeTab === "leaderboard") {
         setLeaderboardData(demoLeaderboardData);
       } else if (activeTab === "challenges") {
@@ -104,6 +100,7 @@ function CompetitionsContent() {
       } else if (activeTab === "profile") {
         setUserProfile(demoProfile);
       }
+      setError(""); // Don't show error to user, use demo data silently
     } finally {
       setLoading(false);
     }
@@ -199,13 +196,23 @@ function CompetitionsContent() {
               }}
               className="flex-shrink-0 w-20 h-20 rounded-3xl bg-[#191919] hover:bg-[#1a1a1a] transition-all flex items-center justify-center"
             >
-              <span className="text-white text-xs uppercase tracking-wider transform -rotate-90">
-                {activeTab === "leaderboard"
-                  ? "Profile"
-                  : activeTab === "challenges"
-                  ? "Leaderboard"
-                  : "Challenges"}
-              </span>
+              <img
+                src={
+                  activeTab === "leaderboard"
+                    ? "/profile.png"
+                    : activeTab === "challenges"
+                    ? "/leadrbrd-icon.png"
+                    : "/hunt.png"
+                }
+                alt={
+                  activeTab === "leaderboard"
+                    ? "Profile"
+                    : activeTab === "challenges"
+                    ? "Leaderboard"
+                    : "Challenges"
+                }
+                className="w-8 h-8 object-contain"
+              />
             </button>
 
             {/* Center Active Tab */}
@@ -230,13 +237,23 @@ function CompetitionsContent() {
               }}
               className="flex-shrink-0 w-20 h-20 rounded-3xl bg-[#191919] hover:bg-[#1a1a1a] transition-all flex items-center justify-center"
             >
-              <span className="text-white text-xs uppercase tracking-wider transform rotate-90">
-                {activeTab === "leaderboard"
-                  ? "Challenges"
-                  : activeTab === "challenges"
-                  ? "Profile"
-                  : "Leaderboard"}
-              </span>
+              <img
+                src={
+                  activeTab === "leaderboard"
+                    ? "/hunt.png"
+                    : activeTab === "challenges"
+                    ? "/profile.png"
+                    : "/leadrbrd-icon.png"
+                }
+                alt={
+                  activeTab === "leaderboard"
+                    ? "Challenges"
+                    : activeTab === "challenges"
+                    ? "Profile"
+                    : "Leaderboard"
+                }
+                className="w-8 h-8 object-contain"
+              />
             </button>
           </div>
         </div>

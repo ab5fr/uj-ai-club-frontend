@@ -22,9 +22,8 @@ export default function Home() {
           <div className="relative h-full w-full">
             {/* Text Block */}
             <div className="flex flex-col max-w-5xl md:pr-[22rem] h-full justify-start pt-12 md:pt-24">
-              <h1 className="text-5xl sm:text-5xl mb-4 leading-tight tracking-tight font-extrabold">
-                <span className="block">Choose Your</span>
-                <span className="block">Path</span>
+              <h1 className="text-5xl sm:text-5xl md:text-7xl lg:text-8xl mb-4 leading-tight tracking-tight font-extrabold md:whitespace-nowrap">
+                Choose Your Path
               </h1>
               <p className="text-3xl md:text-lg lg:text-3xl mt-4 md:mt-6 font-light text-gray-200/95 leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)] max-w-4xl">
                 Learn the difference between AI types we will help you whatever

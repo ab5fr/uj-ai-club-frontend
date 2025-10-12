@@ -85,12 +85,10 @@ function ResourcesAdmin() {
   const [form, setForm] = useState({
     title: "",
     provider: "",
-    coverImage: "",
+    coverImage: null,
     notionUrl: "",
     instructorName: "",
-    instructorImage: "",
-    quoteText: "",
-    quoteAuthor: "",
+    instructorImage: null,
     visible: true,
   });
 
@@ -132,12 +130,10 @@ function ResourcesAdmin() {
     setForm({
       title: r.title || "",
       provider: r.provider || "",
-      coverImage: r.coverImage || "",
+      coverImage: null, // Reset file input
       notionUrl: r.notionUrl || "",
       instructorName: r.instructor?.name || "",
-      instructorImage: r.instructor?.image || "",
-      quoteText: r.quote?.text || "",
-      quoteAuthor: r.quote?.author || "",
+      instructorImage: null, // Reset file input
       visible: r.visible !== false && r.isHidden !== true,
     });
   };
@@ -166,12 +162,10 @@ function ResourcesAdmin() {
     setForm({
       title: "",
       provider: "",
-      coverImage: "",
+      coverImage: null,
       notionUrl: "",
       instructorName: "",
-      instructorImage: "",
-      quoteText: "",
-      quoteAuthor: "",
+      instructorImage: null,
       visible: true,
     });
   };
@@ -211,10 +205,9 @@ function ResourcesAdmin() {
             onChange={(v) => setForm({ ...form, provider: v })}
             required
           />
-          <Input
-            label="Cover Image URL"
-            value={form.coverImage}
-            onChange={(v) => setForm({ ...form, coverImage: v })}
+          <FileInput
+            label="Cover Image"
+            onChange={(file) => setForm({ ...form, coverImage: file })}
           />
           <Input
             label="Notion URL"
@@ -226,20 +219,9 @@ function ResourcesAdmin() {
             value={form.instructorName}
             onChange={(v) => setForm({ ...form, instructorName: v })}
           />
-          <Input
-            label="Instructor Image URL"
-            value={form.instructorImage}
-            onChange={(v) => setForm({ ...form, instructorImage: v })}
-          />
-          <Input
-            label="Quote Text"
-            value={form.quoteText}
-            onChange={(v) => setForm({ ...form, quoteText: v })}
-          />
-          <Input
-            label="Quote Author"
-            value={form.quoteAuthor}
-            onChange={(v) => setForm({ ...form, quoteAuthor: v })}
+          <FileInput
+            label="Instructor Image"
+            onChange={(file) => setForm({ ...form, instructorImage: file })}
           />
         </div>
         <div className="mt-4 flex items-center justify-between">
@@ -612,22 +594,38 @@ function Textarea({
   );
 }
 
+function FileInput({ label, onChange, className = "" }) {
+  return (
+    <label className={`block ${className}`}>
+      {label && (
+        <span className="block text-sm text-gray-400 mb-1">{label}</span>
+      )}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => onChange(e.target.files[0] || null)}
+        className="w-full bg-[#0a1225] border-2 border-blue-900/30 rounded-xl py-3 px-4 text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 focus:outline-none focus:border-blue-700/50"
+      />
+    </label>
+  );
+}
+
 function toResourcePayload(form) {
-  return {
-    title: form.title,
-    provider: form.provider,
-    coverImage: form.coverImage || null,
-    notionUrl: form.notionUrl || null,
-    instructor:
-      form.instructorName || form.instructorImage
-        ? { name: form.instructorName || "", image: form.instructorImage || "" }
-        : null,
-    quote:
-      form.quoteText || form.quoteAuthor
-        ? { text: form.quoteText || "", author: form.quoteAuthor || "" }
-        : null,
-    visible: form.visible,
-  };
+  const payload = new FormData();
+  payload.append("title", form.title);
+  payload.append("provider", form.provider);
+  payload.append("notionUrl", form.notionUrl || "");
+  payload.append("instructorName", form.instructorName || "");
+  payload.append("visible", form.visible);
+
+  if (form.coverImage) {
+    payload.append("coverImage", form.coverImage);
+  }
+  if (form.instructorImage) {
+    payload.append("instructorImage", form.instructorImage);
+  }
+
+  return payload;
 }
 
 function fmtDate(s) {

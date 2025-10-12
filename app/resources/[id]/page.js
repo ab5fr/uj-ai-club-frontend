@@ -104,7 +104,7 @@ export default function ResourcePage({ params }) {
           </div>
 
           {/* Quote Box */}
-          <div className="bg-[#7CD0F9] rounded-3xl p-6 max-w-md mt-8">
+          <div className="hidden md:block bg-[#7CD0F9] rounded-3xl p-6 max-w-md mt-8">
             <p className="text-white text-xl font-medium mb-2">
               {resource.quote.text}
             </p>

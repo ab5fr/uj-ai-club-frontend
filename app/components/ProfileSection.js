@@ -1,3 +1,5 @@
+import { getImageUrl } from "@/lib/api";
+
 export default function ProfileSection({ userProfile }) {
   const StatCard = ({ label, value, isHighlighted = false }) => (
     <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 flex justify-between items-center">
@@ -29,7 +31,7 @@ export default function ProfileSection({ userProfile }) {
         </div>
         {userProfile.image && (
           <img
-            src={userProfile.image}
+            src={getImageUrl(userProfile.image)}
             alt={userProfile.name}
             className="w-16 h-16 rounded-full object-cover border-2 border-gray-700"
           />
