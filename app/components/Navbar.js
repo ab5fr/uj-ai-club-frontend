@@ -16,6 +16,12 @@ export default function Navbar() {
   const isChallenges = pathname?.startsWith("/challanges");
   const { user, isAuthenticated, logout } = useAuth();
 
+  // Check if user is admin
+  const isAdmin = () => {
+    if (!user) return false;
+    return user.role === "admin" || user.isAdmin === true;
+  };
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -83,6 +89,15 @@ export default function Navbar() {
           >
             AI Specializations
           </Link>
+          {/* Admin Link - only show for admins */}
+          {isAuthenticated() && isAdmin() && (
+            <Link
+              href="/admin"
+              className="font-medium text-yellow-400 hover:text-yellow-300 transition-colors"
+            >
+              Admin
+            </Link>
+          )}
           {/* <Link
             href="/the-club"
             className="font-medium hover:text-blue-400 transition-colors"
@@ -251,6 +266,17 @@ export default function Navbar() {
           >
             AI Specializations
           </Link>
+
+          {/* Admin Link - only show for admins */}
+          {isAuthenticated() && isAdmin() && (
+            <Link
+              href="/admin"
+              onClick={() => setMobileMenuOpen(false)}
+              className="font-medium text-yellow-400 hover:text-yellow-300 transition-colors text-lg"
+            >
+              Admin
+            </Link>
+          )}
 
           {/* Mobile Auth Buttons */}
           <div className="flex flex-col gap-3 mt-6">
