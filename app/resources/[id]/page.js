@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { resourcesApi, ApiError } from "@/lib/api";
+import { resourcesApi, ApiError, getImageUrl } from "@/lib/api";
 
 export default function ResourcePage({ params }) {
   const [resource, setResource] = useState(null);
@@ -92,7 +92,7 @@ export default function ResourcePage({ params }) {
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full overflow-hidden">
                 <img
-                  src={resource.instructor.image}
+                  src={getImageUrl(resource.instructor.image)}
                   alt={resource.instructor.name}
                   className="w-full h-full object-cover"
                 />

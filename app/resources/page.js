@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { resourcesApi, ApiError } from "@/lib/api";
+import { resourcesApi, ApiError, getImageUrl } from "@/lib/api";
 
 export default function ResourcesPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -106,7 +106,7 @@ export default function ResourcesPage() {
                 {/* Card Image */}
                 <div className="h-48 relative overflow-hidden">
                   <img
-                    src={resource.coverImage}
+                    src={getImageUrl(resource.coverImage)}
                     alt={resource.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
@@ -125,7 +125,7 @@ export default function ResourcesPage() {
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-900/50">
                       <img
-                        src={resource.instructor.image}
+                        src={getImageUrl(resource.instructor.image)}
                         alt={resource.instructor.name}
                         className="w-full h-full object-cover"
                       />
