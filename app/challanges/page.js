@@ -21,6 +21,56 @@ function CompetitionsContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Demo data for preview
+  const demoLeaderboardData = [
+    { rank: 1, name: "Ahmed Al-Mansour", points: 2450, avatar: "/avatar1.jpg" },
+    { rank: 2, name: "Sara Al-Qahtani", points: 2380, avatar: "/avatar2.jpg" },
+    {
+      rank: 3,
+      name: "Mohammed bin Saleh",
+      points: 2210,
+      avatar: "/avatar3.jpg",
+    },
+    {
+      rank: 4,
+      name: "Fatima Al-Zahrani",
+      points: 2100,
+      avatar: "/avatar4.jpg",
+    },
+    { rank: 5, name: "Khalid Al-Otaibi", points: 2050, avatar: "/avatar5.jpg" },
+    { rank: 6, name: "Noura Al-Harbi", points: 1980, avatar: "/avatar6.jpg" },
+    {
+      rank: 7,
+      name: "Abdullah Al-Shehri",
+      points: 1920,
+      avatar: "/avatar7.jpg",
+    },
+    { rank: 8, name: "Lama Al-Mutairi", points: 1850, avatar: "/avatar8.jpg" },
+  ];
+
+  const demoChallenge = {
+    week: 5,
+    title: "Neural Network from Scratch",
+    description:
+      "Build a simple neural network using only NumPy. Implement forward propagation, backpropagation, and gradient descent. Train your network on the MNIST dataset and achieve at least 85% accuracy. Document your approach and share your insights on optimization techniques.",
+    challengeUrl: "https://github.com/uj-ai-club/challenge-week-5",
+  };
+
+  const demoProfile = {
+    name: "Ahmed Al-Mansour",
+    email: "ahmed.almansour@example.com",
+    university: "King Saud University",
+    rank: 1,
+    points: 2450,
+    image: "/avatar1.jpg",
+    stats: {
+      bestSubject: "Neural Networks",
+      improveable: "Data Preprocessing",
+      quickestHunter: "Week 3",
+      challengesTaken: 12,
+    },
+  };
+
   useEffect(() => {
     fetchData();
   }, [activeTab]);
@@ -32,19 +82,27 @@ function CompetitionsContent() {
 
       if (activeTab === "leaderboard") {
         const data = await challengesApi.getLeaderboard();
-        setLeaderboardData(data);
+        setLeaderboardData(data.length > 0 ? data : demoLeaderboardData);
       } else if (activeTab === "challenges") {
         const data = await challengesApi.getCurrent();
-        setCurrentChallenge(data);
+        setCurrentChallenge(data || demoChallenge);
       } else if (activeTab === "profile") {
         const data = await userApi.getProfile();
-        setUserProfile(data);
+        setUserProfile(data || demoProfile);
       }
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);
       } else {
         setError("Failed to load data");
+      }
+      // Fallback to demo data on error for leaderboard
+      if (activeTab === "leaderboard") {
+        setLeaderboardData(demoLeaderboardData);
+      } else if (activeTab === "challenges") {
+        setCurrentChallenge(demoChallenge);
+      } else if (activeTab === "profile") {
+        setUserProfile(demoProfile);
       }
     } finally {
       setLoading(false);
@@ -88,8 +146,8 @@ function CompetitionsContent() {
             T
           </p>
         </div>{" "}
-        {/* Navigation Buttons */}
-        <div className="flex justify-center gap-1 mb-20">
+        {/* Navigation Buttons - Desktop */}
+        <div className="hidden md:flex justify-center gap-1 mb-20">
           <button
             onClick={() => setActiveTab("leaderboard")}
             className={`py-3 px-10 text-white font-light uppercase tracking-wider transition-colors ${
@@ -126,6 +184,61 @@ function CompetitionsContent() {
           >
             Profile
           </button>
+        </div>
+        {/* Navigation Carousel - Mobile */}
+        <div className="md:hidden mb-12">
+          <div className="flex items-center justify-center gap-4 px-4">
+            {/* Left Tab */}
+            <button
+              onClick={() => {
+                const tabs = ["leaderboard", "challenges", "profile"];
+                const currentIndex = tabs.indexOf(activeTab);
+                const prevIndex =
+                  currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
+                setActiveTab(tabs[prevIndex]);
+              }}
+              className="flex-shrink-0 w-20 h-20 rounded-3xl bg-[#191919] hover:bg-[#1a1a1a] transition-all flex items-center justify-center"
+            >
+              <span className="text-white text-xs uppercase tracking-wider transform -rotate-90">
+                {activeTab === "leaderboard"
+                  ? "Profile"
+                  : activeTab === "challenges"
+                  ? "Leaderboard"
+                  : "Challenges"}
+              </span>
+            </button>
+
+            {/* Center Active Tab */}
+            <div className="flex-1 max-w-xs h-24 rounded-3xl bg-[#08090a] flex items-center justify-center px-6">
+              <span className="text-white text-lg font-semibold uppercase tracking-wider">
+                {activeTab === "leaderboard"
+                  ? "Leaderboard"
+                  : activeTab === "challenges"
+                  ? "Challenges"
+                  : "Profile"}
+              </span>
+            </div>
+
+            {/* Right Tab */}
+            <button
+              onClick={() => {
+                const tabs = ["leaderboard", "challenges", "profile"];
+                const currentIndex = tabs.indexOf(activeTab);
+                const nextIndex =
+                  currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
+                setActiveTab(tabs[nextIndex]);
+              }}
+              className="flex-shrink-0 w-20 h-20 rounded-3xl bg-[#191919] hover:bg-[#1a1a1a] transition-all flex items-center justify-center"
+            >
+              <span className="text-white text-xs uppercase tracking-wider transform rotate-90">
+                {activeTab === "leaderboard"
+                  ? "Challenges"
+                  : activeTab === "challenges"
+                  ? "Profile"
+                  : "Leaderboard"}
+              </span>
+            </button>
+          </div>
         </div>
         {/* Content Section */}
         <div className="w-full">
