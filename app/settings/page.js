@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
-import { userApi, ApiError } from "@/lib/api";
+import { userApi, ApiError, getImageUrl } from "@/lib/api";
 
 function SettingsContent() {
   const { user, login } = useAuth();
@@ -22,7 +22,9 @@ function SettingsContent() {
     confirmPassword: "",
   });
 
-  const [previewImage, setPreviewImage] = useState(user?.image || null);
+  const [previewImage, setPreviewImage] = useState(
+    user?.image ? getImageUrl(user.image) : null
+  );
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

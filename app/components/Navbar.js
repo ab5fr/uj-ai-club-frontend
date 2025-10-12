@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { HomeIcon } from "@heroicons/react/24/solid";
 import { useAuth } from "@/contexts/AuthContext";
+import { getImageUrl } from "@/lib/api";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -123,7 +124,7 @@ export default function Navbar() {
               >
                 {user?.image ? (
                   <img
-                    src={user.image}
+                    src={getImageUrl(user.image)}
                     alt="Profile"
                     className="w-full h-full rounded-full object-cover"
                   />
@@ -286,7 +287,7 @@ export default function Navbar() {
                   <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
                     {user?.image ? (
                       <img
-                        src={user.image}
+                        src={getImageUrl(user.image)}
                         alt="Profile"
                         className="w-full h-full rounded-full object-cover"
                       />
