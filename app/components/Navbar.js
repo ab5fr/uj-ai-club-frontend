@@ -78,18 +78,30 @@ export default function Navbar() {
           >
             Resources
           </Link>
+          <Link
+            href="/roadmap"
+            className="font-medium hover:text-blue-400 transition-colors"
+          >
+            Roadmap
+          </Link>
+          <Link
+            href="/notebook-demo"
+            className="font-medium hover:text-blue-400 transition-colors"
+          >
+            Notebook
+          </Link>
           {/* <Link
             href="/learning-plans"
             className="font-medium hover:text-blue-400 transition-colors"
           >
             Learning Plans
           </Link> */}
-          <Link
+          {/* <Link
             href="/ai-specializations"
             className="font-medium hover:text-blue-400 transition-colors"
           >
             AI Specializations
-          </Link>
+          </Link> */}
           {/* Admin Link - only show for admins */}
           {isAuthenticated() && isAdmin() && (
             <Link
@@ -261,12 +273,26 @@ export default function Navbar() {
             Resources
           </Link>
           <Link
+            href="/roadmap"
+            onClick={() => setMobileMenuOpen(false)}
+            className="font-medium hover:text-blue-400 transition-colors text-lg"
+          >
+            Roadmap
+          </Link>
+          <Link
+            href="/notebook-demo"
+            onClick={() => setMobileMenuOpen(false)}
+            className="font-medium hover:text-blue-400 transition-colors text-lg"
+          >
+            Notebook
+          </Link>
+          {/* <Link
             href="/ai-specializations"
             onClick={() => setMobileMenuOpen(false)}
             className="font-medium hover:text-blue-400 transition-colors text-lg"
           >
             AI Specializations
-          </Link>
+          </Link> */}
 
           {/* Admin Link - only show for admins */}
           {isAuthenticated() && isAdmin() && (
