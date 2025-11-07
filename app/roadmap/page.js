@@ -264,7 +264,7 @@ export default function RoadmapPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 relative overflow-hidden">
       {/* Ocean Depth Overlay - Changes with scroll */}
-      <div 
+      <div
         className="fixed inset-0 pointer-events-none z-[1] transition-opacity duration-300"
         style={{
           background: `linear-gradient(to bottom, 
@@ -281,13 +281,15 @@ export default function RoadmapPage() {
             key={i}
             className="absolute rounded-full bg-cyan-300/20 border border-cyan-400/30"
             style={{
-              width: Math.random() * 40 + 15 + 'px',
-              height: Math.random() * 40 + 15 + 'px',
-              left: Math.random() * 100 + '%',
-              bottom: '-50px',
-              animation: `bubbleFloat ${Math.random() * 8 + 6}s linear infinite`,
+              width: Math.random() * 40 + 15 + "px",
+              height: Math.random() * 40 + 15 + "px",
+              left: Math.random() * 100 + "%",
+              bottom: "-50px",
+              animation: `bubbleFloat ${
+                Math.random() * 8 + 6
+              }s linear infinite`,
               animationDelay: `${Math.random() * 5}s`,
-              boxShadow: '0 0 15px rgba(34, 211, 238, 0.3)',
+              boxShadow: "0 0 15px rgba(34, 211, 238, 0.3)",
             }}
           />
         ))}
@@ -301,13 +303,15 @@ export default function RoadmapPage() {
               opacity: 0.6;
             }
             50% {
-              transform: translateY(-50vh) translateX(${Math.random() * 100 - 50}px) scale(1);
+              transform: translateY(-50vh)
+                translateX(${Math.random() * 100 - 50}px) scale(1);
             }
             90% {
               opacity: 0.4;
             }
             100% {
-              transform: translateY(-100vh) translateX(${Math.random() * 150 - 75}px) scale(0.6);
+              transform: translateY(-100vh)
+                translateX(${Math.random() * 150 - 75}px) scale(0.6);
               opacity: 0;
             }
           }
@@ -315,7 +319,7 @@ export default function RoadmapPage() {
       </div>
 
       {/* Light Rays from Surface */}
-      <div 
+      <div
         className="fixed inset-0 pointer-events-none z-[1] opacity-20"
         style={{
           background: `repeating-linear-gradient(
@@ -325,8 +329,10 @@ export default function RoadmapPage() {
             rgba(100, 200, 255, 0.1) 80px,
             rgba(100, 200, 255, 0.1) 85px
           )`,
-          transform: `translateY(${-scrollProgress * 2}px) rotate(-10deg) scale(2)`,
-          transition: 'transform 0.3s ease-out',
+          transform: `translateY(${
+            -scrollProgress * 2
+          }px) rotate(-10deg) scale(2)`,
+          transition: "transform 0.3s ease-out",
         }}
       ></div>
 
@@ -337,9 +343,11 @@ export default function RoadmapPage() {
             key={i}
             className="absolute w-1 h-1 bg-cyan-400/40 rounded-full"
             style={{
-              left: Math.random() * 100 + '%',
-              top: Math.random() * 100 + '%',
-              animation: `particleDrift ${Math.random() * 15 + 10}s linear infinite`,
+              left: Math.random() * 100 + "%",
+              top: Math.random() * 100 + "%",
+              animation: `particleDrift ${
+                Math.random() * 15 + 10
+              }s linear infinite`,
               animationDelay: `${Math.random() * 5}s`,
             }}
           />
@@ -357,7 +365,8 @@ export default function RoadmapPage() {
               opacity: 0.3;
             }
             100% {
-              transform: translateY(100vh) translateX(${Math.random() * 100 - 50}px);
+              transform: translateY(100vh)
+                translateX(${Math.random() * 100 - 50}px);
               opacity: 0;
             }
           }
@@ -372,10 +381,12 @@ export default function RoadmapPage() {
             className="absolute text-2xl md:text-3xl transition-transform"
             style={{
               top: `${20 + Math.random() * 60}%`,
-              left: i % 2 === 0 ? '-50px' : 'calc(100% + 50px)',
-              animation: `swimFish${i % 2 === 0 ? 'Right' : 'Left'} ${Math.random() * 20 + 15}s linear infinite`,
+              left: i % 2 === 0 ? "-50px" : "calc(100% + 50px)",
+              animation: `swimFish${i % 2 === 0 ? "Right" : "Left"} ${
+                Math.random() * 20 + 15
+              }s linear infinite`,
               animationDelay: `${Math.random() * 10}s`,
-              transform: i % 2 === 0 ? 'scaleX(1)' : 'scaleX(-1)',
+              transform: i % 2 === 0 ? "scaleX(1)" : "scaleX(-1)",
             }}
           >
             🐟
@@ -394,7 +405,8 @@ export default function RoadmapPage() {
               opacity: 0.5;
             }
             100% {
-              transform: translateX(calc(100vw + 100px)) translateY(${Math.random() * 200 - 100}px);
+              transform: translateX(calc(100vw + 100px))
+                translateY(${Math.random() * 200 - 100}px);
               opacity: 0;
             }
           }
@@ -410,7 +422,8 @@ export default function RoadmapPage() {
               opacity: 0.5;
             }
             100% {
-              transform: translateX(calc(-100vw - 100px)) translateY(${Math.random() * 200 - 100}px) scaleX(-1);
+              transform: translateX(calc(-100vw - 100px))
+                translateY(${Math.random() * 200 - 100}px) scaleX(-1);
               opacity: 0;
             }
           }
@@ -444,7 +457,7 @@ export default function RoadmapPage() {
         <div className="h-screen flex items-center justify-center px-4 pt-20 relative">
           {/* Surface waves decoration */}
           <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-cyan-500/10 to-transparent pointer-events-none"></div>
-          
+
           <div className="max-w-2xl text-center relative">
             <div className="inline-block mb-4">
               <div className="flex items-center gap-2 bg-blue-500/20 border border-cyan-400/30 rounded-full px-5 py-2 backdrop-blur-md">
@@ -458,13 +471,12 @@ export default function RoadmapPage() {
               AI Club Roadmap
             </h1>
             <p className="text-lg text-cyan-100 max-w-2xl mx-auto drop-shadow-lg mb-8">
-              Dive deep into our strategic roadmap and explore the depths of artificial intelligence
+              Dive deep into our strategic roadmap and explore the depths of
+              artificial intelligence
             </p>
             <div className="flex items-center justify-center gap-2 text-cyan-300 animate-bounce">
               <span className="text-2xl">⚓</span>
-              <p className="text-sm drop-shadow-lg">
-                Scroll down to descend
-              </p>
+              <p className="text-sm drop-shadow-lg">Scroll down to descend</p>
               <span className="text-2xl">⚓</span>
             </div>
           </div>
@@ -559,7 +571,7 @@ export default function RoadmapPage() {
           <div className="mt-24 text-center relative">
             {/* Ocean floor decoration */}
             <div className="absolute -bottom-20 left-0 right-0 h-40 bg-gradient-to-t from-slate-950/50 to-transparent pointer-events-none"></div>
-            
+
             <div className="max-w-2xl mx-auto bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-2xl p-8 border border-cyan-400/30 backdrop-blur-md shadow-2xl relative">
               {/* Treasure chest emoji */}
               <div className="text-5xl mb-4">🏆</div>
@@ -567,7 +579,8 @@ export default function RoadmapPage() {
                 Ready to Surface with New Skills?
               </h2>
               <p className="text-cyan-100 mb-6">
-                Join the AI Club and be part of this extraordinary deep dive into artificial intelligence
+                Join the AI Club and be part of this extraordinary deep dive
+                into artificial intelligence
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <button className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105">
