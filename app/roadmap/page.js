@@ -88,7 +88,7 @@ export default function RoadmapPage() {
 
     // Find which segment the submarine is currently on
     const currentSegment = Math.floor(pathProgress);
-    
+
     // Make submarine visible only on the current segment
     if (currentSegment !== index) {
       return { x: 0, y: 0, rotation: 0, visible: false };
@@ -337,11 +337,15 @@ export default function RoadmapPage() {
               // Determine if submarine should be flipped based on rotation
               // When rotation is between 90 and 270 degrees, the submarine is moving leftward
               let adjustedRotation = submarinePos.rotation;
-              const facingLeft = adjustedRotation > 90 || adjustedRotation < -90;
-              
+              const facingLeft =
+                adjustedRotation > 90 || adjustedRotation < -90;
+
               // If facing left, flip the submarine and adjust rotation
               if (facingLeft) {
-                adjustedRotation = adjustedRotation > 0 ? adjustedRotation - 180 : adjustedRotation + 180;
+                adjustedRotation =
+                  adjustedRotation > 0
+                    ? adjustedRotation - 180
+                    : adjustedRotation + 180;
               }
 
               return (
@@ -350,9 +354,13 @@ export default function RoadmapPage() {
                   className="absolute z-30 pointer-events-none"
                   style={{
                     left: `${(submarinePos.x / 1200) * 100}%`,
-                    top: `${(submarinePos.y / (roadmapSteps.length * 500)) * 100}%`,
-                    transform: `translate(-50%, -50%) rotate(${adjustedRotation}deg) ${facingLeft ? "scaleX(-1)" : ""}`,
-                    transition: 'transform 0.15s ease-out',
+                    top: `${
+                      (submarinePos.y / (roadmapSteps.length * 500)) * 100
+                    }%`,
+                    transform: `translate(-50%, -50%) rotate(${adjustedRotation}deg) ${
+                      facingLeft ? "scaleX(-1)" : ""
+                    }`,
+                    transition: "transform 0.15s ease-out",
                   }}
                 >
                   <div className="relative">
@@ -362,7 +370,7 @@ export default function RoadmapPage() {
                       height="60"
                       viewBox="0 0 120 60"
                       className="drop-shadow-2xl"
-                      style={{ transform: 'scaleX(-1)' }}
+                      style={{ transform: "scaleX(-1)" }}
                     >
                       {/* Main Hull */}
                       <ellipse
