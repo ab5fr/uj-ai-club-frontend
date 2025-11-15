@@ -273,26 +273,12 @@ export default function Navbar() {
             Resources
           </Link>
           <Link
-            href="/roadmap"
-            onClick={() => setMobileMenuOpen(false)}
-            className="font-medium hover:text-blue-400 transition-colors text-lg"
-          >
-            Roadmap
-          </Link>
-          <Link
-            href="/notebook-demo"
-            onClick={() => setMobileMenuOpen(false)}
-            className="font-medium hover:text-blue-400 transition-colors text-lg"
-          >
-            Notebook
-          </Link>
-          {/* <Link
             href="/ai-specializations"
             onClick={() => setMobileMenuOpen(false)}
             className="font-medium hover:text-blue-400 transition-colors text-lg"
           >
             AI Specializations
-          </Link> */}
+          </Link>
 
           {/* Admin Link - only show for admins */}
           {isAuthenticated() && isAdmin() && (
