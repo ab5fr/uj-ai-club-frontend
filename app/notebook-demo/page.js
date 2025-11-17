@@ -107,7 +107,6 @@ test_score = nn.score(X_test, y_test)
 
 print(f"Training accuracy: {train_score:.4f}")
 print(f"Test accuracy: {test_score:.4f}")
-print(f"\\nNote: TensorFlow/PyTorch are not available in browser.")
 print("For deep learning, use TensorFlow.js with JavaScript!")`,
       output: "",
       isRunning: false,
@@ -388,21 +387,10 @@ sys.stderr = StringIO()
                   <strong>Matplotlib</strong> - Data visualization
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-yellow-400">⚠</span>
-                <span>
-                  <strong>TensorFlow/PyTorch</strong> - Not available (use
-                  TensorFlow.js instead)
-                </span>
-              </div>
             </div>
             <p className="mt-4 text-gray-400 text-sm">
-              💡 Tip: All code runs in your browser using Pyodide (Python
+              💡 Note: All code runs in your browser using Pyodide (Python
               compiled to WebAssembly)
-            </p>
-            <p className="mt-2 text-gray-400 text-sm">
-              🔬 Note: For deep learning frameworks like TensorFlow or PyTorch,
-              use TensorFlow.js or ONNX Runtime Web with JavaScript
             </p>
           </div>
         )}
