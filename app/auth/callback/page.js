@@ -7,11 +7,15 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function AuthCallbackPage() {
   const [status, setStatus] = useState("processing");
   const [error, setError] = useState("");
+  const [processed, setProcessed] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login } = useAuth();
 
   useEffect(() => {
+    // Prevent multiple executions
+    if (processed) return;
+
     const handleCallback = async () => {
       // The backend handles OAuth and redirects here with token or error
       const token = searchParams.get("token");
@@ -22,23 +26,27 @@ export default function AuthCallbackPage() {
       if (error) {
         setError(decodeURIComponent(error));
         setStatus("error");
+        setProcessed(true);
         return;
       }
 
       if (!token || !user) {
         setError("Invalid authentication response from server.");
         setStatus("error");
+        setProcessed(true);
         return;
       }
 
       try {
         setStatus("processing");
-        
+
         // Parse user data from URL parameter
         const userData = JSON.parse(decodeURIComponent(user));
-        
+
         // Store token and user info
         login(userData, token);
+
+        setProcessed(true);
 
         // Check if user needs to complete profile
         if (needs_profile === "true") {
@@ -50,11 +58,12 @@ export default function AuthCallbackPage() {
         console.error("Auth callback parsing error:", err);
         setError("Failed to process authentication data.");
         setStatus("error");
+        setProcessed(true);
       }
     };
 
     handleCallback();
-  }, [searchParams, router, login]);
+  }, [searchParams, router, login, processed]);
 
   const handleRetry = () => {
     router.push("/login");
