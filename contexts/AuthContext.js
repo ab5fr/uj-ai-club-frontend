@@ -38,6 +38,11 @@ export function AuthProvider({ children }) {
     router.push("/login");
   };
 
+  const updateUser = (userData) => {
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  };
+
   const isAuthenticated = () => {
     return !!token && !!user;
   };
@@ -50,6 +55,7 @@ export function AuthProvider({ children }) {
         loading,
         login,
         logout,
+        updateUser,
         isAuthenticated,
       }}
     >
