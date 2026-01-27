@@ -34,11 +34,11 @@ export default function ResourcesPage() {
   const filteredResources = resources.filter(
     (resource) =>
       resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      resource.provider.toLowerCase().includes(searchQuery.toLowerCase())
+      resource.provider.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
-    <main className="min-h-screen bg-[#121522] text-white pt-24">
+    <main className="min-h-screen bg-[var(--color-surface-2)] text-[var(--color-text)] pt-24">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Search Bar */}
         <div className="relative mb-16 mt-8">
@@ -47,14 +47,14 @@ export default function ResourcesPage() {
             placeholder="Search resources..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#0a1225] border-2 border-blue-900/30 rounded-xl py-4 px-6 text-lg placeholder:text-gray-500 focus:outline-none focus:border-blue-700/50"
+            className="w-full bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-xl py-4 px-6 text-lg placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-strong)]"
           />
           <div className="absolute right-6 top-1/2 -translate-y-1/2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="w-6 h-6 text-gray-500"
+              className="w-6 h-6 text-[var(--color-text-muted)]"
             >
               <path d="M8.25 10.875a2.625 2.625 0 115.25 0 2.625 2.625 0 01-5.25 0z" />
               <path
@@ -73,7 +73,7 @@ export default function ResourcesPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-500/20 border border-red-500 text-red-200 px-6 py-4 rounded-2xl mb-8">
+          <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)] px-6 py-4 rounded-2xl mb-8">
             {error}
           </div>
         )}
@@ -81,14 +81,16 @@ export default function ResourcesPage() {
         {/* Loading State */}
         {loading && (
           <div className="text-center py-20">
-            <div className="text-2xl text-gray-400">Loading resources...</div>
+            <div className="text-2xl text-[var(--color-text-muted)]">
+              Loading resources...
+            </div>
           </div>
         )}
 
         {/* Empty State */}
         {!loading && !error && filteredResources.length === 0 && (
           <div className="text-center py-20">
-            <div className="text-2xl text-gray-400">
+            <div className="text-2xl text-[var(--color-text-muted)]">
               {searchQuery ? "No resources found" : "No resources available"}
             </div>
           </div>
@@ -101,7 +103,7 @@ export default function ResourcesPage() {
               <div
                 key={resource.id}
                 onClick={() => router.push(`/resources/${resource.id}`)}
-                className="bg-[#0a1225] rounded-[3rem] overflow-hidden border border-blue-900/20 hover:border-blue-700/50 transition-all group cursor-pointer"
+                className="bg-[var(--color-surface)] rounded-[3rem] overflow-hidden border border-[var(--color-border)] hover:border-[var(--color-border-strong)] transition-all group cursor-pointer"
               >
                 {/* Card Image */}
                 <div className="h-48 relative overflow-hidden">
@@ -114,23 +116,23 @@ export default function ResourcesPage() {
 
                 {/* Card Content */}
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2 text-white/90">
+                  <h3 className="text-xl font-semibold mb-2 text-[color-mix(in_srgb,var(--color-text)_90%,transparent)]">
                     {resource.title}
                   </h3>
-                  <p className="text-sm text-gray-400 mb-4">
+                  <p className="text-sm text-[var(--color-text-muted)] mb-4">
                     by {resource.provider}
                   </p>
 
                   {/* Instructor */}
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-900/50">
+                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[var(--color-border)]">
                       <img
                         src={getImageUrl(resource.instructor.image)}
                         alt={resource.instructor.name}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <span className="text-sm text-gray-300">
+                    <span className="text-sm text-[var(--color-text-muted)]">
                       {resource.instructor.name}
                     </span>
                   </div>

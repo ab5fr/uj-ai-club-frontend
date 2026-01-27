@@ -21,6 +21,7 @@ function AuthCallbackContent() {
       const token = searchParams.get("token");
       const user = searchParams.get("user");
       const needs_profile = searchParams.get("needs_profile_completion");
+      const needs_password = searchParams.get("needs_password");
       const error = searchParams.get("error");
 
       if (error) {
@@ -48,8 +49,8 @@ function AuthCallbackContent() {
 
         setProcessed(true);
 
-        // Check if user needs to complete profile
-        if (needs_profile === "true") {
+        // Check if user needs to complete profile (includes password setup)
+        if (needs_profile === "true" || needs_password === "true") {
           router.push("/auth/complete-profile");
         } else {
           router.push("/challanges");
@@ -80,12 +81,12 @@ function AuthCallbackContent() {
       }}
     >
       <div className="container mx-auto px-4 max-w-2xl">
-        <div className="bg-[#0a1225]/60 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-blue-900/20 text-center">
+        <div className="bg-[color-mix(in_srgb,var(--color-surface)_60%,transparent)] backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-[var(--color-border)] text-center">
           {status === "processing" && (
             <>
               <div className="w-12 h-12 mx-auto mb-6">
                 <svg
-                  className="animate-spin w-12 h-12 text-white"
+                  className="animate-spin w-12 h-12 text-[var(--color-text)]"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
@@ -104,10 +105,10 @@ function AuthCallbackContent() {
                   ></path>
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-white mb-4">
+              <h1 className="text-2xl font-bold text-[var(--color-text)] mb-4">
                 Completing Authentication
               </h1>
-              <p className="text-gray-300">
+              <p className="text-[var(--color-text-muted)]">
                 Please wait while we process your Google authentication...
               </p>
             </>
@@ -117,7 +118,7 @@ function AuthCallbackContent() {
             <>
               <div className="w-12 h-12 mx-auto mb-6">
                 <svg
-                  className="w-12 h-12 text-red-400"
+                  className="w-12 h-12 text-[var(--color-danger)]"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={2}
@@ -130,13 +131,13 @@ function AuthCallbackContent() {
                   />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-white mb-4">
+              <h1 className="text-2xl font-bold text-[var(--color-text)] mb-4">
                 Authentication Failed
               </h1>
-              <p className="text-gray-300 mb-6">{error}</p>
+              <p className="text-[var(--color-text-muted)] mb-6">{error}</p>
               <button
                 onClick={handleRetry}
-                className="px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
+                className="px-6 py-3 rounded-2xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)] text-[var(--color-text)] font-medium transition-colors"
               >
                 Try Again
               </button>
@@ -162,10 +163,10 @@ export default function AuthCallbackPage() {
           }}
         >
           <div className="container mx-auto px-4 max-w-2xl">
-            <div className="bg-[#0a1225]/60 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-blue-900/20 text-center">
+            <div className="bg-[color-mix(in_srgb,var(--color-surface)_60%,transparent)] backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-[var(--color-border)] text-center">
               <div className="w-12 h-12 mx-auto mb-6">
                 <svg
-                  className="animate-spin w-12 h-12 text-white"
+                  className="animate-spin w-12 h-12 text-[var(--color-text)]"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
@@ -184,7 +185,9 @@ export default function AuthCallbackPage() {
                   ></path>
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-white mb-4">Loading...</h1>
+              <h1 className="text-2xl font-bold text-[var(--color-text)] mb-4">
+                Loading...
+              </h1>
             </div>
           </div>
         </main>

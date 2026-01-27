@@ -59,10 +59,10 @@ export default function LeaderboardCarousel() {
         }}
       >
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-7xl font-extrabold mb-12 text-white drop-shadow-lg">
+          <h2 className="text-7xl font-extrabold mb-12 text-[var(--color-text)] drop-shadow-lg">
             Leaderboards
           </h2>
-          <div className="text-2xl text-white">Loading...</div>
+          <div className="text-2xl text-[var(--color-text)]">Loading...</div>
         </div>
       </section>
     );
@@ -81,10 +81,10 @@ export default function LeaderboardCarousel() {
         }}
       >
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-7xl font-extrabold mb-12 text-white drop-shadow-lg">
+          <h2 className="text-7xl font-extrabold mb-12 text-[var(--color-text)] drop-shadow-lg">
             Leaderboards
           </h2>
-          <div className="text-2xl text-white/80">
+          <div className="text-2xl text-[color-mix(in_srgb,var(--color-text)_80%,transparent)]">
             {error || "No leaderboards available"}
           </div>
         </div>
@@ -104,23 +104,23 @@ export default function LeaderboardCarousel() {
       }}
     >
       <div className="container mx-auto px-4 text-center w-full">
-        <h2 className="text-5xl md:text-7xl font-extrabold mb-6 md:mb-12 text-white drop-shadow-lg pt-5">
+        <h2 className="text-5xl md:text-7xl font-extrabold mb-6 md:mb-12 text-[var(--color-text)] drop-shadow-lg pt-5">
           Leaderboards
         </h2>
 
         {/* Single Leaderboard - First One */}
         <div className="flex items-center justify-center w-full">
           <div className="w-full max-w-2xl">
-            <div className="bg-[#16214470] backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-gray-700/80 shadow-2xl">
-              <h3 className="text-2xl md:text-3xl font-semibold mb-6 text-white">
+            <div className="bg-[color-mix(in_srgb,var(--color-surface-2)_70%,transparent)] backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-[var(--color-border)] shadow-2xl">
+              <h3 className="text-2xl md:text-3xl font-semibold mb-6 text-[var(--color-text)]">
                 {leaderboards[0].title}
               </h3>
 
               {/* Single Column Layout - Top 3 Only */}
               <div>
                 {/* Table Headers */}
-                <div className="bg-gray-700/60 rounded-lg p-3 mb-4">
-                  <div className="grid grid-cols-[1fr_100px] font-light text-white text-sm uppercase tracking-wider">
+                <div className="bg-[color-mix(in_srgb,var(--color-muted-surface-2)_60%,transparent)] rounded-lg p-3 mb-4">
+                  <div className="grid grid-cols-[1fr_100px] font-light text-[var(--color-text)] text-sm uppercase tracking-wider">
                     <div className="flex items-center gap-2">
                       <span className="w-12 md:w-20">Rank</span>
                       <span>Name</span>
@@ -133,17 +133,17 @@ export default function LeaderboardCarousel() {
                   {leaderboards[0].entries.slice(0, 3).map((entry) => (
                     <div
                       key={entry.rank}
-                      className="grid grid-cols-[1fr_100px] items-center bg-gray-700/50 p-4 rounded-lg hover:bg-gray-700/70 transition-colors"
+                      className="grid grid-cols-[1fr_100px] items-center bg-[color-mix(in_srgb,var(--color-muted-surface-2)_50%,transparent)] p-4 rounded-lg hover:bg-[color-mix(in_srgb,var(--color-muted-surface-2)_70%,transparent)] transition-colors"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-white/90 w-12 md:w-20">
+                        <span className="text-[color-mix(in_srgb,var(--color-text)_90%,transparent)] w-12 md:w-20">
                           #{entry.rank}
                         </span>
-                        <span className="text-white truncate">
+                        <span className="text-[var(--color-text)] truncate">
                           {entry.name}
                         </span>
                       </div>
-                      <span className="text-right text-[#0087d3]">
+                      <span className="text-right text-[var(--color-primary)]">
                         {entry.points}
                       </span>
                     </div>

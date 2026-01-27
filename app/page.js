@@ -25,7 +25,7 @@ export default function Home() {
               <h1 className="text-5xl sm:text-5xl md:text-7xl lg:text-8xl mb-4 leading-tight tracking-tight font-extrabold md:whitespace-nowrap">
                 Choose Your Path
               </h1>
-              <p className="text-3xl md:text-lg lg:text-3xl mt-4 md:mt-6 font-light text-gray-200/95 leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)] max-w-4xl">
+              <p className="text-3xl md:text-lg lg:text-3xl mt-4 md:mt-6 font-light text-[color-mix(in_srgb,var(--color-text)_95%,transparent)] leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)] max-w-4xl">
                 Learn the difference between AI types we will help you whatever
                 you choose
               </p>
@@ -33,7 +33,7 @@ export default function Home() {
             {/* Call To Action Button on the right */}
             <Link
               href="/ai-specializations"
-              className="hidden md:block font-extrabold absolute top-1/2 -translate-y-1/2 right-4 md:right-10 lg:right-16 xl:right-24 2xl:right-32 bg-blue-600 text-white px-12 py-5 rounded-full text-2xl hover:bg-blue-500 focus:ring-2 focus:ring-blue-400/50 focus:outline-none transition shadow-xl shadow-blue-800/30 tracking-wide"
+              className="hidden md:block font-extrabold absolute top-1/2 -translate-y-1/2 right-4 md:right-10 lg:right-16 xl:right-24 2xl:right-32 bg-[var(--color-primary)] text-[var(--color-text)] px-12 py-5 rounded-full text-2xl hover:bg-[var(--color-primary-strong)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-primary-soft)_50%,transparent)] focus:outline-none transition shadow-xl shadow-[color-mix(in_srgb,var(--color-primary-strong)_30%,transparent)] tracking-wide"
             >
               Click Here
             </Link>
@@ -44,7 +44,7 @@ export default function Home() {
           className="hidden md:block absolute left-24 z-10 text-[12rem] leading-none"
           style={{
             top: "calc(100% - 23rem)", // Position to overlap panorama
-            color: "#0087d3",
+            color: "var(--color-primary)",
           }}
         >
           {"}"}
@@ -64,12 +64,12 @@ export default function Home() {
           >
             {/* Optional: caption or overlay content can go here */}
           </div>
-          <div className="w-full h-2 bg-blue-600" />
+          <div className="w-full h-2 bg-[var(--color-primary)]" />
         </div>
 
         {/* Blue line for mobile (no panorama) */}
         <div className="md:hidden absolute bottom-0 left-0 right-0 z-20">
-          <div className="w-full h-2 bg-blue-600" />
+          <div className="w-full h-2 bg-[var(--color-primary)]" />
         </div>
       </div>
       {/* Leaderboard Section */}

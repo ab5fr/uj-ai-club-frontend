@@ -60,12 +60,12 @@ export default function ContactSection() {
       <div className="container mx-auto w-full max-w-5xl relative">
         {/* Heading */}
         <div className="mb-12 absolute right-8 md:right-12 lg:right-16 text-right">
-          <h2 className="text-6xl md:text-7xl font-extrabold text-white mb-2">
+          <h2 className="text-6xl md:text-7xl font-extrabold text-[var(--color-text)] mb-2">
             We would love
           </h2>
-          <p className="text-3xl md:text-4xl font-light text-white/90">
+          <p className="text-3xl md:text-4xl font-light text-[color-mix(in_srgb,var(--color-text)_90%,transparent)]">
             to hear from{" "}
-            <span className="font-semibold text-[#040b1f]">you</span>
+            <span className="font-semibold text-[var(--color-ink)]">you</span>
           </p>
         </div>
 
@@ -76,8 +76,8 @@ export default function ContactSection() {
             <div
               className={`px-6 py-4 rounded-2xl ${
                 status.type === "success"
-                  ? "bg-green-500/20 border border-green-500 text-green-200"
-                  : "bg-red-500/20 border border-red-500 text-red-200"
+                  ? "bg-[color-mix(in_srgb,var(--color-success)_25%,transparent)] border border-[var(--color-success)] text-[var(--color-success)]"
+                  : "bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)]"
               }`}
             >
               {status.message}
@@ -87,10 +87,10 @@ export default function ContactSection() {
           {/* Name and Email Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="relative">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-white text-lg font-bold z-10">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[var(--color-text)] text-lg font-bold z-10">
                 name = "
               </span>
-              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-white text-lg font-bold z-10">
+              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-[var(--color-text)] text-lg font-bold z-10">
                 "
               </span>
               <input
@@ -98,15 +98,15 @@ export default function ContactSection() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[#93cff0] backdrop-blur-sm text-white text-lg focus:outline-none transition-all"
+                className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[var(--color-primary-soft)] backdrop-blur-sm text-[var(--color-ink)] text-lg focus:outline-none transition-all"
                 required
               />
             </div>
             <div className="relative">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-white text-lg font-bold z-10">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[var(--color-text)] text-lg font-bold z-10">
                 email = "
               </span>
-              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-white text-lg font-bold z-10">
+              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-[var(--color-text)] text-lg font-bold z-10">
                 "
               </span>
               <input
@@ -114,7 +114,7 @@ export default function ContactSection() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[#93cff0] backdrop-blur-sm text-white text-lg focus:outline-none transition-all"
+                className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[var(--color-primary-soft)] backdrop-blur-sm text-[var(--color-ink)] text-lg focus:outline-none transition-all"
                 required
               />
             </div>
@@ -122,7 +122,7 @@ export default function ContactSection() {
 
           {/* Message Field */}
           <div className="relative">
-            <span className="absolute left-6 top-[1.7rem] -translate-y-1/2 text-white text-lg font-bold z-10">
+            <span className="absolute left-6 top-[1.7rem] -translate-y-1/2 text-[var(--color-text)] text-lg font-bold z-10">
               return {' { "'}
             </span>
             <textarea
@@ -130,10 +130,10 @@ export default function ContactSection() {
               value={formData.message}
               onChange={handleChange}
               rows={6}
-              className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[#93cff0] backdrop-blur-sm text-white text-lg focus:outline-none transition-all resize-none"
+              className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[var(--color-primary-soft)] backdrop-blur-sm text-[var(--color-ink)] text-lg focus:outline-none transition-all resize-none"
               required
             />
-            <div className="absolute bottom-4 right-4 text-white text-lg font-bold">
+            <div className="absolute bottom-4 right-4 text-[var(--color-text)] text-lg font-bold">
               {'" }'}
             </div>
           </div>
@@ -143,7 +143,7 @@ export default function ContactSection() {
             <button
               type="submit"
               disabled={loading}
-              className="px-8 py-4 bg-gray-900 hover:bg-gray-800 text-white rounded-2xl font-semibold text-lg transition-all shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-8 py-4 bg-[var(--color-ink-strong)] hover:bg-[var(--color-ink)] text-[var(--color-text)] rounded-2xl font-semibold text-lg transition-all shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Sending..." : "Send"}
             </button>

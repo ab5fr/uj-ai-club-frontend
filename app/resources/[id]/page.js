@@ -36,22 +36,24 @@ export default function ResourcePage({ params }) {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#0a1225] text-white pt-24 flex items-center justify-center">
-        <div className="text-2xl text-gray-400">Loading...</div>
+      <main className="min-h-screen bg-[var(--color-surface)] text-[var(--color-text)] pt-24 flex items-center justify-center">
+        <div className="text-2xl text-[var(--color-text-muted)]">
+          Loading...
+        </div>
       </main>
     );
   }
 
   if (error || !resource) {
     return (
-      <main className="min-h-screen bg-[#0a1225] text-white pt-24 flex items-center justify-center">
+      <main className="min-h-screen bg-[var(--color-surface)] text-[var(--color-text)] pt-24 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">
             {error || "Resource not found"}
           </h1>
           <button
             onClick={() => router.push("/resources")}
-            className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-semibold text-lg transition-all"
+            className="px-8 py-4 bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)] text-[var(--color-text)] rounded-2xl font-semibold text-lg transition-all"
           >
             Back to Resources
           </button>
@@ -66,7 +68,7 @@ export default function ResourcePage({ params }) {
 
   return (
     <main
-      className="min-h-[110vh] text-white pt-24 bg-no-repeat bg-[#121522]"
+      className="min-h-[110vh] text-[var(--color-text)] pt-24 bg-no-repeat bg-[var(--color-surface-2)]"
       style={{
         backgroundImage: "url('/project.jpg')",
         backgroundSize: "100%",
@@ -79,16 +81,18 @@ export default function ResourcePage({ params }) {
           <div className="max-w-2xl">
             {/* Notes Label */}
             <div className="relative inline-block mb-4 ml-8">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl w-50 h-15"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--color-neutral)] rounded-2xl w-50 h-15"></div>
               <span
-                className="relative text-[#0087d3] text-9xl leading-none"
+                className="relative text-[var(--color-primary)] text-9xl leading-none"
                 style={{ fontFamily: "'Freestyle Script', cursive" }}
               >
                 Notes
               </span>
             </div>
             <h1 className="text-5xl font-bold mb-4">{resource.title}</h1>
-            <p className="text-gray-400 mb-3">by {resource.provider}</p>
+            <p className="text-[var(--color-text-muted)] mb-3">
+              by {resource.provider}
+            </p>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full overflow-hidden">
                 <img
@@ -97,27 +101,29 @@ export default function ResourcePage({ params }) {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <span className="text-sm text-gray-300">
+              <span className="text-sm text-[var(--color-text-muted)]">
                 {resource.instructor.name}
               </span>
             </div>
           </div>
 
           {/* Quote Box */}
-          <div className="hidden md:block bg-[#7CD0F9] rounded-3xl p-6 max-w-md mt-8">
-            <p className="text-white text-xl font-medium mb-2">
+          <div className="hidden md:block bg-[var(--color-primary-soft)] rounded-3xl p-6 max-w-md mt-8">
+            <p className="text-[var(--color-ink)] text-xl font-medium mb-2">
               {resource.quote.text}
             </p>
-            <p className="text-white/90 text-sm">— {resource.quote.author}</p>
+            <p className="text-[color-mix(in_srgb,var(--color-ink)_90%,transparent)] text-sm">
+              — {resource.quote.author}
+            </p>
           </div>
         </div>
 
         {/* Notion Section */}
-        <div className="relative mt-12 rounded-2xl bg-[#0a1225]">
+        <div className="relative mt-12 rounded-2xl bg-[var(--color-surface)]">
           {/* Notion Logo */}
           <button
             onClick={openNotion}
-            className="absolute top-[-0.5rem] left-[-0.5rem] z-10 bg-white backdrop-blur-sm p-7 rounded-br-3xl rounded-tl-3xl transition-colors cursor-pointer"
+            className="absolute top-[-0.5rem] left-[-0.5rem] z-10 bg-[var(--color-neutral)] backdrop-blur-sm p-7 rounded-br-3xl rounded-tl-3xl transition-colors cursor-pointer"
           >
             <img src="/notion.svg" alt="Open in Notion" className="w-15 h-15" />
           </button>
@@ -125,7 +131,7 @@ export default function ResourcePage({ params }) {
           {/* Notion Embed */}
           <iframe
             src={resource.notionUrl}
-            className="w-full h-[400px] bg-white rounded-2xl"
+            className="w-full h-[400px] bg-[var(--color-neutral)] rounded-2xl"
             allowFullScreen
           />
         </div>

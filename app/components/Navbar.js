@@ -37,68 +37,68 @@ export default function Navbar() {
   if (isChallenges) {
     // Minimal nav for challenges page: only a home icon linking to '/'
     return (
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center px-6 py-4 w-full bg-transparent text-white">
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center px-6 py-4 w-full bg-transparent text-[var(--color-text)]">
         <Link href="/" aria-label="Home" className="inline-flex items-center">
-          <HomeIcon className="h-7 w-7 text-white hover:opacity-80 transition-opacity" />
+          <HomeIcon className="h-7 w-7 text-[var(--color-text)] hover:opacity-80 transition-opacity" />
         </Link>
       </nav>
     );
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-2 md:px-8 py-4 max-w-full text-white bg-[#121522] overflow-visible">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-2 md:px-8 py-4 max-w-full text-[var(--color-text)] bg-[var(--color-surface-2)] overflow-visible">
       {/* Left cluster: Logo + Links */}
       <div className="flex items-center gap-2 md:gap-10 flex-shrink-0">
         <Link href="/" className="shrink-0">
           <Image
-            src="/logo.png"
+            src="/new logo.png"
             alt="Logo"
-            width={40}
-            height={40}
-            className="md:w-[70px] md:h-[70px]"
+            width={500}
+            height={500}
+            className="md:w-[300px]"
           />
         </Link>
         {/* Desktop Navigation */}
         <div className="hidden md:flex gap-6 lg:gap-8 text-sm tracking-wide">
           <Link
             href="/"
-            className="font-medium hover:text-blue-400 transition-colors"
+            className="font-medium hover:text-[var(--color-primary)] transition-colors"
           >
             Home
           </Link>
           <Link
             href="/challanges"
-            className="font-medium hover:text-blue-400 transition-colors"
+            className="font-medium hover:text-[var(--color-primary)] transition-colors"
           >
             Challanges
           </Link>
           <Link
             href="/resources"
-            className="font-medium hover:text-blue-400 transition-colors"
+            className="font-medium hover:text-[var(--color-primary)] transition-colors"
           >
             Resources
           </Link>
           <Link
             href="/roadmap"
-            className="font-medium hover:text-blue-400 transition-colors"
+            className="font-medium hover:text-[var(--color-primary)] transition-colors"
           >
             Roadmap
           </Link>
           <Link
             href="/notebook-demo"
-            className="font-medium hover:text-blue-400 transition-colors"
+            className="font-medium hover:text-[var(--color-primary)] transition-colors"
           >
             Notebook
           </Link>
           {/* <Link
             href="/learning-plans"
-            className="font-medium hover:text-blue-400 transition-colors"
+            className="font-medium hover:text-[var(--color-primary)] transition-colors"
           >
             Learning Plans
           </Link> */}
           {/* <Link
             href="/ai-specializations"
-            className="font-medium hover:text-blue-400 transition-colors"
+            className="font-medium hover:text-[var(--color-primary)] transition-colors"
           >
             AI Specializations
           </Link> */}
@@ -106,14 +106,14 @@ export default function Navbar() {
           {isAuthenticated() && isAdmin() && (
             <Link
               href="/admin"
-              className="font-medium text-yellow-400 hover:text-yellow-300 transition-colors"
+              className="font-medium text-[var(--color-warning)] hover:text-[var(--color-accent-soft)] transition-colors"
             >
               Admin
             </Link>
           )}
           {/* <Link
             href="/the-club"
-            className="font-medium hover:text-blue-400 transition-colors"
+            className="font-medium hover:text-[var(--color-primary)] transition-colors"
           >
             The Club
           </Link> */}
@@ -124,14 +124,14 @@ export default function Navbar() {
       <div className="hidden md:flex gap-3 ml-auto items-center">
         {isAuthenticated() ? (
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-300">
+            <span className="text-sm text-[var(--color-text-muted)]">
               Welcome, {user?.fullName || user?.email}
             </span>
             {/* Profile Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-10 h-10 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-[var(--color-text)] font-semibold hover:bg-[var(--color-primary-strong)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-soft)]"
                 aria-label="Profile menu"
               >
                 {user?.image ? (
@@ -149,11 +149,11 @@ export default function Navbar() {
 
               {/* Dropdown Menu */}
               {profileDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-[#0a1225] rounded-2xl shadow-lg border border-blue-900/30 overflow-hidden z-50">
+                <div className="absolute right-0 mt-2 w-48 bg-[var(--color-surface)] rounded-2xl shadow-lg border border-[var(--color-border)] overflow-hidden z-50">
                   <Link
                     href="/settings"
                     onClick={() => setProfileDropdownOpen(false)}
-                    className="block px-4 py-3 text-white hover:bg-blue-900/20 transition-colors"
+                    className="block px-4 py-3 text-[var(--color-text)] hover:bg-[color-mix(in_srgb,var(--color-primary-strong)_20%,transparent)] transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <svg
@@ -183,7 +183,7 @@ export default function Navbar() {
                       setProfileDropdownOpen(false);
                       logout();
                     }}
-                    className="w-full text-left px-4 py-3 text-white hover:bg-red-900/20 transition-colors"
+                    className="w-full text-left px-4 py-3 text-[var(--color-text)] hover:bg-[color-mix(in_srgb,var(--color-danger)_20%,transparent)] transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <svg
@@ -210,12 +210,12 @@ export default function Navbar() {
         ) : (
           <>
             <Link href="/login">
-              <button className="px-6 py-2.5 rounded-full bg-blue-500/90 text-white hover:bg-blue-400 focus:ring-2 focus:ring-blue-300/50 focus:outline-none transition-colors shadow shadow-blue-700/30 font-medium">
+              <button className="px-6 py-2.5 rounded-full bg-[color-mix(in_srgb,var(--color-primary)_90%,transparent)] text-[var(--color-text)] hover:bg-[var(--color-primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-primary-soft)_50%,transparent)] focus:outline-none transition-colors shadow shadow-[color-mix(in_srgb,var(--color-primary-strong)_30%,transparent)] font-medium">
                 Login
               </button>
             </Link>
             <Link href="/signup">
-              <button className="px-6 py-2.5 rounded-full font-medium bg-gray-200/90 text-gray-900 hover:bg-gray-100 focus:ring-2 focus:ring-gray-300/60 focus:outline-none transition-colors shadow">
+              <button className="px-6 py-2.5 rounded-full font-medium bg-[color-mix(in_srgb,var(--color-neutral)_90%,transparent)] text-[var(--color-ink)] hover:bg-[var(--color-neutral)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-neutral)_60%,transparent)] focus:outline-none transition-colors shadow">
                 Sign Up
               </button>
             </Link>
@@ -229,21 +229,21 @@ export default function Navbar() {
         className="md:hidden flex flex-col gap-1.5 p-2 flex-shrink-0"
         aria-label="Toggle menu"
       >
-        <span className="w-5 h-0.5 bg-white transition-all"></span>
-        <span className="w-5 h-0.5 bg-white transition-all"></span>
-        <span className="w-5 h-0.5 bg-white transition-all"></span>
+        <span className="w-5 h-0.5 bg-[var(--color-text)] transition-all"></span>
+        <span className="w-5 h-0.5 bg-[var(--color-text)] transition-all"></span>
+        <span className="w-5 h-0.5 bg-[var(--color-text)] transition-all"></span>
       </button>
 
       {/* Mobile Side Menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-[#0a1225] transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed top-0 right-0 h-full w-64 bg-[var(--color-surface)] transform transition-transform duration-300 ease-in-out z-50 ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         } md:hidden`}
       >
         {/* Close Button */}
         <button
           onClick={() => setMobileMenuOpen(false)}
-          className="absolute top-4 right-4 text-white text-2xl"
+          className="absolute top-4 right-4 text-[var(--color-text)] text-2xl"
           aria-label="Close menu"
         >
           ×
@@ -254,28 +254,28 @@ export default function Navbar() {
           <Link
             href="/"
             onClick={() => setMobileMenuOpen(false)}
-            className="font-medium hover:text-blue-400 transition-colors text-lg"
+            className="font-medium hover:text-[var(--color-primary)] transition-colors text-lg"
           >
             Home
           </Link>
           <Link
             href="/challanges"
             onClick={() => setMobileMenuOpen(false)}
-            className="font-medium hover:text-blue-400 transition-colors text-lg"
+            className="font-medium hover:text-[var(--color-primary)] transition-colors text-lg"
           >
             Challanges
           </Link>
           <Link
             href="/resources"
             onClick={() => setMobileMenuOpen(false)}
-            className="font-medium hover:text-blue-400 transition-colors text-lg"
+            className="font-medium hover:text-[var(--color-primary)] transition-colors text-lg"
           >
             Resources
           </Link>
           <Link
             href="/ai-specializations"
             onClick={() => setMobileMenuOpen(false)}
-            className="font-medium hover:text-blue-400 transition-colors text-lg"
+            className="font-medium hover:text-[var(--color-primary)] transition-colors text-lg"
           >
             AI Specializations
           </Link>
@@ -285,7 +285,7 @@ export default function Navbar() {
             <Link
               href="/admin"
               onClick={() => setMobileMenuOpen(false)}
-              className="font-medium text-yellow-400 hover:text-yellow-300 transition-colors text-lg"
+              className="font-medium text-[var(--color-warning)] hover:text-[var(--color-accent-soft)] transition-colors text-lg"
             >
               Admin
             </Link>
@@ -296,7 +296,7 @@ export default function Navbar() {
             {isAuthenticated() ? (
               <>
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+                  <div className="w-10 h-10 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-[var(--color-text)] font-semibold">
                     {user?.image ? (
                       <img
                         src={getImageUrl(user.image)}
@@ -311,14 +311,14 @@ export default function Navbar() {
                       </span>
                     )}
                   </div>
-                  <span className="text-sm text-gray-300">
+                  <span className="text-sm text-[var(--color-text-muted)]">
                     {user?.fullName || user?.email}
                   </span>
                 </div>
                 <Link
                   href="/settings"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-6 py-2.5 rounded-full bg-blue-500/90 text-white hover:bg-blue-400 transition-colors font-medium text-center"
+                  className="px-6 py-2.5 rounded-full bg-[color-mix(in_srgb,var(--color-primary)_90%,transparent)] text-[var(--color-text)] hover:bg-[var(--color-primary)] transition-colors font-medium text-center"
                 >
                   Settings
                 </Link>
@@ -327,7 +327,7 @@ export default function Navbar() {
                     logout();
                     setMobileMenuOpen(false);
                   }}
-                  className="px-6 py-2.5 rounded-full bg-red-500/90 text-white hover:bg-red-400 transition-colors font-medium"
+                  className="px-6 py-2.5 rounded-full bg-[color-mix(in_srgb,var(--color-danger)_90%,transparent)] text-[var(--color-text)] hover:bg-[var(--color-danger)] transition-colors font-medium"
                 >
                   Logout
                 </button>
@@ -335,12 +335,12 @@ export default function Navbar() {
             ) : (
               <>
                 <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                  <button className="w-full px-6 py-2.5 rounded-full bg-blue-500/90 text-white hover:bg-blue-400 transition-colors font-medium">
+                  <button className="w-full px-6 py-2.5 rounded-full bg-[color-mix(in_srgb,var(--color-primary)_90%,transparent)] text-[var(--color-text)] hover:bg-[var(--color-primary)] transition-colors font-medium">
                     Login
                   </button>
                 </Link>
                 <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
-                  <button className="w-full px-6 py-2.5 rounded-full font-medium bg-gray-200/90 text-gray-900 hover:bg-gray-100 transition-colors">
+                  <button className="w-full px-6 py-2.5 rounded-full font-medium bg-[color-mix(in_srgb,var(--color-neutral)_90%,transparent)] text-[var(--color-ink)] hover:bg-[var(--color-neutral)] transition-colors">
                     Sign Up
                   </button>
                 </Link>
@@ -354,7 +354,7 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div
           onClick={() => setMobileMenuOpen(false)}
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          className="fixed inset-0 bg-[color-mix(in_srgb,var(--color-ink)_50%,transparent)] z-40 md:hidden"
         ></div>
       )}
     </nav>

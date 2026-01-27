@@ -14,9 +14,122 @@
   font-style: normal;
 }
 
+:root {
+  --color-ink: #00072c;
+  --color-ink-strong: #030870;
+  --color-primary: #0470fc;
+  --color-primary-strong: #0c34e9;
+  --color-accent: #e74904;
+  --color-neutral: #ebebed;
+
+  --color-bg: var(--color-ink);
+  --color-surface: color-mix(
+    in_srgb,
+    var(--color-ink) 82%,
+    var(--color-ink-strong)
+  );
+  --color-surface-2: color-mix(
+    in_srgb,
+    var(--color-ink) 68%,
+    var(--color-primary-strong)
+  );
+  --color-surface-3: color-mix(
+    in_srgb,
+    var(--color-ink) 54%,
+    var(--color-primary)
+  );
+  --color-surface-4: color-mix(
+    in_srgb,
+    var(--color-ink) 40%,
+    var(--color-primary)
+  );
+  --color-muted-surface: color-mix(
+    in_srgb,
+    var(--color-ink) 88%,
+    var(--color-neutral)
+  );
+  --color-muted-surface-2: color-mix(
+    in_srgb,
+    var(--color-ink) 78%,
+    var(--color-neutral)
+  );
+
+  --color-border: color-mix(
+    in_srgb,
+    var(--color-primary-strong) 35%,
+    var(--color-ink)
+  );
+  --color-border-strong: color-mix(
+    in_srgb,
+    var(--color-primary-strong) 55%,
+    var(--color-ink)
+  );
+
+  --color-text: var(--color-neutral);
+  --color-text-muted: color-mix(
+    in_srgb,
+    var(--color-neutral) 70%,
+    var(--color-ink)
+  );
+  --color-text-strong: color-mix(
+    in_srgb,
+    var(--color-neutral) 90%,
+    var(--color-primary)
+  );
+
+  --color-primary-soft: color-mix(
+    in_srgb,
+    var(--color-primary) 45%,
+    var(--color-neutral)
+  );
+  --color-primary-glow: color-mix(
+    in_srgb,
+    var(--color-primary) 70%,
+    var(--color-neutral)
+  );
+  --color-accent-strong: color-mix(
+    in_srgb,
+    var(--color-accent) 78%,
+    var(--color-primary-strong)
+  );
+  --color-accent-soft: color-mix(
+    in_srgb,
+    var(--color-accent) 55%,
+    var(--color-neutral)
+  );
+
+  --color-info: color-mix(
+    in_srgb,
+    var(--color-primary) 75%,
+    var(--color-neutral)
+  );
+  --color-info-strong: color-mix(
+    in_srgb,
+    var(--color-primary-strong) 70%,
+    var(--color-ink)
+  );
+  --color-warning: color-mix(
+    in_srgb,
+    var(--color-accent) 65%,
+    var(--color-neutral)
+  );
+  --color-danger: color-mix(in_srgb, var(--color-accent) 75%, var(--color-ink));
+  --color-success: color-mix(
+    in_srgb,
+    var(--color-primary) 40%,
+    var(--color-neutral)
+  );
+  --color-muted: color-mix(in_srgb, var(--color-neutral) 55%, var(--color-ink));
+  --color-muted-strong: color-mix(
+    in_srgb,
+    var(--color-neutral) 35%,
+    var(--color-ink)
+  );
+}
+
 body {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   min-height: 100vh;
   overflow-x: hidden;
   max-width: 100vw;

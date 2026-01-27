@@ -162,7 +162,7 @@ export default function RoadmapPage() {
           minHeight: "100%",
         }}
       >
-        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 bg-[color-mix(in_srgb,var(--color-ink)_20%,transparent)]"></div>
       </div>
 
       <div className="relative z-10">
@@ -170,10 +170,10 @@ export default function RoadmapPage() {
         <div className="relative pt-24 pb-32" ref={containerRef}>
           {/* Header */}
           <div className="text-center mb-20 px-4">
-            <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent pt-20">
+            <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-strong)] bg-clip-text text-transparent pt-20">
               AI Learning Roadmap
             </h1>
-            <p className="text-xl text-cyan-300">
+            <p className="text-xl text-[var(--color-primary-soft)]">
               Navigate your journey through the depths of AI knowledge
             </p>
           </div>
@@ -198,8 +198,16 @@ export default function RoadmapPage() {
                   x2="0%"
                   y2="100%"
                 >
-                  <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.8" />
-                  <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.4" />
+                  <stop
+                    offset="0%"
+                    stopColor="var(--color-primary)"
+                    stopOpacity="0.8"
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor="var(--color-primary-strong)"
+                    stopOpacity="0.4"
+                  />
                 </linearGradient>
               </defs>
               {/* Draw ONE continuous curved path through all circles */}
@@ -256,8 +264,14 @@ export default function RoadmapPage() {
                     cx={circleX}
                     cy={circleY}
                     r="32"
-                    fill={isActive ? "#06b6d4" : "#164e63"}
-                    stroke={isActive ? "#22d3ee" : "#155e75"}
+                    fill={
+                      isActive
+                        ? "var(--color-primary-strong)"
+                        : "var(--color-surface-3)"
+                    }
+                    stroke={
+                      isActive ? "var(--color-primary)" : "var(--color-border)"
+                    }
                     strokeWidth="4"
                     opacity={isActive ? "1" : "0.5"}
                     className="transition-all duration-700"
@@ -276,7 +290,7 @@ export default function RoadmapPage() {
                     x={circleX}
                     y={circleY + 8}
                     textAnchor="middle"
-                    fill="white"
+                    fill="var(--color-text)"
                     fontSize="24"
                     fontWeight="bold"
                     opacity={isActive ? "1" : "0.5"}
@@ -309,17 +323,17 @@ export default function RoadmapPage() {
                       width: "45%",
                     }}
                   >
-                    <div className="bg-gradient-to-br from-cyan-900/80 to-blue-900/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-cyan-500/30">
-                      <h3 className="text-2xl font-bold text-cyan-300 mb-3">
+                    <div className="bg-gradient-to-br from-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] to-[color-mix(in_srgb,var(--color-surface-3)_80%,transparent)] backdrop-blur-sm rounded-2xl p-6 border-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)]">
+                      <h3 className="text-2xl font-bold text-[var(--color-primary-soft)] mb-3">
                         {step.title}
                       </h3>
-                      <p className="text-gray-300 leading-relaxed">
+                      <p className="text-[var(--color-text-muted)] leading-relaxed">
                         {step.description}
                       </p>
 
                       {/* Decorative Corner */}
-                      <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-cyan-400/30 rounded-tr-2xl"></div>
-                      <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-cyan-400/30 rounded-bl-2xl"></div>
+                      <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)] rounded-tr-2xl"></div>
+                      <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)] rounded-bl-2xl"></div>
                     </div>
                   </div>
                 </div>
@@ -330,7 +344,7 @@ export default function RoadmapPage() {
             {roadmapSteps.map((step, index) => {
               const submarinePos = getSubmarinePosition(
                 index,
-                roadmapSteps.length
+                roadmapSteps.length,
               );
               if (!submarinePos.visible) return null;
 
@@ -378,8 +392,8 @@ export default function RoadmapPage() {
                         cy="35"
                         rx="50"
                         ry="20"
-                        fill="#fbbf24"
-                        stroke="#f59e0b"
+                        fill="var(--color-warning)"
+                        stroke="var(--color-accent)"
                         strokeWidth="2"
                       />
 
@@ -390,8 +404,8 @@ export default function RoadmapPage() {
                         width="30"
                         height="20"
                         rx="5"
-                        fill="#fbbf24"
-                        stroke="#f59e0b"
+                        fill="var(--color-warning)"
+                        stroke="var(--color-accent)"
                         strokeWidth="2"
                       />
 
@@ -401,35 +415,35 @@ export default function RoadmapPage() {
                         y1="15"
                         x2="60"
                         y2="5"
-                        stroke="#f59e0b"
+                        stroke="var(--color-accent)"
                         strokeWidth="3"
                         strokeLinecap="round"
                       />
-                      <circle cx="60" cy="5" r="3" fill="#ef4444" />
+                      <circle cx="60" cy="5" r="3" fill="var(--color-danger)" />
 
                       {/* Windows */}
                       <circle
                         cx="40"
                         cy="30"
                         r="6"
-                        fill="#60a5fa"
-                        stroke="#1e40af"
+                        fill="var(--color-primary-soft)"
+                        stroke="var(--color-primary-strong)"
                         strokeWidth="2"
                       />
                       <circle
                         cx="60"
                         cy="30"
                         r="6"
-                        fill="#60a5fa"
-                        stroke="#1e40af"
+                        fill="var(--color-primary-soft)"
+                        stroke="var(--color-primary-strong)"
                         strokeWidth="2"
                       />
                       <circle
                         cx="80"
                         cy="30"
                         r="6"
-                        fill="#60a5fa"
-                        stroke="#1e40af"
+                        fill="var(--color-primary-soft)"
+                        stroke="var(--color-primary-strong)"
                         strokeWidth="2"
                       />
 
@@ -437,8 +451,8 @@ export default function RoadmapPage() {
                       <g transform="translate(110, 35)">
                         <circle
                           r="8"
-                          fill="#94a3b8"
-                          stroke="#64748b"
+                          fill="var(--color-muted)"
+                          stroke="var(--color-muted-strong)"
                           strokeWidth="2"
                         />
                         <line
@@ -446,7 +460,7 @@ export default function RoadmapPage() {
                           y1="0"
                           x2="6"
                           y2="0"
-                          stroke="#475569"
+                          stroke="var(--color-muted-strong)"
                           strokeWidth="2"
                         />
                         <line
@@ -454,7 +468,7 @@ export default function RoadmapPage() {
                           y1="-6"
                           x2="0"
                           y2="6"
-                          stroke="#475569"
+                          stroke="var(--color-muted-strong)"
                           strokeWidth="2"
                         />
                       </g>
@@ -464,8 +478,8 @@ export default function RoadmapPage() {
                         cx="15"
                         cy="35"
                         r="8"
-                        fill="#f59e0b"
-                        stroke="#d97706"
+                        fill="var(--color-accent)"
+                        stroke="var(--color-accent-strong)"
                         strokeWidth="2"
                       />
                     </svg>
@@ -483,7 +497,7 @@ export default function RoadmapPage() {
                   cx="32"
                   cy="32"
                   r="28"
-                  stroke="#1e40af"
+                  stroke="var(--color-primary-strong)"
                   strokeWidth="4"
                   fill="none"
                 />
@@ -491,7 +505,7 @@ export default function RoadmapPage() {
                   cx="32"
                   cy="32"
                   r="28"
-                  stroke="#22d3ee"
+                  stroke="var(--color-primary)"
                   strokeWidth="4"
                   fill="none"
                   strokeDasharray={`${2 * Math.PI * 28}`}
@@ -502,7 +516,7 @@ export default function RoadmapPage() {
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-cyan-400 text-xs font-bold">
+                <span className="text-[var(--color-primary)] text-xs font-bold">
                   {Math.round(scrollProgress * 100)}%
                 </span>
               </div>

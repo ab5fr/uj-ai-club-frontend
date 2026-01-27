@@ -13,7 +13,6 @@ function SettingsContent() {
 
   const [profileForm, setProfileForm] = useState({
     fullName: user?.fullName || "",
-    email: user?.email || "",
   });
 
   const [passwordForm, setPasswordForm] = useState({
@@ -23,7 +22,7 @@ function SettingsContent() {
   });
 
   const [previewImage, setPreviewImage] = useState(
-    user?.image ? getImageUrl(user.image) : null
+    user?.image ? getImageUrl(user.image) : null,
   );
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -63,7 +62,6 @@ function SettingsContent() {
       // Update profile info
       const updatedUser = await userApi.updateProfile({
         fullName: profileForm.fullName,
-        email: profileForm.email,
         image: imageUrl,
       });
 
@@ -102,7 +100,7 @@ function SettingsContent() {
     try {
       await userApi.changePassword(
         passwordForm.currentPassword,
-        passwordForm.newPassword
+        passwordForm.newPassword,
       );
       setSuccess("Password changed successfully!");
       setPasswordForm({
@@ -122,39 +120,39 @@ function SettingsContent() {
   };
 
   return (
-    <main className="min-h-screen bg-[#121522] text-white pt-32 pb-12">
+    <main className="min-h-screen bg-[var(--color-surface-2)] text-[var(--color-text)] pt-32 pb-12">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-4xl font-bold">Settings</h1>
           <button
             onClick={() => router.back()}
-            className="px-4 py-2 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors"
+            className="px-4 py-2 rounded-xl bg-[var(--color-muted-surface-2)] hover:bg-[var(--color-muted-surface)] transition-colors"
           >
             Back
           </button>
         </div>
 
         {error && (
-          <div className="bg-red-500/20 border border-red-500 text-red-200 px-6 py-4 rounded-2xl mb-6">
+          <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)] px-6 py-4 rounded-2xl mb-6">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="bg-green-500/20 border border-green-500 text-green-200 px-6 py-4 rounded-2xl mb-6">
+          <div className="bg-[color-mix(in_srgb,var(--color-success)_25%,transparent)] border border-[var(--color-success)] text-[var(--color-success)] px-6 py-4 rounded-2xl mb-6">
             {success}
           </div>
         )}
 
         {/* Profile Settings */}
-        <section className="bg-[#0a1225] border border-blue-900/30 rounded-2xl p-6 md:p-8 mb-8">
+        <section className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 md:p-8 mb-8">
           <h2 className="text-2xl font-semibold mb-6">Profile Information</h2>
 
           <form onSubmit={handleProfileUpdate}>
             {/* Profile Picture */}
             <div className="flex flex-col md:flex-row items-center gap-6 mb-6">
               <div className="relative">
-                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-3xl overflow-hidden">
+                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-[var(--color-text)] font-semibold text-3xl overflow-hidden">
                   {previewImage ? (
                     <img
                       src={previewImage}
@@ -170,7 +168,7 @@ function SettingsContent() {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute bottom-0 right-0 w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition-colors"
+                  className="absolute bottom-0 right-0 w-10 h-10 rounded-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)] flex items-center justify-center transition-colors"
                   aria-label="Upload photo"
                 >
                   <svg
@@ -202,10 +200,10 @@ function SettingsContent() {
                 />
               </div>
               <div className="text-center md:text-left">
-                <p className="text-gray-400 text-sm mb-2">
+                <p className="text-[var(--color-text-muted)] text-sm mb-2">
                   Upload a new profile picture
                 </p>
-                <p className="text-gray-500 text-xs">
+                <p className="text-[var(--color-text-muted)] text-xs">
                   JPG, PNG or GIF. Max size 5MB
                 </p>
               </div>
@@ -214,7 +212,7 @@ function SettingsContent() {
             {/* Name and Email Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div>
-                <label className="block text-sm text-gray-400 mb-2">
+                <label className="block text-sm text-[var(--color-text-muted)] mb-2">
                   Full Name
                 </label>
                 <input
@@ -223,22 +221,19 @@ function SettingsContent() {
                   onChange={(e) =>
                     setProfileForm({ ...profileForm, fullName: e.target.value })
                   }
-                  className="w-full bg-[#0d1b3a] border-2 border-blue-900/30 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-blue-700/50"
+                  className="w-full bg-[var(--color-surface-2)] border-2 border-[var(--color-border)] rounded-xl py-3 px-4 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-border-strong)]"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-2">
+                <label className="block text-sm text-[var(--color-text-muted)] mb-2">
                   Email
                 </label>
                 <input
                   type="email"
-                  value={profileForm.email}
-                  onChange={(e) =>
-                    setProfileForm({ ...profileForm, email: e.target.value })
-                  }
-                  className="w-full bg-[#0d1b3a] border-2 border-blue-900/30 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-blue-700/50"
-                  required
+                  value={user?.email || ""}
+                  disabled
+                  className="w-full bg-[var(--color-surface-2)] border-2 border-[var(--color-border)] rounded-xl py-3 px-4 text-[color-mix(in_srgb,var(--color-text)_70%,transparent)] cursor-not-allowed"
                 />
               </div>
             </div>
@@ -246,7 +241,7 @@ function SettingsContent() {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)] text-[var(--color-text)] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Updating..." : "Update Profile"}
             </button>
@@ -254,13 +249,13 @@ function SettingsContent() {
         </section>
 
         {/* Password Change */}
-        <section className="bg-[#0a1225] border border-blue-900/30 rounded-2xl p-6 md:p-8">
+        <section className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 md:p-8">
           <h2 className="text-2xl font-semibold mb-6">Change Password</h2>
 
           <form onSubmit={handlePasswordChange}>
             <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm text-gray-400 mb-2">
+                <label className="block text-sm text-[var(--color-text-muted)] mb-2">
                   Current Password
                 </label>
                 <input
@@ -272,12 +267,12 @@ function SettingsContent() {
                       currentPassword: e.target.value,
                     })
                   }
-                  className="w-full bg-[#0d1b3a] border-2 border-blue-900/30 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-blue-700/50"
+                  className="w-full bg-[var(--color-surface-2)] border-2 border-[var(--color-border)] rounded-xl py-3 px-4 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-border-strong)]"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-2">
+                <label className="block text-sm text-[var(--color-text-muted)] mb-2">
                   New Password
                 </label>
                 <input
@@ -289,12 +284,12 @@ function SettingsContent() {
                       newPassword: e.target.value,
                     })
                   }
-                  className="w-full bg-[#0d1b3a] border-2 border-blue-900/30 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-blue-700/50"
+                  className="w-full bg-[var(--color-surface-2)] border-2 border-[var(--color-border)] rounded-xl py-3 px-4 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-border-strong)]"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-2">
+                <label className="block text-sm text-[var(--color-text-muted)] mb-2">
                   Confirm New Password
                 </label>
                 <input
@@ -306,7 +301,7 @@ function SettingsContent() {
                       confirmPassword: e.target.value,
                     })
                   }
-                  className="w-full bg-[#0d1b3a] border-2 border-blue-900/30 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-blue-700/50"
+                  className="w-full bg-[var(--color-surface-2)] border-2 border-[var(--color-border)] rounded-xl py-3 px-4 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-border-strong)]"
                   required
                 />
               </div>
@@ -315,7 +310,7 @@ function SettingsContent() {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)] text-[var(--color-text)] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Changing..." : "Change Password"}
             </button>

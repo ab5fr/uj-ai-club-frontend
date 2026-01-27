@@ -9,6 +9,8 @@ export default function CompleteProfilePage() {
   const [formData, setFormData] = useState({
     university: "",
     major: "",
+    password: "",
+    confirmPassword: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -61,19 +63,34 @@ export default function CompleteProfilePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    // Validate password
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     setLoading(true);
 
     try {
       const response = await authApi.completeProfile(
         formData.university,
-        formData.major
+        formData.major,
+        formData.password,
       );
-      updateUser(response.user);
+      if (updateUser) {
+        updateUser(response.user);
+      }
       router.push("/challanges");
     } catch (err) {
       if (err instanceof ApiError) {
         setError(
-          err.message || "Failed to complete profile. Please try again."
+          err.message || "Failed to complete profile. Please try again.",
         );
       } else {
         setError("An unexpected error occurred. Please try again.");
@@ -108,40 +125,89 @@ export default function CompleteProfilePage() {
     >
       <div className="container mx-auto px-4 max-w-2xl">
         {/* Title */}
-        <h1 className="text-4xl font-bold text-white mb-4 text-center">
+        <h1 className="text-4xl font-bold text-[var(--color-text)] mb-4 text-center">
           Complete Your Profile
         </h1>
-        <p className="text-gray-300 mb-8 text-center">
-          Welcome, {user.fullName}! Please provide your university and major to
-          complete your profile.
+        <p className="text-[var(--color-text-muted)] mb-8 text-center">
+          Welcome, {user.fullName}! Please complete your profile to continue.
         </p>
 
         {/* Profile Completion Form */}
-        <div className="bg-[#0a1225]/60 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-blue-900/20">
+        <div className="bg-[color-mix(in_srgb,var(--color-surface)_60%,transparent)] backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-[var(--color-border)]">
           {error && (
-            <div className="bg-red-500/20 border border-red-500 text-red-200 px-6 py-4 rounded-2xl mb-6">
+            <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)] px-6 py-4 rounded-2xl mb-6">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Password Field */}
+            <div>
+              <label className="block text-[var(--color-text-muted)] text-sm font-medium mb-2">
+                Create Password{" "}
+                <span className="text-[var(--color-danger)]">*</span>
+              </label>
+              <p className="text-[var(--color-text-muted)] text-xs mb-2">
+                Set a password so you can also log in with email and password
+              </p>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="At least 6 characters"
+                className="w-full px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] backdrop-blur-sm text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
+                required
+                minLength={6}
+              />
+            </div>
+
+            {/* Confirm Password Field */}
+            <div>
+              <label className="block text-[var(--color-text-muted)] text-sm font-medium mb-2">
+                Confirm Password{" "}
+                <span className="text-[var(--color-danger)]">*</span>
+              </label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm your password"
+                className="w-full px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] backdrop-blur-sm text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
+                required
+                minLength={6}
+              />
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-[var(--color-border)] my-6"></div>
+
             {/* University Field */}
             <div>
-              <label className="block text-gray-300 text-sm font-medium mb-2">
+              <label className="block text-[var(--color-text-muted)] text-sm font-medium mb-2">
                 University
               </label>
               <select
                 name="university"
                 value={formData.university}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl bg-[#0d1b3a]/80 backdrop-blur-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] backdrop-blur-sm text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
                 required
               >
-                <option value="" disabled className="bg-[#0d1b3a]">
+                <option
+                  value=""
+                  disabled
+                  className="bg-[var(--color-surface-2)]"
+                >
                   Select your university
                 </option>
                 {universities.map((uni, index) => (
-                  <option key={index} value={uni} className="bg-[#0d1b3a]">
+                  <option
+                    key={index}
+                    value={uni}
+                    className="bg-[var(--color-surface-2)]"
+                  >
                     {uni}
                   </option>
                 ))}
@@ -150,21 +216,29 @@ export default function CompleteProfilePage() {
 
             {/* Major Field */}
             <div>
-              <label className="block text-gray-300 text-sm font-medium mb-2">
+              <label className="block text-[var(--color-text-muted)] text-sm font-medium mb-2">
                 Major / Field of Study
               </label>
               <select
                 name="major"
                 value={formData.major}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl bg-[#0d1b3a]/80 backdrop-blur-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] backdrop-blur-sm text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
                 required
               >
-                <option value="" disabled className="bg-[#0d1b3a]">
+                <option
+                  value=""
+                  disabled
+                  className="bg-[var(--color-surface-2)]"
+                >
                   Select your major
                 </option>
                 {majors.map((major, index) => (
-                  <option key={index} value={major} className="bg-[#0d1b3a]">
+                  <option
+                    key={index}
+                    value={major}
+                    className="bg-[var(--color-surface-2)]"
+                  >
                     {major}
                   </option>
                 ))}
@@ -175,7 +249,7 @@ export default function CompleteProfilePage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-6 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-6 py-4 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)] text-[var(--color-text)] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Completing Profile..." : "Complete Profile"}
             </button>

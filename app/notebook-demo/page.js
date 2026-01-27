@@ -176,7 +176,7 @@ print("For deep learning, use TensorFlow.js with JavaScript!")`,
     if (!pyodide) {
       console.log("❌ Pyodide not loaded yet");
       alert(
-        "Python environment is not loaded yet. Please wait for the loading to complete."
+        "Python environment is not loaded yet. Please wait for the loading to complete.",
       );
       return;
     }
@@ -193,8 +193,8 @@ print("For deep learning, use TensorFlow.js with JavaScript!")`,
     // Set running state and clear output
     setCells((prevCells) =>
       prevCells.map((c) =>
-        c.id === cellId ? { ...c, isRunning: true, output: "Running..." } : c
-      )
+        c.id === cellId ? { ...c, isRunning: true, output: "Running..." } : c,
+      ),
     );
 
     try {
@@ -225,8 +225,8 @@ sys.stderr = StringIO()
 
       setCells((prevCells) =>
         prevCells.map((c) =>
-          c.id === cellId ? { ...c, isRunning: false, output: finalOutput } : c
-        )
+          c.id === cellId ? { ...c, isRunning: false, output: finalOutput } : c,
+        ),
       );
     } catch (error) {
       console.error("❌ Cell execution error:", error);
@@ -234,8 +234,8 @@ sys.stderr = StringIO()
         prevCells.map((c) =>
           c.id === cellId
             ? { ...c, isRunning: false, output: `Error: ${error.message}` }
-            : c
-        )
+            : c,
+        ),
       );
     }
   };
@@ -271,16 +271,16 @@ sys.stderr = StringIO()
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a1225] via-[#121522] to-[#1a1f35] text-white pt-[180px]">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--color-surface)] via-[var(--color-surface-2)] to-[var(--color-surface-3)] text-[var(--color-text)] pt-[180px]">
       {/* Header */}
-      <div className="fixed top-[80px] left-0 right-0 z-40 bg-[#0a1225]/95 backdrop-blur-sm border-b border-blue-500/20">
+      <div className="fixed top-[80px] left-0 right-0 z-40 bg-[color-mix(in_srgb,var(--color-surface)_95%,transparent)] backdrop-blur-sm border-b border-[var(--color-border)]">
         <div className="max-w-7xl mx-auto px-4 py-5">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-strong)] bg-clip-text text-transparent">
                 AI/ML Notebook Demo
               </h1>
-              <p className="text-gray-400 text-sm mt-1">
+              <p className="text-[var(--color-text-muted)] text-sm mt-1">
                 Run Python with NumPy, Pandas, and Scikit-learn in your browser
               </p>
             </div>
@@ -291,7 +291,7 @@ sys.stderr = StringIO()
                   runAllCells();
                 }}
                 disabled={loading || loadError}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 rounded-lg font-medium transition-colors"
+                className="px-4 py-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)] disabled:bg-[var(--color-muted-strong)] rounded-lg font-medium transition-colors"
               >
                 {loading ? "Loading..." : "Run All"}
               </button>
@@ -301,7 +301,7 @@ sys.stderr = StringIO()
                   addCell();
                 }}
                 disabled={loading || loadError}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 rounded-lg font-medium transition-colors"
+                className="px-4 py-2 bg-[var(--color-primary-strong)] hover:bg-[color-mix(in_srgb,var(--color-primary-strong)_80%,var(--color-ink))] disabled:bg-[var(--color-muted-strong)] rounded-lg font-medium transition-colors"
               >
                 + Add Cell
               </button>
@@ -314,25 +314,25 @@ sys.stderr = StringIO()
       <div className="max-w-7xl mx-auto px-4 py-8">
         {loading && (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
-            <p className="mt-4 text-gray-400">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[var(--color-primary)] border-t-transparent"></div>
+            <p className="mt-4 text-[var(--color-text-muted)]">
               Loading Python environment and ML libraries...
             </p>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-[var(--color-text-muted)] mt-2">
               This may take a minute on first load
             </p>
           </div>
         )}
 
         {loadError && (
-          <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-6 mb-6">
-            <h3 className="text-xl font-bold text-red-400 mb-2">
+          <div className="bg-[color-mix(in_srgb,var(--color-danger)_10%,transparent)] border border-[color-mix(in_srgb,var(--color-danger)_50%,transparent)] rounded-lg p-6 mb-6">
+            <h3 className="text-xl font-bold text-[var(--color-danger)] mb-2">
               Failed to Load Python Environment
             </h3>
-            <p className="text-red-300">{loadError}</p>
+            <p className="text-[var(--color-warning)]">{loadError}</p>
             <button
               onClick={loadPyodide}
-              className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-medium transition-colors"
+              className="mt-4 px-4 py-2 bg-[var(--color-danger)] hover:bg-[color-mix(in_srgb,var(--color-danger)_80%,var(--color-ink))] rounded-lg font-medium transition-colors"
             >
               Retry
             </button>
@@ -357,38 +357,38 @@ sys.stderr = StringIO()
 
         {/* Info Section */}
         {!loading && !loadError && (
-          <div className="mt-8 p-6 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-            <h3 className="text-xl font-bold mb-3 text-blue-400">
+          <div className="mt-8 p-6 bg-[color-mix(in_srgb,var(--color-primary)_10%,transparent)] border border-[color-mix(in_srgb,var(--color-primary)_20%,transparent)] rounded-lg">
+            <h3 className="text-xl font-bold mb-3 text-[var(--color-primary)]">
               Available Libraries:
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
               <div className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
+                <span className="text-[var(--color-success)]">✓</span>
                 <span>
                   <strong>NumPy</strong> - Numerical computing
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
+                <span className="text-[var(--color-success)]">✓</span>
                 <span>
                   <strong>Pandas</strong> - Data manipulation
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
+                <span className="text-[var(--color-success)]">✓</span>
                 <span>
                   <strong>Scikit-learn</strong> - Machine learning & Neural
                   Networks
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
+                <span className="text-[var(--color-success)]">✓</span>
                 <span>
                   <strong>Matplotlib</strong> - Data visualization
                 </span>
               </div>
             </div>
-            <p className="mt-4 text-gray-400 text-sm">
+            <p className="mt-4 text-[var(--color-text-muted)] text-sm">
               💡 Note: All code runs in your browser using Pyodide (Python
               compiled to WebAssembly)
             </p>
@@ -437,10 +437,10 @@ function NotebookCell({
   }, []);
 
   return (
-    <div className="bg-[#1a1f35] border border-blue-500/20 rounded-lg overflow-hidden">
+    <div className="bg-[var(--color-surface-3)] border border-[color-mix(in_srgb,var(--color-primary)_20%,transparent)] rounded-lg overflow-hidden">
       {/* Cell Header */}
-      <div className="flex items-center justify-between px-4 py-2 bg-[#0a1225] border-b border-blue-500/20">
-        <span className="text-sm font-mono text-gray-400">
+      <div className="flex items-center justify-between px-4 py-2 bg-[var(--color-surface)] border-b border-[color-mix(in_srgb,var(--color-primary)_20%,transparent)]">
+        <span className="text-sm font-mono text-[var(--color-text-muted)]">
           In [{index + 1}]:
         </span>
         <div className="flex gap-2">
@@ -449,14 +449,14 @@ function NotebookCell({
               console.log("Cell Run button clicked for index:", index + 1);
               onRun();
             }}
-            className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+            className="px-3 py-1 bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)] text-[var(--color-text)] text-sm rounded transition-colors"
           >
             Run
           </button>
           {canDelete && (
             <button
               onClick={onDelete}
-              className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition-colors"
+              className="px-3 py-1 bg-[var(--color-danger)] hover:bg-[color-mix(in_srgb,var(--color-danger)_80%,var(--color-ink))] text-[var(--color-text)] text-sm rounded transition-colors"
             >
               Delete
             </button>
@@ -468,25 +468,25 @@ function NotebookCell({
       <div ref={editorRef} className="text-sm" />
 
       {/* Output */}
-      <div className="border-t border-blue-500/20">
-        <div className="px-4 py-2 bg-[#0a1225] border-b border-blue-500/20">
-          <span className="text-sm font-mono text-gray-400">
+      <div className="border-t border-[color-mix(in_srgb,var(--color-primary)_20%,transparent)]">
+        <div className="px-4 py-2 bg-[var(--color-surface)] border-b border-[color-mix(in_srgb,var(--color-primary)_20%,transparent)]">
+          <span className="text-sm font-mono text-[var(--color-text-muted)]">
             Out [{index + 1}]:
           </span>
         </div>
         {cell.isRunning ? (
-          <div className="p-4 text-sm font-mono text-yellow-400">
+          <div className="p-4 text-sm font-mono text-[var(--color-warning)]">
             <div className="flex items-center gap-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-yellow-400 border-t-transparent"></div>
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-[var(--color-warning)] border-t-transparent"></div>
               Running...
             </div>
           </div>
         ) : cell.output ? (
-          <pre className="p-4 text-sm font-mono text-green-400 overflow-x-auto whitespace-pre-wrap">
+          <pre className="p-4 text-sm font-mono text-[var(--color-success)] overflow-x-auto whitespace-pre-wrap">
             {cell.output}
           </pre>
         ) : (
-          <div className="p-4 text-sm font-mono text-gray-500 italic">
+          <div className="p-4 text-sm font-mono text-[var(--color-text-muted)] italic">
             No output yet. Click "Run" to execute this cell.
           </div>
         )}

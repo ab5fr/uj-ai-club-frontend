@@ -2,9 +2,9 @@ import { getImageUrl } from "@/lib/api";
 
 export default function TopPlayers({ topPlayers }) {
   const rankColors = {
-    "1st": "border-yellow-500", // Gold
-    "2nd": "border-gray-400", // Silver
-    "3rd": "border-amber-700", // Bronze
+    "1st": "border-[var(--color-warning)]", // Gold
+    "2nd": "border-[var(--color-muted)]", // Silver
+    "3rd": "border-[var(--color-accent)]", // Bronze
   };
 
   // Desktop: 3 columns -> 2nd (left), 1st (center), 3rd (right)
@@ -43,9 +43,9 @@ export default function TopPlayers({ topPlayers }) {
               <div
                 className={`
                 absolute -top-2 -left-2 z-10
-                w-8 h-8 rounded-full bg-orange-500
+                w-8 h-8 rounded-full bg-[var(--color-accent)]
                 flex items-center justify-center
-                text-white text-sm font-bold
+                text-[var(--color-text)] text-sm font-bold
               `}
               >
                 {rank}
@@ -66,7 +66,7 @@ export default function TopPlayers({ topPlayers }) {
               </div>
 
               {/* Points Badge */}
-              <div className="absolute bottom-0 right-0 bg-black/80 px-2 py-1 rounded-full text-white text-sm">
+              <div className="absolute bottom-0 right-0 bg-[color-mix(in_srgb,var(--color-ink)_80%,transparent)] px-2 py-1 rounded-full text-[var(--color-text)] text-sm">
                 {player.points}
               </div>
             </div>
@@ -74,7 +74,7 @@ export default function TopPlayers({ topPlayers }) {
             {/* Player Title (The Beast) - Only for 1st place, above name */}
             {rank === "1st" && (
               <p
-                className="font-bold text-4xl mb-1 bg-gradient-to-r from-[#c13d21] to-[#dd4e00] text-transparent bg-clip-text"
+                className="font-bold text-4xl mb-1 bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-strong)] text-transparent bg-clip-text"
                 style={{ fontFamily: "DK Face Your Fears" }}
               >
                 THE BEAST
@@ -82,7 +82,7 @@ export default function TopPlayers({ topPlayers }) {
             )}
 
             {/* Player Name split across two lines at first space */}
-            <h3 className="mt-2 text-white text-center font-light leading-tight">
+            <h3 className="mt-2 text-[var(--color-text)] text-center font-light leading-tight">
               <span className="block">{firstLine}</span>
               {secondLine && <span className="block">{secondLine}</span>}
             </h3>

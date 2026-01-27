@@ -2,15 +2,15 @@
 
 export default function AITypesPage() {
   return (
-    <main className="min-h-screen bg-[#121522] text-white pt-32">
+    <main className="min-h-screen bg-[var(--color-surface-2)] text-[var(--color-text)] pt-32">
       {/* Machine Learning Section - Left Aligned */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="w-full lg:w-11/12">
-            <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9]">
+            <h2 className="text-5xl font-bold mb-6 text-[var(--color-primary-soft)]">
               Machine Learning (ML)
             </h2>
-            <p className="text-2xl text-gray-300 leading-relaxed">
+            <p className="text-2xl text-[var(--color-text-muted)] leading-relaxed">
               Often used interchangeably with AI, machine learning is a
               fundamental subfield that focuses on developing algorithms that
               allow computers to learn from and make predictions or decisions
@@ -25,10 +25,10 @@ export default function AITypesPage() {
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="ml-auto w-full lg:w-11/12">
-            <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9] text-right">
+            <h2 className="text-5xl font-bold mb-6 text-[var(--color-primary-soft)] text-right">
               Deep Learning (DL)
             </h2>
-            <p className="text-2xl text-gray-300 leading-relaxed text-right">
+            <p className="text-2xl text-[var(--color-text-muted)] leading-relaxed text-right">
               A subfield of machine learning, deep learning utilizes artificial
               neural networks with many layers (hence "deep") to learn from vast
               amounts of data. This approach has been particularly successful in
@@ -42,10 +42,10 @@ export default function AITypesPage() {
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="w-full lg:w-11/12">
-            <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9]">
+            <h2 className="text-5xl font-bold mb-6 text-[var(--color-primary-soft)]">
               Natural Language Processing (NLP)
             </h2>
-            <p className="text-2xl text-gray-300 leading-relaxed">
+            <p className="text-2xl text-[var(--color-text-muted)] leading-relaxed">
               This specialization is dedicated to enabling computers to
               understand, interpret, and generate human language. NLP is the
               technology behind chatbots, language translation services, and
@@ -59,10 +59,10 @@ export default function AITypesPage() {
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="ml-auto w-full lg:w-11/12">
-            <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9] text-right">
+            <h2 className="text-5xl font-bold mb-6 text-[var(--color-primary-soft)] text-right">
               Computer Vision
             </h2>
-            <p className="text-2xl text-gray-300 leading-relaxed text-right">
+            <p className="text-2xl text-[var(--color-text-muted)] leading-relaxed text-right">
               As the name suggests, this field aims to give computers the
               ability to "see" and interpret the visual world. Computer vision
               is at the heart of facial recognition systems, self-driving cars,
@@ -106,8 +106,10 @@ export default function AITypesPage() {
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="w-full lg:w-11/12">
-            <h2 className="text-5xl font-bold mb-6 text-[#7CD0F9]">Robotics</h2>
-            <p className="text-2xl text-gray-300 leading-relaxed">
+            <h2 className="text-5xl font-bold mb-6 text-[var(--color-primary-soft)]">
+              Robotics
+            </h2>
+            <p className="text-2xl text-[var(--color-text-muted)] leading-relaxed">
               This interdisciplinary field combines AI, engineering, and
               computer science to design, build, and operate robots. AI plays a
               crucial role in enabling robots to perceive their environment,
