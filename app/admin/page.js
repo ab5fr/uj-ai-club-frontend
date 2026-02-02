@@ -44,7 +44,7 @@ function AdminContent() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--color-surface-2)] text-[var(--color-text)] pt-24">
+    <main className="min-h-screen bg-[var(--color-surface-2)] text-[var(--color-text)] pt-50">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-4xl font-bold">Admin Dashboard</h1>

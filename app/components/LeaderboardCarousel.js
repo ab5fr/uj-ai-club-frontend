@@ -49,16 +49,8 @@ export default function LeaderboardCarousel() {
 
   if (loading) {
     return (
-      <section
-        className="w-full min-h-screen md:h-screen relative overflow-hidden flex items-center"
-        style={{
-          backgroundImage: "url('/lbbg.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-        }}
-      >
-        <div className="container mx-auto px-4 text-center">
+      <section className="w-full min-h-screen md:h-screen relative overflow-hidden flex items-center bg-transparent">
+        <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-7xl font-extrabold mb-12 text-[var(--color-text)] drop-shadow-lg">
             Leaderboards
           </h2>
@@ -71,16 +63,8 @@ export default function LeaderboardCarousel() {
   // Show error state if no data
   if (!loading && (error || leaderboards.length === 0)) {
     return (
-      <section
-        className="w-full min-h-screen md:h-screen relative overflow-hidden flex items-center"
-        style={{
-          backgroundImage: "url('/lbbg.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-        }}
-      >
-        <div className="container mx-auto px-4 text-center">
+      <section className="w-full min-h-screen md:h-screen relative overflow-hidden flex items-center bg-transparent">
+        <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-7xl font-extrabold mb-12 text-[var(--color-text)] drop-shadow-lg">
             Leaderboards
           </h2>
@@ -94,16 +78,8 @@ export default function LeaderboardCarousel() {
 
   // Show leaderboard content
   return (
-    <section
-      className="w-full min-h-screen md:h-screen relative overflow-hidden flex items-start pt-8 md:pt-0 md:items-center"
-      style={{
-        backgroundImage: "url('/lbbg.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
-      }}
-    >
-      <div className="container mx-auto px-4 text-center w-full">
+    <section className="w-full min-h-screen md:h-screen relative overflow-hidden flex items-start pt-8 md:pt-0 md:items-center bg-transparent">
+      <div className="container mx-auto px-4 text-center w-full relative z-10">
         <h2 className="text-5xl md:text-7xl font-extrabold mb-6 md:mb-12 text-[var(--color-text)] drop-shadow-lg pt-5">
           Leaderboards
         </h2>

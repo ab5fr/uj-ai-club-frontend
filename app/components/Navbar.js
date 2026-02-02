@@ -11,6 +11,8 @@ import { getImageUrl } from "@/lib/api";
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const dropdownRef = useRef(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -34,19 +36,47 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Handle scroll to hide/show navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        // Scrolling down and past 50px
+        setIsVisible(false);
+      } else {
+        // Scrolling up or near top
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   if (isChallenges) {
     // Minimal nav for challenges page: only a home icon linking to '/'
     return (
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center px-6 py-4 w-full bg-transparent text-[var(--color-text)]">
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 flex items-center px-6 py-1 w-full bg-transparent text-(--color-text) transition-transform duration-300 ${
+          isVisible ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         <Link href="/" aria-label="Home" className="inline-flex items-center">
-          <HomeIcon className="h-7 w-7 text-[var(--color-text)] hover:opacity-80 transition-opacity" />
+          <HomeIcon className="h-7 w-7 text-(--color-text) hover:opacity-80 transition-opacity" />
         </Link>
       </nav>
     );
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-2 md:px-8 py-4 max-w-full text-[var(--color-text)] bg-[var(--color-surface-2)] overflow-visible">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-2 md:px-8 py-1 max-w-full text-[var(--color-text)] bg-transparent overflow-visible transition-transform duration-300 ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       {/* Left cluster: Logo + Links */}
       <div className="flex items-center gap-2 md:gap-10 flex-shrink-0">
         <Link href="/" className="shrink-0">
@@ -55,7 +85,7 @@ export default function Navbar() {
             alt="Logo"
             width={500}
             height={500}
-            className="md:w-[300px]"
+            className="md:w-75"
           />
         </Link>
         {/* Desktop Navigation */}
@@ -149,7 +179,7 @@ export default function Navbar() {
 
               {/* Dropdown Menu */}
               {profileDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-[var(--color-surface)] rounded-2xl shadow-lg border border-[var(--color-border)] overflow-hidden z-50">
+                <div className="absolute right-0 2 w-48 bg-[var(--color-surface)] rounded-2xl shadow-lg border border-[var(--color-border)] overflow-hidden z-50">
                   <Link
                     href="/settings"
                     onClick={() => setProfileDropdownOpen(false)}

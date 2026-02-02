@@ -49,15 +49,8 @@ export default function ContactSection() {
   };
 
   return (
-    <section
-      className="w-full h-screen relative overflow-hidden flex items-center"
-      style={{
-        backgroundImage: "url('/feedback.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="container mx-auto w-full max-w-5xl relative">
+    <section className="w-full h-screen relative overflow-hidden flex items-center bg-transparent">
+      <div className="container mx-auto w-full max-w-5xl relative z-10">
         {/* Heading */}
         <div className="mb-12 absolute right-8 md:right-12 lg:right-16 text-right">
           <h2 className="text-6xl md:text-7xl font-extrabold text-[var(--color-text)] mb-2">
@@ -65,7 +58,7 @@ export default function ContactSection() {
           </h2>
           <p className="text-3xl md:text-4xl font-light text-[color-mix(in_srgb,var(--color-text)_90%,transparent)]">
             to hear from{" "}
-            <span className="font-semibold text-[var(--color-ink)]">you</span>
+            <span className="font-semibold text-(--color-text)">you</span>
           </p>
         </div>
 
