@@ -1,70 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import LeaderboardCarousel from "./components/LeaderboardCarousel";
 import ContactSection from "./components/ContactSection";
 import Link from "next/link";
 
 export default function Home() {
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Calculate scroll progress (0 to 1) based on page height
-  const maxScroll =
-    typeof window !== "undefined"
-      ? document.body.scrollHeight - window.innerHeight
-      : 3000;
-  const scrollProgress = Math.min(scrollY / maxScroll, 1);
-
   return (
     <main className="flex flex-col w-full relative">
-      {/* Shared Animated Gradient Blobs - Fixed position, moves with scroll */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-hard-light">
-        <div
-          className="absolute w-[750px] h-[750px] rounded-full blur-[180px] transition-transform duration-100 mix-blend-color-dodge"
-          style={{
-            background:
-              "linear-gradient(135deg, var(--color-primary-strong) 0%, var(--color-accent-soft) 100%)",
-            opacity: 0.9,
-            top: `${-10 + scrollProgress * 80}%`,
-            right: `${-5 + scrollProgress * 30}%`,
-            transform: `scale(${1 + scrollProgress * 0.3})`,
-          }}
-        />
-        <div
-          className="absolute w-[700px] h-[700px] rounded-full blur-[170px] transition-transform duration-100 mix-blend-color-dodge"
-          style={{
-            background:
-              "linear-gradient(225deg, var(--color-primary) 0%, var(--color-ink) 100%)",
-            opacity: 0.85,
-            top: `${20 + scrollProgress * 60}%`,
-            left: `${-15 + scrollProgress * 20}%`,
-            transform: `scale(${1 + scrollProgress * 0.25})`,
-          }}
-        />
-        <div
-          className="absolute w-[650px] h-[650px] rounded-full blur-[160px] transition-transform duration-100 mix-blend-color-dodge"
-          style={{
-            background:
-              "linear-gradient(45deg, var(--color-primary-soft) 0%, var(--color-primary-strong) 100%)",
-            opacity: 0.8,
-            bottom: `${-20 + scrollProgress * 50}%`,
-            right: `${10 + scrollProgress * 25}%`,
-            transform: `scale(${1 + scrollProgress * 0.35})`,
-          }}
-        />
-      </div>
-
       {/* First screen - 75vh on mobile, original height on desktop */}
-      <div className="relative h-[75vh] md:h-screen z-10">
+      <div className="relative h-[75vh] md:h-screen z-10 overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--color-primary-strong)_0%,_var(--color-ink)_100%)]">
         {/* Hero Background */}
         <div
           className="absolute inset-x-0 top-0 h-full md:h-[calc(100%-15.5rem)]"
