@@ -87,6 +87,7 @@
     var(--color-primary) 70%,
     var(--color-neutral)
   );
+  --color-primary-glow-solid: #cfe3ff;
   --color-accent-strong: color-mix(
     in_srgb,
     var(--color-accent) 78%,

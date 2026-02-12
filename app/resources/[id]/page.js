@@ -68,11 +68,12 @@ export default function ResourcePage({ params }) {
 
   return (
     <main
-      className="min-h-[110vh] text-[var(--color-text)] pt-24 bg-no-repeat bg-[var(--color-surface-2)]"
+      className="min-h-screen text-[var(--color-text)] pt-24 bg-no-repeat bg-[var(--color-surface-2)]"
       style={{
         backgroundImage: "url('/project.jpg')",
-        backgroundSize: "100%",
-        backgroundPosition: "center 70%",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
       }}
     >
       <div className="container mx-auto px-4 max-w-7xl">
@@ -108,7 +109,7 @@ export default function ResourcePage({ params }) {
           </div>
 
           {/* Quote Box */}
-          <div className="hidden md:block bg-[var(--color-primary-soft)] rounded-3xl p-6 max-w-md mt-8">
+          <div className="hidden md:block bg-[var(--color-primary-glow-solid)] rounded-3xl p-6 max-w-md mt-8">
             <p className="text-[var(--color-ink)] text-xl font-medium mb-2">
               {resource.quote.text}
             </p>
