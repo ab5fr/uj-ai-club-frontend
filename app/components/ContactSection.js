@@ -50,6 +50,7 @@ export default function ContactSection() {
 
   return (
     <section className="w-full h-screen relative overflow-hidden flex items-center bg-[var(--color-accent)]">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_color-mix(in_srgb,var(--color-accent)_65%,var(--color-neutral))_0%,_var(--color-accent)_55%)] opacity-100" />
       <div className="container mx-auto w-full max-w-5xl relative z-10">
         {/* Heading */}
         <div className="mb-12 absolute right-8 md:right-12 lg:right-16 text-right">

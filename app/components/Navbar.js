@@ -127,7 +127,7 @@ export default function Navbar() {
             Learning Plans
           </Link> */}
           {/* <Link
-            href="/ai-specializations"
+            href="/roadmap"
             className="font-medium hover:text-[var(--color-primary)] transition-colors"
           >
             AI Specializations
@@ -303,7 +303,7 @@ export default function Navbar() {
             Resources
           </Link>
           <Link
-            href="/ai-specializations"
+            href="/roadmap"
             onClick={() => setMobileMenuOpen(false)}
             className="font-medium hover:text-[var(--color-primary)] transition-colors text-lg"
           >

@@ -34,7 +34,7 @@ export default function Home() {
             </div>
             {/* Call To Action Button on the right */}
             <Link
-              href="/ai-specializations"
+              href="/roadmap"
               className="hidden md:block font-extrabold absolute top-1/2 -translate-y-1/2 right-4 md:right-10 lg:right-16 xl:right-24 2xl:right-32 bg-[var(--color-primary)] text-[var(--color-text)] px-12 py-5 rounded-full text-2xl hover:bg-[var(--color-primary-strong)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-primary-soft)_50%,transparent)] focus:outline-none transition shadow-xl shadow-[color-mix(in_srgb,var(--color-primary-strong)_30%,transparent)] tracking-wide"
             >
               Click Here
