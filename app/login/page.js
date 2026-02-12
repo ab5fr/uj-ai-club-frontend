@@ -129,7 +129,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-14 px-6 pl-[16rem] pr-20 rounded-full bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] hover:bg-[var(--color-surface-2)] text-[var(--color-text)] text-lg transition-colors backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed text-left relative flex items-center"
+                className="w-full h-14 px-6 pl-[16rem] pr-20 rounded-2xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)] text-[var(--color-text)] text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-left relative flex items-center"
               >
                 <span className="absolute right-0 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-[var(--color-primary-soft)] hover:bg-[var(--color-primary-glow)] flex items-center justify-center transition-colors pointer-events-none">
                   <svg
