@@ -102,24 +102,24 @@ export default function Navbar() {
           >
             Challanges
           </Link>
-          <Link
+          {/* <Link
             href="/resources"
             className="font-medium hover:text-[var(--color-primary)] transition-colors"
           >
             Resources
-          </Link>
+          </Link> */}
           <Link
             href="/roadmap"
             className="font-medium hover:text-[var(--color-primary)] transition-colors"
           >
             Roadmap
           </Link>
-          <Link
+          {/* <Link
             href="/notebook-demo"
             className="font-medium hover:text-[var(--color-primary)] transition-colors"
           >
             Notebook
-          </Link>
+          </Link> */}
           {/* <Link
             href="/learning-plans"
             className="font-medium hover:text-[var(--color-primary)] transition-colors"
