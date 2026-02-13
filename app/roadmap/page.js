@@ -173,17 +173,17 @@ export default function RoadmapPage() {
       <div className="relative z-10">
         <Navbar />{" "}
         <div className="relative pt-24 pb-32" ref={containerRef}>
-          <div className="flex justify-center px-4 mb-10">
+          <div className="flex justify-center px-4 mt-72 mb-8">
             <img
               src="/ai-roadmap.png"
               alt="AI Roadmap"
-              className="w-full max-w-md h-auto"
+              className="w-full max-w-xl h-auto"
             />
           </div>
 
           {/* Roadmap Container */}
           <div
-            className="relative max-w-6xl mx-auto px-4"
+            className="relative max-w-6xl mx-auto px-4 mt-8"
             style={{ minHeight: `${totalHeight}px` }}
           >
             {/* Curved Path with SVG */}
