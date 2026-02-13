@@ -50,7 +50,7 @@ export default function ProfileSection({ userProfile }) {
             <img
               src={getImageUrl(userProfile.image)}
               alt={userProfile.name}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-20 h-20 rounded-full object-cover border-2 border-white"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-20 h-20 rounded-full object-cover"
             />
           )}
           <div className="text-[var(--color-text)] text-4xl font-light leading-tight truncate">

@@ -61,12 +61,12 @@ export default function Navbar() {
     // Minimal nav for challenges page: only a home icon linking to '/'
     return (
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 flex items-center px-6 py-1 w-full bg-transparent text-(--color-text) transition-transform duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 flex items-center px-12 py-6 w-full bg-transparent text-(--color-text) transition-transform duration-300 ${
           isVisible ? "translate-y-0" : "-translate-y-full"
         }`}
       >
         <Link href="/" aria-label="Home" className="inline-flex items-center">
-          <HomeIcon className="h-7 w-7 text-(--color-text) hover:opacity-80 transition-opacity" />
+          <HomeIcon className="h-10 w-10 text-(--color-text) hover:opacity-80 transition-opacity" />
         </Link>
       </nav>
     );
