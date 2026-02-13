@@ -350,12 +350,14 @@ function CompetitionsContent() {
     return () => clearInterval(interval);
   }, [activeTab, challenges]);
 
+  const leaderboardTop10 = leaderboardData.slice(0, 10);
+
   return (
     <main
       className={`${fredoka.className} min-h-screen relative flex flex-col items-center pt-32 text-[var(--color-text)] pb-20`}
       style={{
         backgroundImage: "url('/challenges-bg.jpg')",
-        backgroundSize: "cover",
+        backgroundSize: "120%",
         backgroundPosition: "top center",
         backgroundRepeat: "no-repeat",
       }}
@@ -370,7 +372,7 @@ function CompetitionsContent() {
             <br /> until they face
           </p>
           <p
-            className="text-[5rem] bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-strong)] text-transparent bg-clip-text"
+            className="text-[5rem] bg-gradient-to-r from-[#dd4e00] to-[#ff0000] text-transparent bg-clip-text"
             style={{
               fontFamily: "DK Face Your Fears",
             }}
@@ -391,39 +393,75 @@ function CompetitionsContent() {
         <div className="hidden md:flex justify-center gap-1 mb-20">
           <button
             onClick={() => setActiveTab("leaderboard")}
-            className={`py-3 px-10 text-[var(--color-text)] font-light uppercase tracking-wider transition-colors ${
+            className={`relative overflow-hidden py-4 px-14 font-light uppercase tracking-wider transition-all ${
               activeTab === "leaderboard"
-                ? "bg-[var(--color-muted-surface)]"
-                : "bg-[var(--color-muted-surface-2)] hover:bg-[var(--color-muted-surface)]"
+                ? "text-white"
+                : "text-[var(--color-text)]"
             }`}
             style={{ clipPath: "polygon(0 0, 100% 0, 90% 100%, 0% 100%)" }}
             aria-pressed={activeTab === "leaderboard"}
           >
-            Leaderboard
+            <span
+              aria-hidden="true"
+              className={`absolute inset-0 bg-cover bg-center transition-all ${
+                activeTab === "leaderboard"
+                  ? "brightness-50 saturate-75"
+                  : "brightness-100 hover:brightness-110"
+              }`}
+              style={{
+                backgroundImage: "url('/leader-board-board.png')",
+                backgroundSize: "100% 100%",
+              }}
+            />
+            <span className="relative z-10">Leaderboard</span>
           </button>
           <button
             onClick={() => setActiveTab("challenges")}
-            className={`py-3 px-10 text-[var(--color-text)] font-light uppercase tracking-wider transition-colors ${
+            className={`relative overflow-hidden py-4 px-14 font-light uppercase tracking-wider transition-all ${
               activeTab === "challenges"
-                ? "bg-[var(--color-muted-surface)]"
-                : "bg-[var(--color-muted-surface-2)] hover:bg-[var(--color-muted-surface)]"
+                ? "text-white"
+                : "text-[var(--color-text)]"
             }`}
             style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
             aria-pressed={activeTab === "challenges"}
           >
-            Challenges
+            <span
+              aria-hidden="true"
+              className={`absolute inset-0 bg-cover bg-center transition-all ${
+                activeTab === "challenges"
+                  ? "brightness-50 saturate-75"
+                  : "brightness-100 hover:brightness-110"
+              }`}
+              style={{
+                backgroundImage: "url('/chlngeeeees-board.png')",
+                backgroundSize: "100% 100%",
+              }}
+            />
+            <span className="relative z-10">Challenges</span>
           </button>
           <button
             onClick={() => setActiveTab("profile")}
-            className={`py-3 px-10 text-[var(--color-text)] font-light uppercase tracking-wider transition-colors ${
+            className={`relative overflow-hidden py-4 px-14 font-light uppercase tracking-wider transition-all ${
               activeTab === "profile"
-                ? "bg-[var(--color-muted-surface)]"
-                : "bg-[var(--color-muted-surface-2)] hover:bg-[var(--color-muted-surface)]"
+                ? "text-white"
+                : "text-[var(--color-text)]"
             }`}
             style={{ clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0% 100%)" }}
             aria-pressed={activeTab === "profile"}
           >
-            Profile
+            <span
+              aria-hidden="true"
+              className={`absolute inset-0 bg-cover bg-center transition-all ${
+                activeTab === "profile"
+                  ? "brightness-50 saturate-75"
+                  : "brightness-100 hover:brightness-110"
+              }`}
+              style={{
+                backgroundImage: "url('/prfiiiiiiiiiiiil-board.png')",
+                backgroundSize: "100% 100%",
+              }}
+            />
+            <span className="relative z-10">Profile</span>
           </button>
         </div>
         {/* Navigation Carousel - Mobile */}
@@ -540,11 +578,13 @@ function CompetitionsContent() {
             </div>
           ) : activeTab === "leaderboard" ? (
             // Leaderboard Section
-            <div className="container mx-auto max-w-4xl">
-              {leaderboardData.length > 0 ? (
+            <div className="container mx-auto max-w-3xl px-2">
+              {leaderboardTop10.length > 0 ? (
                 <>
-                  <TopPlayers topPlayers={leaderboardData.slice(0, 3)} />
-                  <LeaderboardTable players={leaderboardData.slice(3)} />
+                  <TopPlayers topPlayers={leaderboardTop10.slice(0, 3)} />
+                  <div className="p-3 bg-[#08090a]">
+                    <LeaderboardTable players={leaderboardTop10.slice(3)} />
+                  </div>
                 </>
               ) : (
                 <p className="text-2xl text-[var(--color-text-muted)] text-center">

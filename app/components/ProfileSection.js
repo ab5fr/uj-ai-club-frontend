@@ -1,20 +1,18 @@
 import { getImageUrl } from "@/lib/api";
 
 export default function ProfileSection({ userProfile }) {
-  const StatCard = ({ label, value, isHighlighted = false }) => (
-    <div className="bg-[color-mix(in_srgb,var(--color-ink)_30%,transparent)] backdrop-blur-sm rounded-lg p-4 flex justify-between items-center">
-      <span className="text-[color-mix(in_srgb,var(--color-text)_80%,transparent)]">
+  const StatPair = ({ label, value, valueRed = false }) => (
+    <div className="grid grid-cols-[1fr_auto] gap-2">
+      <div className="bg-[#0d0e10] px-6 py-3 text-[var(--color-text)] text-3xl font-light">
         {label}
-      </span>
-      <span
-        className={`font-bold text-2xl ${
-          isHighlighted
-            ? "text-[var(--color-danger)]"
-            : "text-[var(--color-text)]"
+      </div>
+      <div
+        className={`bg-[#0d0e10] px-6 py-3 text-4xl font-semibold ${
+          valueRed ? "text-[#ff0000]" : "text-[var(--color-text)]"
         }`}
       >
         {value}
-      </span>
+      </div>
     </div>
   );
 
@@ -28,46 +26,59 @@ export default function ProfileSection({ userProfile }) {
     );
   }
 
+  const stats = userProfile.stats || {};
+
   return (
-    <div className="max-w-4xl mx-auto text-[var(--color-text)]">
-      {/* User Info */}
-      <div className="flex items-center gap-6 bg-[color-mix(in_srgb,var(--color-ink)_30%,transparent)] backdrop-blur-sm rounded-lg p-4 mb-8">
-        <div className="text-[var(--color-danger)] font-bold text-2xl">
+    <div className="max-w-4xl mx-auto text-[var(--color-text)] space-y-8">
+      <div className="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
+        <div className="bg-[#0d0e10] px-7 py-5 text-[#ff0000] font-semibold text-5xl leading-none">
           #{userProfile.rank}
         </div>
-        {userProfile.image && (
-          <img
-            src={getImageUrl(userProfile.image)}
-            alt={userProfile.name}
-            className="w-16 h-16 rounded-full object-cover border-2 border-[var(--color-border)]"
-          />
-        )}
-        <div className="flex-grow text-xl font-semibold">
-          {userProfile.name}
+
+        <div className="relative bg-[#0d0e10] py-5 pl-28 pr-8 min-h-[96px] flex items-center">
+          {userProfile.image && (
+            <img
+              src={getImageUrl(userProfile.image)}
+              alt={userProfile.name}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-20 h-20 rounded-full object-cover border-2 border-white"
+            />
+          )}
+          <div className="text-[var(--color-text)] text-4xl font-light leading-tight truncate">
+            {userProfile.name}
+          </div>
         </div>
-        <div className="text-2xl font-bold">{userProfile.points}</div>
+
+        <div className="bg-[#0d0e10] px-8 py-5 text-[var(--color-text)] text-5xl font-light leading-none">
+          {userProfile.points}
+        </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <StatCard
-          label="Best subject"
-          value={userProfile.stats.bestSubject}
-          isHighlighted
-        />
-        <StatCard
-          label="Improveable"
-          value={userProfile.stats.improveable}
-          isHighlighted
-        />
-        <StatCard
-          label="Quickest hunter"
-          value={userProfile.stats.quickestHunter}
-        />
-        <StatCard
-          label="Challenges taken"
-          value={userProfile.stats.challengesTaken}
-        />
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <StatPair
+            label="Best Ability"
+            value={stats.bestSubject || "-"}
+            valueRed
+          />
+          <StatPair
+            label="Improveable"
+            value={stats.improveable || "-"}
+            valueRed
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <StatPair
+            label="Fastest hunter"
+            value={stats.quickestHunter ?? "-"}
+            valueRed
+          />
+          <StatPair
+            label="Challenges taken"
+            value={stats.challengesTaken ?? "-"}
+            valueRed
+          />
+        </div>
       </div>
     </div>
   );

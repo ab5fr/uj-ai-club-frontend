@@ -92,7 +92,7 @@ export default function ContactSection() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[var(--color-primary-soft)] backdrop-blur-sm text-white text-lg focus:outline-none transition-all"
+                className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[var(--color-primary-soft)] border border-white backdrop-blur-sm text-white text-lg focus:outline-none transition-all"
                 required
               />
             </div>
@@ -108,7 +108,7 @@ export default function ContactSection() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[var(--color-primary-soft)] backdrop-blur-sm text-white text-lg focus:outline-none transition-all"
+                className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[var(--color-primary-soft)] border border-white backdrop-blur-sm text-white text-lg focus:outline-none transition-all"
                 required
               />
             </div>
@@ -124,7 +124,7 @@ export default function ContactSection() {
               value={formData.message}
               onChange={handleChange}
               rows={6}
-              className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[var(--color-primary-soft)] backdrop-blur-sm text-white text-lg focus:outline-none transition-all resize-none"
+              className="w-full px-6 py-4 pl-[7rem] rounded-2xl bg-[var(--color-primary-soft)] border border-white backdrop-blur-sm text-white text-lg focus:outline-none transition-all resize-none"
               required
             />
             <div className="absolute bottom-4 right-4 text-[var(--color-text)] text-lg font-bold">

@@ -67,6 +67,11 @@ export default function RoadmapPage() {
     },
   ];
 
+  const stepHeight = 500;
+  const stepOffset = stepHeight;
+  const stepBaseY = 50;
+  const totalHeight = roadmapSteps.length * stepHeight + stepOffset;
+
   useEffect(() => {
     const handleScroll = () => {
       if (containerRef.current) {
@@ -100,8 +105,8 @@ export default function RoadmapPage() {
 
     const startX = currentStep.position === "left" ? 300 : 900;
     const endX = nextStep ? (nextStep.position === "left" ? 300 : 900) : startX;
-    const startY = index * 500 + 50;
-    const endY = (index + 1) * 500 + 50;
+    const startY = index * stepHeight + stepBaseY + stepOffset;
+    const endY = (index + 1) * stepHeight + stepBaseY + stepOffset;
 
     // Calculate position on very smooth cubic bezier curve matching the path
     const verticalDistance = endY - startY;
@@ -181,13 +186,13 @@ export default function RoadmapPage() {
           {/* Roadmap Container */}
           <div
             className="relative max-w-6xl mx-auto px-4"
-            style={{ minHeight: `${roadmapSteps.length * 500}px` }}
+            style={{ minHeight: `${totalHeight}px` }}
           >
             {/* Curved Path with SVG */}
             <svg
               className="absolute left-0 top-0 w-full h-full pointer-events-none"
-              style={{ minHeight: `${roadmapSteps.length * 500}px` }}
-              viewBox={`0 0 1200 ${roadmapSteps.length * 500}`}
+              style={{ minHeight: `${totalHeight}px` }}
+              viewBox={`0 0 1200 ${totalHeight}`}
               preserveAspectRatio="none"
             >
               <defs>
@@ -217,7 +222,7 @@ export default function RoadmapPage() {
 
                   roadmapSteps.forEach((step, index) => {
                     const x = step.position === "left" ? 300 : 900;
-                    const y = index * 500 + 50;
+                    const y = index * stepHeight + stepBaseY + stepOffset;
 
                     if (index === 0) {
                       // Start at first circle
@@ -226,7 +231,8 @@ export default function RoadmapPage() {
                       // Create smooth curve to next circle
                       const prevStep = roadmapSteps[index - 1];
                       const prevX = prevStep.position === "left" ? 300 : 900;
-                      const prevY = (index - 1) * 500 + 50;
+                      const prevY =
+                        (index - 1) * stepHeight + stepBaseY + stepOffset;
 
                       const verticalDistance = y - prevY;
                       const horizontalDistance = x - prevX;
@@ -255,7 +261,7 @@ export default function RoadmapPage() {
               {/* Draw circles on the path */}
               {roadmapSteps.map((step, index) => {
                 const circleX = step.position === "left" ? 300 : 900;
-                const circleY = index * 500 + 50;
+                const circleY = index * stepHeight + stepBaseY + stepOffset;
                 const isActive = getCircleProgress(index);
 
                 return (
@@ -281,7 +287,7 @@ export default function RoadmapPage() {
               {/* Draw circle numbers */}
               {roadmapSteps.map((step, index) => {
                 const circleX = step.position === "left" ? 300 : 900;
-                const circleY = index * 500 + 50;
+                const circleY = index * stepHeight + stepBaseY + stepOffset;
                 const isActive = getCircleProgress(index);
 
                 return (
@@ -303,6 +309,7 @@ export default function RoadmapPage() {
             </svg>
 
             {/* Roadmap Steps */}
+            <div style={{ height: `${stepOffset}px` }} aria-hidden="true" />
             {roadmapSteps.map((step, index) => {
               const isLeft = step.position === "left";
               const isActive = getCircleProgress(index);
@@ -368,9 +375,7 @@ export default function RoadmapPage() {
                   className="absolute z-30 pointer-events-none"
                   style={{
                     left: `${(submarinePos.x / 1200) * 100}%`,
-                    top: `${
-                      (submarinePos.y / (roadmapSteps.length * 500)) * 100
-                    }%`,
+                    top: `${(submarinePos.y / totalHeight) * 100}%`,
                     transform: `translate(-50%, -50%) rotate(${adjustedRotation}deg) ${
                       facingLeft ? "scaleX(-1)" : ""
                     }`,
