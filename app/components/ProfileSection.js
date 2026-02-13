@@ -1,15 +1,25 @@
 import { getImageUrl } from "@/lib/api";
 
 export default function ProfileSection({ userProfile }) {
-  const StatPair = ({ label, value, valueRed = false }) => (
-    <div className="grid grid-cols-[1fr_auto] gap-2">
-      <div className="bg-[#0d0e10] px-6 py-3 text-[var(--color-text)] text-3xl font-light">
+  const StatPair = ({ label, value, valueRed = false, compact = false }) => (
+    <div
+      className={`grid gap-2 ${
+        compact
+          ? "grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]"
+          : "grid-cols-[1fr_auto]"
+      }`}
+    >
+      <div
+        className={`bg-[#0d0e10] py-3 text-[var(--color-text)] font-light ${
+          compact ? "px-5 text-xl" : "px-6 text-3xl"
+        }`}
+      >
         {label}
       </div>
       <div
-        className={`bg-[#0d0e10] px-6 py-3 text-4xl font-semibold ${
-          valueRed ? "text-[#ff0000]" : "text-[var(--color-text)]"
-        }`}
+        className={`bg-[#0d0e10] px-6 py-3 font-semibold ${
+          compact ? "text-3xl" : "text-4xl"
+        } ${valueRed ? "text-[#ff0000]" : "text-[var(--color-text)]"}`}
       >
         {value}
       </div>
@@ -59,11 +69,13 @@ export default function ProfileSection({ userProfile }) {
             label="Best Ability"
             value={stats.bestSubject || "-"}
             valueRed
+            compact
           />
           <StatPair
             label="Improveable"
             value={stats.improveable || "-"}
             valueRed
+            compact
           />
         </div>
 

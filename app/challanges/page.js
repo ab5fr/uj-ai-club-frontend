@@ -393,7 +393,7 @@ function CompetitionsContent() {
         <div className="hidden md:flex justify-center gap-1 mb-20">
           <button
             onClick={() => setActiveTab("leaderboard")}
-            className={`relative overflow-hidden py-4 px-14 font-light uppercase tracking-wider transition-all ${
+            className={`relative overflow-hidden w-[260px] h-[76px] flex items-center justify-center text-xl font-light uppercase tracking-wider transition-all ${
               activeTab === "leaderboard"
                 ? "text-white"
                 : "text-[var(--color-text)]"
@@ -417,7 +417,7 @@ function CompetitionsContent() {
           </button>
           <button
             onClick={() => setActiveTab("challenges")}
-            className={`relative overflow-hidden py-4 px-14 font-light uppercase tracking-wider transition-all ${
+            className={`relative overflow-hidden w-[260px] h-[76px] flex items-center justify-center text-xl font-light uppercase tracking-wider transition-all ${
               activeTab === "challenges"
                 ? "text-white"
                 : "text-[var(--color-text)]"
@@ -441,7 +441,7 @@ function CompetitionsContent() {
           </button>
           <button
             onClick={() => setActiveTab("profile")}
-            className={`relative overflow-hidden py-4 px-14 font-light uppercase tracking-wider transition-all ${
+            className={`relative overflow-hidden w-[260px] h-[76px] flex items-center justify-center text-xl font-light uppercase tracking-wider transition-all ${
               activeTab === "profile"
                 ? "text-white"
                 : "text-[var(--color-text)]"

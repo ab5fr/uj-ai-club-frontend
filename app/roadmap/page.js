@@ -68,7 +68,7 @@ export default function RoadmapPage() {
   ];
 
   const stepHeight = 500;
-  const stepOffset = stepHeight;
+  const stepOffset = 100;
   const stepBaseY = 50;
   const totalHeight = roadmapSteps.length * stepHeight + stepOffset;
 
@@ -173,14 +173,12 @@ export default function RoadmapPage() {
       <div className="relative z-10">
         <Navbar />{" "}
         <div className="relative pt-24 pb-32" ref={containerRef}>
-          {/* Header */}
-          <div className="text-center mb-20 px-4">
-            <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-strong)] bg-clip-text text-transparent pt-20">
-              AI Learning Roadmap
-            </h1>
-            <p className="text-xl text-[var(--color-primary-soft)]">
-              Navigate your journey through the depths of AI knowledge
-            </p>
+          <div className="flex justify-center px-4 mb-10">
+            <img
+              src="/ai-roadmap.png"
+              alt="AI Roadmap"
+              className="w-full max-w-md h-auto"
+            />
           </div>
 
           {/* Roadmap Container */}
@@ -309,7 +307,6 @@ export default function RoadmapPage() {
             </svg>
 
             {/* Roadmap Steps */}
-            <div style={{ height: `${stepOffset}px` }} aria-hidden="true" />
             {roadmapSteps.map((step, index) => {
               const isLeft = step.position === "left";
               const isActive = getCircleProgress(index);
