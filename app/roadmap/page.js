@@ -327,11 +327,11 @@ export default function RoadmapPage() {
                       width: "45%",
                     }}
                   >
-                    <div className="bg-gradient-to-br from-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] to-[color-mix(in_srgb,var(--color-surface-3)_80%,transparent)] backdrop-blur-sm rounded-2xl p-6 border-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)]">
-                      <h3 className="text-2xl font-bold text-[var(--color-primary-soft)] mb-3">
+                    <div className="bg-linear-to-br from-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] to-[color-mix(in_srgb,var(--color-surface-3)_80%,transparent)] backdrop-blur-sm rounded-2xl p-6 border-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)]">
+                      <h3 className="text-2xl font-bold text-(--color-primary-soft) mb-3">
                         {step.title}
                       </h3>
-                      <p className="text-[var(--color-text-muted)] leading-relaxed">
+                      <p className="text-(--color-text-muted) leading-relaxed">
                         {step.description}
                       </p>
 
@@ -518,7 +518,7 @@ export default function RoadmapPage() {
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-[var(--color-primary)] text-xs font-bold">
+                <span className="text-(--color-primary) text-xs font-bold">
                   {Math.round(scrollProgress * 100)}%
                 </span>
               </div>

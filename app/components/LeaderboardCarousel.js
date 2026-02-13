@@ -51,10 +51,10 @@ export default function LeaderboardCarousel() {
     return (
       <section className="w-full min-h-screen md:h-screen relative overflow-hidden flex items-center bg-transparent">
         <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="text-7xl font-extrabold mb-12 text-[var(--color-text)] drop-shadow-lg">
+          <h2 className="text-7xl font-extrabold mb-12 text-(--color-text) drop-shadow-lg">
             Leaderboards
           </h2>
-          <div className="text-2xl text-[var(--color-text)]">Loading...</div>
+          <div className="text-2xl text-(--color-text)">Loading...</div>
         </div>
       </section>
     );
@@ -65,7 +65,7 @@ export default function LeaderboardCarousel() {
     return (
       <section className="w-full min-h-screen md:h-screen relative overflow-hidden flex items-center bg-transparent">
         <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="text-7xl font-extrabold mb-12 text-[var(--color-text)] drop-shadow-lg">
+          <h2 className="text-7xl font-extrabold mb-12 text-(--color-text) drop-shadow-lg">
             Leaderboards
           </h2>
           <div className="text-2xl text-[color-mix(in_srgb,var(--color-text)_80%,transparent)]">
@@ -78,17 +78,17 @@ export default function LeaderboardCarousel() {
 
   // Show leaderboard content
   return (
-    <section className="w-full min-h-screen md:h-screen relative overflow-hidden flex items-start pt-8 md:pt-0 md:items-center bg-[radial-gradient(ellipse_at_center,_var(--color-primary-strong)_0%,_var(--color-ink)_100%)]">
+    <section className="w-full min-h-screen md:h-screen relative overflow-hidden flex items-start pt-8 md:pt-0 md:items-center bg-[radial-gradient(ellipse_at_center,var(--color-primary-strong)_0%,var(--color-ink)_100%)]">
       <div className="container mx-auto px-4 text-center w-full relative z-10">
-        <h2 className="text-5xl md:text-7xl font-extrabold mb-6 md:mb-12 text-[var(--color-text)] drop-shadow-lg pt-5">
+        <h2 className="text-5xl md:text-7xl font-extrabold mb-6 md:mb-12 text-(--color-text) drop-shadow-lg pt-5">
           Leaderboards
         </h2>
 
         {/* Single Leaderboard - First One */}
         <div className="flex items-center justify-center w-full">
           <div className="w-full max-w-2xl">
-            <div className="bg-[color-mix(in_srgb,var(--color-surface-2)_70%,transparent)] backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-[var(--color-border)] shadow-2xl">
-              <h3 className="text-2xl md:text-3xl font-semibold mb-6 text-[var(--color-text)]">
+            <div className="bg-[color-mix(in_srgb,var(--color-surface-2)_70%,transparent)] backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-(--color-border) shadow-2xl">
+              <h3 className="text-2xl md:text-3xl font-semibold mb-6 text-(--color-text)">
                 {leaderboards[0].title}
               </h3>
 
@@ -96,7 +96,7 @@ export default function LeaderboardCarousel() {
               <div>
                 {/* Table Headers */}
                 <div className="bg-[color-mix(in_srgb,var(--color-muted-surface-2)_60%,transparent)] rounded-lg p-3 mb-4">
-                  <div className="grid grid-cols-[1fr_100px] font-light text-[var(--color-text)] text-sm uppercase tracking-wider">
+                  <div className="grid grid-cols-[1fr_100px] font-light text-(--color-text) text-sm uppercase tracking-wider">
                     <div className="flex items-center gap-2">
                       <span className="w-12 md:w-20">Rank</span>
                       <span>Name</span>
@@ -115,11 +115,11 @@ export default function LeaderboardCarousel() {
                         <span className="text-[color-mix(in_srgb,var(--color-text)_90%,transparent)] w-12 md:w-20">
                           #{entry.rank}
                         </span>
-                        <span className="text-[var(--color-text)] truncate">
+                        <span className="text-(--color-text) truncate">
                           {entry.name}
                         </span>
                       </div>
-                      <span className="text-right text-[var(--color-primary)]">
+                      <span className="text-right text-(--color-primary)">
                         {entry.points}
                       </span>
                     </div>

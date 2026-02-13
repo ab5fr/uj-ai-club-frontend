@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import TopPlayers from "../components/TopPlayers";
 import LeaderboardTable from "../components/LeaderboardTable";
@@ -40,7 +41,7 @@ function StatusBadge({ status, score, maxScore, pointsAwarded }) {
         {config.label}
       </span>
       {status === "graded" && score !== null && maxScore !== null && (
-        <span className="text-[var(--color-text-muted)] text-sm">
+        <span className="text-(--color-text-muted) text-sm">
           ({score}/{maxScore})
         </span>
       )}
@@ -73,23 +74,23 @@ function ChallengeCard({
   };
 
   return (
-    <div className="bg-[var(--color-muted-surface-2)] rounded-2xl p-6 mb-4">
+    <div className="bg-(--color-muted-surface-2) rounded-2xl p-6 mb-4">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-xl font-bold text-[var(--color-text)]">
+          <h3 className="text-xl font-bold text-(--color-text)">
             Week {challenge.week} - {challenge.title}
           </h3>
-          <p className="text-[var(--color-text-muted)] mt-2">
+          <p className="text-(--color-text-muted) mt-2">
             {challenge.description}
           </p>
         </div>
         {challenge.hasNotebook && (
           <div className="text-right">
-            <span className="text-[var(--color-accent)] font-bold text-lg">
+            <span className="text-(--color-accent) font-bold text-lg">
               {challenge.maxPoints} pts
             </span>
             {challenge.timeLimitMinutes && (
-              <p className="text-[var(--color-text-muted)] text-sm">
+              <p className="text-(--color-text-muted) text-sm">
                 {challenge.timeLimitMinutes} min
               </p>
             )}
@@ -99,7 +100,7 @@ function ChallengeCard({
 
       {/* Date range */}
       {(challenge.startDate || challenge.endDate) && (
-        <div className="text-[var(--color-text-muted)] text-sm mb-4">
+        <div className="text-(--color-text-muted) text-sm mb-4">
           {challenge.startDate && (
             <span>
               Starts: {new Date(challenge.startDate).toLocaleDateString()}
@@ -135,8 +136,8 @@ function ChallengeCard({
                 disabled={isSubmitting}
                 className={`px-6 py-3 rounded-xl font-bold transition-all ${
                   isSubmitting
-                    ? "bg-[var(--color-muted-strong)] cursor-wait"
-                    : "bg-[var(--color-success)] hover:bg-[color-mix(in_srgb,var(--color-success)_80%,var(--color-ink))]"
+                    ? "bg-(--color-muted-strong) cursor-wait"
+                    : "bg-(--color-success) hover:bg-[color-mix(in_srgb,var(--color-success)_80%,var(--color-ink))]"
                 }`}
               >
                 {isSubmitting ? "Submitting..." : "Submit"}
@@ -149,12 +150,12 @@ function ChallengeCard({
               disabled={!isActive || isCompleted || isStarting}
               className={`px-8 py-3 rounded-xl font-bold transition-all ${
                 isCompleted
-                  ? "bg-[var(--color-success)] cursor-not-allowed"
+                  ? "bg-(--color-success) cursor-not-allowed"
                   : !isActive
-                    ? "bg-[var(--color-muted-strong)] cursor-not-allowed"
+                    ? "bg-(--color-muted-strong) cursor-not-allowed"
                     : isStarting
-                      ? "bg-[var(--color-muted-strong)] cursor-wait"
-                      : "bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-strong)] hover:opacity-90"
+                      ? "bg-(--color-muted-strong) cursor-wait"
+                      : "bg-linear-to-r from-(--color-accent) to-(--color-accent-strong) hover:opacity-90"
               }`}
             >
               {isStarting
@@ -167,7 +168,7 @@ function ChallengeCard({
             </button>
           </div>
         ) : (
-          <span className="text-[var(--color-text-muted)] italic">
+          <span className="text-(--color-text-muted) italic">
             No notebook available
           </span>
         )}
@@ -354,7 +355,7 @@ function CompetitionsContent() {
 
   return (
     <main
-      className={`${fredoka.className} min-h-screen relative flex flex-col items-center pt-32 text-[var(--color-text)] pb-20`}
+      className={`${fredoka.className} min-h-screen relative flex flex-col items-center pt-32 text-(--color-text) pb-20`}
       style={{
         backgroundImage: "url('/challenges-bg.jpg')",
         backgroundSize: "120%",
@@ -367,12 +368,12 @@ function CompetitionsContent() {
         {/* Header Text */}
         <div className="text-center mb-16">
           <h1 className="text-8xl font-bold mb-4">ARCADE</h1>
-          <p className="text-5xl mb-2 text-[var(--color-text-muted)]">
+          <p className="text-5xl mb-2 text-(--color-text-muted)">
             everyone is tough
             <br /> until they face
           </p>
           <p
-            className="text-[5rem] bg-gradient-to-r from-[#dd4e00] to-[#ff0000] text-transparent bg-clip-text"
+            className="text-[5rem] bg-linear-to-r from-[#dd4e00] to-[#ff0000] text-transparent bg-clip-text"
             style={{
               fontFamily: "DK Face Your Fears",
             }}
@@ -393,10 +394,8 @@ function CompetitionsContent() {
         <div className="hidden md:flex justify-center gap-1 mb-20">
           <button
             onClick={() => setActiveTab("leaderboard")}
-            className={`relative overflow-hidden w-[260px] h-[76px] flex items-center justify-center text-xl font-light uppercase tracking-wider transition-all ${
-              activeTab === "leaderboard"
-                ? "text-white"
-                : "text-[var(--color-text)]"
+            className={`relative overflow-hidden w-65 h-19 flex items-center justify-center text-xl font-light uppercase tracking-wider transition-all ${
+              activeTab === "leaderboard" ? "text-white" : "text-(--color-text)"
             }`}
             style={{ clipPath: "polygon(0 0, 100% 0, 90% 100%, 0% 100%)" }}
             aria-pressed={activeTab === "leaderboard"}
@@ -417,10 +416,8 @@ function CompetitionsContent() {
           </button>
           <button
             onClick={() => setActiveTab("challenges")}
-            className={`relative overflow-hidden w-[260px] h-[76px] flex items-center justify-center text-xl font-light uppercase tracking-wider transition-all ${
-              activeTab === "challenges"
-                ? "text-white"
-                : "text-[var(--color-text)]"
+            className={`relative overflow-hidden w-65 h-19 flex items-center justify-center text-xl font-light uppercase tracking-wider transition-all ${
+              activeTab === "challenges" ? "text-white" : "text-(--color-text)"
             }`}
             style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
             aria-pressed={activeTab === "challenges"}
@@ -441,10 +438,8 @@ function CompetitionsContent() {
           </button>
           <button
             onClick={() => setActiveTab("profile")}
-            className={`relative overflow-hidden w-[260px] h-[76px] flex items-center justify-center text-xl font-light uppercase tracking-wider transition-all ${
-              activeTab === "profile"
-                ? "text-white"
-                : "text-[var(--color-text)]"
+            className={`relative overflow-hidden w-65 h-19 flex items-center justify-center text-xl font-light uppercase tracking-wider transition-all ${
+              activeTab === "profile" ? "text-white" : "text-(--color-text)"
             }`}
             style={{ clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0% 100%)" }}
             aria-pressed={activeTab === "profile"}
@@ -476,9 +471,9 @@ function CompetitionsContent() {
                   currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
                 setActiveTab(tabs[prevIndex]);
               }}
-              className="flex-shrink-0 w-20 h-20 rounded-3xl bg-[var(--color-muted-surface-2)] hover:bg-[var(--color-muted-surface)] transition-all flex items-center justify-center"
+              className="shrink-0 w-20 h-20 rounded-3xl bg-(--color-muted-surface-2) hover:bg-(--color-muted-surface) transition-all flex items-center justify-center"
             >
-              <img
+              <Image
                 src={
                   activeTab === "leaderboard"
                     ? "/profile.png"
@@ -493,13 +488,15 @@ function CompetitionsContent() {
                       ? "Leaderboard"
                       : "Challenges"
                 }
-                className="w-8 h-8 object-contain"
+                width={32}
+                height={32}
+                className="object-contain"
               />
             </button>
 
             {/* Center Active Tab */}
-            <div className="flex-1 max-w-xs h-24 rounded-3xl bg-[var(--color-muted-surface)] flex items-center justify-center px-6">
-              <span className="text-[var(--color-text)] text-lg font-semibold uppercase tracking-wider">
+            <div className="flex-1 max-w-xs h-24 rounded-3xl bg-(--color-muted-surface) flex items-center justify-center px-6">
+              <span className="text-(--color-text) text-lg font-semibold uppercase tracking-wider">
                 {activeTab === "leaderboard"
                   ? "Leaderboard"
                   : activeTab === "challenges"
@@ -517,9 +514,9 @@ function CompetitionsContent() {
                   currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
                 setActiveTab(tabs[nextIndex]);
               }}
-              className="flex-shrink-0 w-20 h-20 rounded-3xl bg-[var(--color-muted-surface-2)] hover:bg-[var(--color-muted-surface)] transition-all flex items-center justify-center"
+              className="shrink-0 w-20 h-20 rounded-3xl bg-(--color-muted-surface-2) hover:bg-(--color-muted-surface) transition-all flex items-center justify-center"
             >
-              <img
+              <Image
                 src={
                   activeTab === "leaderboard"
                     ? "/hunt.png"
@@ -534,7 +531,9 @@ function CompetitionsContent() {
                       ? "Profile"
                       : "Leaderboard"
                 }
-                className="w-8 h-8 object-contain"
+                width={32}
+                height={32}
+                className="object-contain"
               />
             </button>
           </div>
@@ -542,16 +541,14 @@ function CompetitionsContent() {
         {/* Content Section */}
         <div className="w-full">
           {error && (
-            <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)] px-6 py-4 rounded-2xl mb-8 max-w-4xl mx-auto">
+            <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-(--color-danger) text-(--color-warning) px-6 py-4 rounded-2xl mb-8 max-w-4xl mx-auto">
               {error}
             </div>
           )}
 
           {loading ? (
             <div className="text-center py-20">
-              <div className="text-2xl text-[var(--color-text)]">
-                Loading...
-              </div>
+              <div className="text-2xl text-(--color-text)">Loading...</div>
             </div>
           ) : activeTab === "challenges" ? (
             // Challenge Section - Updated
@@ -570,7 +567,7 @@ function CompetitionsContent() {
                 ))
               ) : (
                 <div className="backdrop-blur-sm rounded-3xl p-10">
-                  <p className="text-2xl text-[var(--color-text-muted)] text-center">
+                  <p className="text-2xl text-(--color-text-muted) text-center">
                     No challenges available
                   </p>
                 </div>
@@ -587,7 +584,7 @@ function CompetitionsContent() {
                   </div>
                 </>
               ) : (
-                <p className="text-2xl text-[var(--color-text-muted)] text-center">
+                <p className="text-2xl text-(--color-text-muted) text-center">
                   No leaderboard data available
                 </p>
               )}

@@ -148,17 +148,17 @@ export default function CompleteProfilePage() {
     >
       <div className="container mx-auto px-4 max-w-2xl">
         {/* Title */}
-        <h1 className="text-4xl font-bold text-[var(--color-text)] mb-4 text-center">
+        <h1 className="text-4xl font-bold text-(--color-text) mb-4 text-center">
           Complete Your Profile
         </h1>
-        <p className="text-[var(--color-text-muted)] mb-8 text-center">
+        <p className="text-(--color-text-muted) mb-8 text-center">
           Welcome, {user.fullName}! Please complete your profile to continue.
         </p>
 
         {/* Profile Completion Form */}
-        <div className="bg-[color-mix(in_srgb,var(--color-surface)_60%,transparent)] backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-[var(--color-border)]">
+        <div className="bg-[color-mix(in_srgb,var(--color-surface)_60%,transparent)] backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-(--color-border)">
           {error && (
-            <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)] px-6 py-4 rounded-2xl mb-6">
+            <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-(--color-danger) text-(--color-warning) px-6 py-4 rounded-2xl mb-6">
               {error}
             </div>
           )}
@@ -166,11 +166,10 @@ export default function CompleteProfilePage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Password Field */}
             <div>
-              <label className="block text-[var(--color-text-muted)] text-sm font-medium mb-2">
-                Create Password{" "}
-                <span className="text-[var(--color-danger)]">*</span>
+              <label className="block text-(--color-text-muted) text-sm font-medium mb-2">
+                Create Password <span className="text-(--color-danger)">*</span>
               </label>
-              <p className="text-[var(--color-text-muted)] text-xs mb-2">
+              <p className="text-(--color-text-muted) text-xs mb-2">
                 Set a password so you can also log in with email and password
               </p>
               <input
@@ -179,7 +178,7 @@ export default function CompleteProfilePage() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="At least 6 characters"
-                className="w-full px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] backdrop-blur-sm text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] backdrop-blur-sm text-(--color-text) focus:outline-none focus:ring-2 focus:ring-(--color-primary) transition-all"
                 required
                 minLength={6}
               />
@@ -187,9 +186,9 @@ export default function CompleteProfilePage() {
 
             {/* Confirm Password Field */}
             <div>
-              <label className="block text-[var(--color-text-muted)] text-sm font-medium mb-2">
+              <label className="block text-(--color-text-muted) text-sm font-medium mb-2">
                 Confirm Password{" "}
-                <span className="text-[var(--color-danger)]">*</span>
+                <span className="text-(--color-danger)">*</span>
               </label>
               <input
                 type="password"
@@ -197,39 +196,35 @@ export default function CompleteProfilePage() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Confirm your password"
-                className="w-full px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] backdrop-blur-sm text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] backdrop-blur-sm text-(--color-text) focus:outline-none focus:ring-2 focus:ring-(--color-primary) transition-all"
                 required
                 minLength={6}
               />
             </div>
 
             {/* Divider */}
-            <div className="border-t border-[var(--color-border)] my-6"></div>
+            <div className="border-t border-(--color-border) my-6"></div>
 
             {/* University Field */}
             <div>
-              <label className="block text-[var(--color-text-muted)] text-sm font-medium mb-2">
+              <label className="block text-(--color-text-muted) text-sm font-medium mb-2">
                 University
               </label>
               <select
                 name="university"
                 value={formData.university}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] backdrop-blur-sm text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] backdrop-blur-sm text-(--color-text) focus:outline-none focus:ring-2 focus:ring-(--color-primary) transition-all"
                 required
               >
-                <option
-                  value=""
-                  disabled
-                  className="bg-[var(--color-surface-2)]"
-                >
+                <option value="" disabled className="bg-(--color-surface-2)">
                   Select your university
                 </option>
                 {universities.map((uni, index) => (
                   <option
                     key={index}
                     value={uni}
-                    className="bg-[var(--color-surface-2)]"
+                    className="bg-(--color-surface-2)"
                   >
                     {uni}
                   </option>
@@ -239,28 +234,24 @@ export default function CompleteProfilePage() {
 
             {/* Major Field */}
             <div>
-              <label className="block text-[var(--color-text-muted)] text-sm font-medium mb-2">
+              <label className="block text-(--color-text-muted) text-sm font-medium mb-2">
                 Major / Field of Study
               </label>
               <select
                 name="major"
                 value={formData.major}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] backdrop-blur-sm text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] backdrop-blur-sm text-(--color-text) focus:outline-none focus:ring-2 focus:ring-(--color-primary) transition-all"
                 required
               >
-                <option
-                  value=""
-                  disabled
-                  className="bg-[var(--color-surface-2)]"
-                >
+                <option value="" disabled className="bg-(--color-surface-2)">
                   Select your major
                 </option>
                 {majors.map((major, index) => (
                   <option
                     key={index}
                     value={major}
-                    className="bg-[var(--color-surface-2)]"
+                    className="bg-(--color-surface-2)"
                   >
                     {major}
                   </option>
@@ -272,7 +263,7 @@ export default function CompleteProfilePage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-6 py-4 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)] text-[var(--color-text)] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-6 py-4 rounded-xl bg-(--color-primary) hover:bg-(--color-primary-strong) text-(--color-text) font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Completing Profile..." : "Complete Profile"}
             </button>

@@ -18,6 +18,7 @@ export default function Navbar() {
   const router = useRouter();
   const isChallenges = pathname?.startsWith("/challanges");
   const isRoadmap = pathname === "/roadmap";
+  const logoSrc = isRoadmap ? "/orange logo.png" : "/new logo.png";
   const { user, isAuthenticated, logout } = useAuth();
 
   // Check if user is admin
@@ -74,15 +75,15 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-2 md:px-8 py-1 max-w-full ${isRoadmap ? "text-black" : "text-[var(--color-text)]"} bg-transparent overflow-visible transition-transform duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-2 md:px-8 py-1 max-w-full ${isRoadmap ? "text-black" : "text-(--color-text)"} bg-transparent overflow-visible transition-transform duration-300 ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
       {/* Left cluster: Logo + Links */}
-      <div className="flex items-center gap-2 md:gap-10 flex-shrink-0">
+      <div className="flex items-center gap-2 md:gap-10 shrink-0">
         <Link href="/" className="shrink-0">
           <Image
-            src="/new logo.png"
+            src={logoSrc}
             alt="Logo"
             width={500}
             height={500}
@@ -93,13 +94,13 @@ export default function Navbar() {
         <div className="hidden md:flex gap-6 lg:gap-8 text-sm tracking-wide">
           <Link
             href="/"
-            className="font-medium hover:text-[var(--color-primary)] transition-colors"
+            className="font-medium hover:text-(--color-primary) transition-colors"
           >
             Home
           </Link>
           <Link
             href="/challanges"
-            className="font-medium hover:text-[var(--color-primary)] transition-colors"
+            className="font-medium hover:text-(--color-primary) transition-colors"
           >
             Challanges
           </Link>
@@ -111,7 +112,7 @@ export default function Navbar() {
           </Link> */}
           <Link
             href="/roadmap"
-            className="font-medium hover:text-[var(--color-primary)] transition-colors"
+            className="font-medium hover:text-(--color-primary) transition-colors"
           >
             Roadmap
           </Link>

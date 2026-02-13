@@ -10,7 +10,7 @@ export default function ProfileSection({ userProfile }) {
       }`}
     >
       <div
-        className={`bg-[#0d0e10] py-3 text-[var(--color-text)] font-light ${
+        className={`bg-[#0d0e10] py-3 text-(--color-text) font-light ${
           compact ? "px-5 text-xl" : "px-6 text-3xl"
         }`}
       >
@@ -19,7 +19,7 @@ export default function ProfileSection({ userProfile }) {
       <div
         className={`bg-[#0d0e10] px-6 py-3 font-semibold ${
           compact ? "text-3xl" : "text-4xl"
-        } ${valueRed ? "text-[#ff0000]" : "text-[var(--color-text)]"}`}
+        } ${valueRed ? "text-[#ff0000]" : "text-(--color-text)"}`}
       >
         {value}
       </div>
@@ -28,8 +28,8 @@ export default function ProfileSection({ userProfile }) {
 
   if (!userProfile) {
     return (
-      <div className="max-w-4xl mx-auto text-[var(--color-text)] text-center py-20">
-        <p className="text-2xl text-[var(--color-text-muted)]">
+      <div className="max-w-4xl mx-auto text-(--color-text) text-center py-20">
+        <p className="text-2xl text-(--color-text-muted)">
           No profile data available
         </p>
       </div>
@@ -39,13 +39,13 @@ export default function ProfileSection({ userProfile }) {
   const stats = userProfile.stats || {};
 
   return (
-    <div className="max-w-4xl mx-auto text-[var(--color-text)] space-y-8">
+    <div className="max-w-4xl mx-auto text-(--color-text) space-y-8">
       <div className="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
         <div className="bg-[#0d0e10] px-7 py-5 text-[#ff0000] font-semibold text-5xl leading-none">
           #{userProfile.rank}
         </div>
 
-        <div className="relative bg-[#0d0e10] py-5 pl-28 pr-8 min-h-[96px] flex items-center">
+        <div className="relative bg-[#0d0e10] py-5 pl-28 pr-8 min-h-24 flex items-center">
           {userProfile.image && (
             <img
               src={getImageUrl(userProfile.image)}
@@ -53,12 +53,12 @@ export default function ProfileSection({ userProfile }) {
               className="absolute left-4 top-1/2 -translate-y-1/2 w-20 h-20 rounded-full object-cover"
             />
           )}
-          <div className="text-[var(--color-text)] text-4xl font-light leading-tight truncate">
+          <div className="text-(--color-text) text-4xl font-light leading-tight truncate">
             {userProfile.name}
           </div>
         </div>
 
-        <div className="bg-[#0d0e10] px-8 py-5 text-[var(--color-text)] text-5xl font-light leading-none">
+        <div className="bg-[#0d0e10] px-8 py-5 text-(--color-text) text-5xl font-light leading-none">
           {userProfile.points}
         </div>
       </div>
