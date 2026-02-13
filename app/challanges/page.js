@@ -14,169 +14,6 @@ const fredoka = Fredoka({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-// Status badge component for challenge submission status
-function StatusBadge({ status, score, maxScore, pointsAwarded }) {
-  const statusConfig = {
-    not_started: {
-      label: "Not Started",
-      color: "bg-[var(--color-muted-strong)]",
-    },
-    in_progress: { label: "In Progress", color: "bg-[var(--color-warning)]" },
-    submitted: { label: "Submitted", color: "bg-[var(--color-primary)]" },
-    grading: { label: "Grading...", color: "bg-[var(--color-primary-strong)]" },
-    graded: {
-      label: `Graded: ${pointsAwarded} pts`,
-      color: "bg-[var(--color-success)]",
-    },
-    error: { label: "Error", color: "bg-[var(--color-danger)]" },
-  };
-
-  const config = statusConfig[status] || statusConfig.not_started;
-
-  return (
-    <div className="flex items-center gap-2">
-      <span
-        className={`px-3 py-1 rounded-full text-sm font-medium ${config.color}`}
-      >
-        {config.label}
-      </span>
-      {status === "graded" && score !== null && maxScore !== null && (
-        <span className="text-(--color-text-muted) text-sm">
-          ({score}/{maxScore})
-        </span>
-      )}
-    </div>
-  );
-}
-
-// Challenge Card component
-function ChallengeCard({
-  challenge,
-  submission,
-  onStartChallenge,
-  onSubmitChallenge,
-  isStarting,
-  isSubmitting,
-}) {
-  const isActive =
-    challenge.startDate && challenge.endDate
-      ? new Date() >= new Date(challenge.startDate) &&
-        new Date() <= new Date(challenge.endDate)
-      : true;
-
-  const isCompleted = submission?.status === "graded";
-  const isInProgress = submission?.status === "in_progress";
-
-  const handleStart = () => {
-    if (!isCompleted && challenge.hasNotebook) {
-      onStartChallenge(challenge.id);
-    }
-  };
-
-  return (
-    <div className="bg-(--color-muted-surface-2) rounded-2xl p-6 mb-4">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-xl font-bold text-(--color-text)">
-            Week {challenge.week} - {challenge.title}
-          </h3>
-          <p className="text-(--color-text-muted) mt-2">
-            {challenge.description}
-          </p>
-        </div>
-        {challenge.hasNotebook && (
-          <div className="text-right">
-            <span className="text-(--color-accent) font-bold text-lg">
-              {challenge.maxPoints} pts
-            </span>
-            {challenge.timeLimitMinutes && (
-              <p className="text-(--color-text-muted) text-sm">
-                {challenge.timeLimitMinutes} min
-              </p>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Date range */}
-      {(challenge.startDate || challenge.endDate) && (
-        <div className="text-(--color-text-muted) text-sm mb-4">
-          {challenge.startDate && (
-            <span>
-              Starts: {new Date(challenge.startDate).toLocaleDateString()}
-            </span>
-          )}
-          {challenge.startDate && challenge.endDate && <span> | </span>}
-          {challenge.endDate && (
-            <span>
-              Ends: {new Date(challenge.endDate).toLocaleDateString()}
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* Status and action */}
-      <div className="flex justify-between items-center">
-        {submission && (
-          <StatusBadge
-            status={submission.status}
-            score={submission.score}
-            maxScore={submission.maxScore}
-            pointsAwarded={submission.pointsAwarded}
-          />
-        )}
-        {!submission && <div />}
-
-        {challenge.hasNotebook ? (
-          <div className="flex gap-2">
-            {/* Submit button - only show when in progress or submitted */}
-            {isInProgress && (
-              <button
-                onClick={() => onSubmitChallenge(challenge.id)}
-                disabled={isSubmitting}
-                className={`px-6 py-3 rounded-xl font-bold transition-all ${
-                  isSubmitting
-                    ? "bg-(--color-muted-strong) cursor-wait"
-                    : "bg-(--color-success) hover:bg-[color-mix(in_srgb,var(--color-success)_80%,var(--color-ink))]"
-                }`}
-              >
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </button>
-            )}
-
-            {/* Start/Continue button */}
-            <button
-              onClick={handleStart}
-              disabled={!isActive || isCompleted || isStarting}
-              className={`px-8 py-3 rounded-xl font-bold transition-all ${
-                isCompleted
-                  ? "bg-(--color-success) cursor-not-allowed"
-                  : !isActive
-                    ? "bg-(--color-muted-strong) cursor-not-allowed"
-                    : isStarting
-                      ? "bg-(--color-muted-strong) cursor-wait"
-                      : "bg-linear-to-r from-(--color-accent) to-(--color-accent-strong) hover:opacity-90"
-              }`}
-            >
-              {isStarting
-                ? "Starting..."
-                : isCompleted
-                  ? "✓ Completed"
-                  : isInProgress
-                    ? "Continue Challenge"
-                    : "Start Challenge"}
-            </button>
-          </div>
-        ) : (
-          <span className="text-(--color-text-muted) italic">
-            No notebook available
-          </span>
-        )}
-      </div>
-    </div>
-  );
-}
-
 function CompetitionsContent() {
   const [activeTab, setActiveTab] = useState("leaderboard");
   const [leaderboardData, setLeaderboardData] = useState([]);
@@ -352,6 +189,40 @@ function CompetitionsContent() {
   }, [activeTab, challenges]);
 
   const leaderboardTop10 = leaderboardData.slice(0, 10);
+
+  const featuredChallenge = challenges[0] || null;
+  const featuredSubmission = featuredChallenge
+    ? submissions[featuredChallenge.id]
+    : null;
+  const featuredIsInProgress = featuredSubmission?.status === "in_progress";
+  const featuredIsCompleted = featuredSubmission?.status === "graded";
+  const featuredHasNotebook = featuredChallenge?.hasNotebook;
+  const featuredIsStarting =
+    featuredChallenge && startingChallenge === featuredChallenge.id;
+  const featuredIsSubmitting =
+    featuredChallenge && submittingChallenge === featuredChallenge.id;
+  const startButtonLabel = featuredChallenge
+    ? featuredIsStarting
+      ? "Starting..."
+      : featuredIsCompleted
+        ? "✓ Completed"
+        : featuredIsInProgress
+          ? "Continue"
+          : "Start Hunting"
+    : "Start Hunting";
+  const submitDisabled =
+    !featuredChallenge || !featuredIsInProgress || featuredIsSubmitting;
+  const startButtonDisabled =
+    !featuredChallenge ||
+    !featuredHasNotebook ||
+    featuredIsStarting ||
+    featuredIsCompleted;
+  const startButtonClasses = startButtonDisabled
+    ? "bg-[#1a1a1a] text-[var(--color-text-muted)] cursor-not-allowed opacity-50"
+    : "bg-[#111111] text-[#ff0000] hover:bg-[#1a1a1a] hover:scale-[1.01] hover:text-[#ff3333]";
+  const submitButtonClasses = submitDisabled
+    ? "bg-[#1a1a1a] text-[var(--color-text-muted)] cursor-not-allowed opacity-50"
+    : "bg-[#111111] text-[#00ff00] hover:bg-[#1a1a1a] hover:scale-[1.01] hover:text-[#33ff33]";
 
   return (
     <main
@@ -551,20 +422,51 @@ function CompetitionsContent() {
               <div className="text-2xl text-(--color-text)">Loading...</div>
             </div>
           ) : activeTab === "challenges" ? (
-            // Challenge Section - Updated
-            <div className="max-w-4xl mx-auto">
-              {challenges.length > 0 ? (
-                challenges.map((challenge) => (
-                  <ChallengeCard
-                    key={challenge.id}
-                    challenge={challenge}
-                    submission={submissions[challenge.id]}
-                    onStartChallenge={handleStartChallenge}
-                    onSubmitChallenge={handleSubmitChallenge}
-                    isStarting={startingChallenge === challenge.id}
-                    isSubmitting={submittingChallenge === challenge.id}
-                  />
-                ))
+            <div className="w-full">
+              {challenges.length > 0 && featuredChallenge ? (
+                <div className="flex flex-col items-center gap-10 px-4">
+                  <div className="text-center space-y-6">
+                    <h2 className="text-[clamp(2rem,5vw,4rem)] font-bold text-[var(--color-text)] leading-tight">
+                      Week {featuredChallenge.week} - {featuredChallenge.title}
+                    </h2>
+                    <p className="text-lg md:text-xl leading-relaxed text-(--color-text-muted) max-w-4xl mx-auto">
+                      Project Summary:{" "}
+                      {featuredChallenge.description || "Details coming soon."}
+                    </p>
+                  </div>
+                  <div className="w-full max-w-xl flex flex-col gap-6 items-center">
+                    <button
+                      onClick={() =>
+                        featuredChallenge &&
+                        handleStartChallenge(featuredChallenge.id)
+                      }
+                      disabled={startButtonDisabled}
+                      className={`relative w-full py-6 text-2xl font-black uppercase tracking-widest transition-transform duration-200 ${startButtonClasses}`}
+                      style={{
+                        clipPath: "polygon(2% 0, 100% 0, 98% 100%, 0% 100%)",
+                        boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+                      }}
+                    >
+                      {startButtonLabel}
+                    </button>
+                    {!featuredIsCompleted && (
+                      <button
+                        onClick={() =>
+                          featuredChallenge &&
+                          handleSubmitChallenge(featuredChallenge.id)
+                        }
+                        disabled={submitDisabled}
+                        className={`relative w-full py-5 text-xl font-bold uppercase tracking-widest transition-transform duration-200 ${submitButtonClasses}`}
+                        style={{
+                          clipPath: "polygon(0 0, 98% 0, 100% 100%, 2% 100%)",
+                          boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+                        }}
+                      >
+                        {featuredIsSubmitting ? "Submitting..." : "Submit"}
+                      </button>
+                    )}
+                  </div>
+                </div>
               ) : (
                 <div className="backdrop-blur-sm rounded-3xl p-10">
                   <p className="text-2xl text-(--color-text-muted) text-center">
