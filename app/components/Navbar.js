@@ -17,6 +17,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const isChallenges = pathname?.startsWith("/challanges");
+  const isRoadmap = pathname === "/roadmap";
   const { user, isAuthenticated, logout } = useAuth();
 
   // Check if user is admin
@@ -73,7 +74,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-2 md:px-8 py-1 max-w-full text-[var(--color-text)] bg-transparent overflow-visible transition-transform duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-2 md:px-8 py-1 max-w-full ${isRoadmap ? "text-black" : "text-[var(--color-text)]"} bg-transparent overflow-visible transition-transform duration-300 ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -259,9 +260,15 @@ export default function Navbar() {
         className="md:hidden flex flex-col gap-1.5 p-2 flex-shrink-0"
         aria-label="Toggle menu"
       >
-        <span className="w-5 h-0.5 bg-[var(--color-text)] transition-all"></span>
-        <span className="w-5 h-0.5 bg-[var(--color-text)] transition-all"></span>
-        <span className="w-5 h-0.5 bg-[var(--color-text)] transition-all"></span>
+        <span
+          className={`w-5 h-0.5 transition-all ${isRoadmap ? "bg-black" : "bg-[var(--color-text)]"}`}
+        ></span>
+        <span
+          className={`w-5 h-0.5 transition-all ${isRoadmap ? "bg-black" : "bg-[var(--color-text)]"}`}
+        ></span>
+        <span
+          className={`w-5 h-0.5 transition-all ${isRoadmap ? "bg-black" : "bg-[var(--color-text)]"}`}
+        ></span>
       </button>
 
       {/* Mobile Side Menu */}

@@ -173,7 +173,7 @@ export default function RoadmapPage() {
       <div className="relative z-10">
         <Navbar />{" "}
         <div className="relative pt-24 pb-32" ref={containerRef}>
-          <div className="flex justify-center px-4 mt-72 mb-8">
+          <div className="flex justify-center px-4 mt-16 mb-8">
             <img
               src="/ai-roadmap.png"
               alt="AI Roadmap"
