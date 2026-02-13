@@ -75,7 +75,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-2 md:px-8 py-1 max-w-full ${isRoadmap ? "text-black" : "text-(--color-text)"} bg-transparent overflow-visible transition-transform duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-2 md:px-8 py-1 max-w-full ${isRoadmap ? "text-[var(--color-accent)]" : "text-(--color-text)"} bg-transparent overflow-visible transition-transform duration-300 ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -262,13 +262,13 @@ export default function Navbar() {
         aria-label="Toggle menu"
       >
         <span
-          className={`w-5 h-0.5 transition-all ${isRoadmap ? "bg-black" : "bg-[var(--color-text)]"}`}
+          className={`w-5 h-0.5 transition-all ${isRoadmap ? "bg-[var(--color-accent)]" : "bg-[var(--color-text)]"}`}
         ></span>
         <span
-          className={`w-5 h-0.5 transition-all ${isRoadmap ? "bg-black" : "bg-[var(--color-text)]"}`}
+          className={`w-5 h-0.5 transition-all ${isRoadmap ? "bg-[var(--color-accent)]" : "bg-[var(--color-text)]"}`}
         ></span>
         <span
-          className={`w-5 h-0.5 transition-all ${isRoadmap ? "bg-black" : "bg-[var(--color-text)]"}`}
+          className={`w-5 h-0.5 transition-all ${isRoadmap ? "bg-[var(--color-accent)]" : "bg-[var(--color-text)]"}`}
         ></span>
       </button>
 

@@ -11,6 +11,9 @@ const notoSans = Noto_Sans({
 export const metadata = {
   title: "AI Club at University of Jeddah",
   description: "Welcome to the AI Club at University of Jeddah!",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({ children }) {
