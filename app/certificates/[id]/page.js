@@ -3,7 +3,45 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ApiError, certificatesApi, getImageUrl } from "@/lib/api";
+import { ApiError, certificatesApi } from "@/lib/api";
+
+function toYoutubeEmbedUrl(rawUrl) {
+  const trimmed = (rawUrl || "").trim();
+  if (!trimmed) return "";
+
+  try {
+    const parsed = new URL(trimmed);
+    const host = parsed.hostname.toLowerCase();
+
+    if (host === "youtu.be" || host.endsWith(".youtu.be")) {
+      const id = parsed.pathname.split("/").filter(Boolean)[0];
+      return id ? `https://www.youtube.com/embed/${id}` : trimmed;
+    }
+
+    if (host.endsWith("youtube.com") || host.endsWith("youtube-nocookie.com")) {
+      const path = parsed.pathname.replace(/^\/+|\/+$/g, "");
+
+      if (path === "watch") {
+        const id = parsed.searchParams.get("v");
+        return id ? `https://www.youtube.com/embed/${id}` : trimmed;
+      }
+
+      if (path.startsWith("embed/")) {
+        const id = path.slice("embed/".length);
+        return id ? `https://www.youtube.com/embed/${id}` : trimmed;
+      }
+
+      if (path.startsWith("shorts/")) {
+        const id = path.slice("shorts/".length);
+        return id ? `https://www.youtube.com/embed/${id}` : trimmed;
+      }
+    }
+  } catch {
+    return trimmed;
+  }
+
+  return trimmed;
+}
 
 export default function CertificatePage({ params }) {
   const [certificate, setCertificate] = useState(null);
@@ -62,16 +100,17 @@ export default function CertificatePage({ params }) {
   }
 
   return (
-    <main
-      className="min-h-screen text-(--color-text) pt-24 bg-no-repeat bg-(--color-surface-2)"
-      style={{
-        backgroundImage: "url('/project.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
-      }}
-    >
-      <div className="container mx-auto px-4 max-w-7xl mt-12">
+    <main className="relative min-h-screen text-(--color-text) pt-24">
+      <div
+        className="fixed inset-0 z-0 bg-no-repeat bg-(--color-surface-2)"
+        style={{
+          backgroundImage: "url('/project.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+
+      <div className="relative z-10 container mx-auto px-4 max-w-7xl mt-12">
         <div className="flex justify-between items-start mb-8">
           <div className="max-w-2xl">
             <div className="relative inline-block mb-4 ml-8">
@@ -102,19 +141,9 @@ export default function CertificatePage({ params }) {
           </div>
         </div>
 
-        {certificate.coverImage && (
-          <div className="mt-12 rounded-2xl overflow-hidden border border-(--color-border)">
-            <img
-              src={getImageUrl(certificate.coverImage)}
-              alt={certificate.title}
-              className="w-full h-auto max-h-[420px] object-cover"
-            />
-          </div>
-        )}
-
         <div className="relative mt-12 rounded-2xl bg-(--color-surface)">
           <div className="absolute -top-2 -left-2 z-10 bg-(--color-neutral) backdrop-blur-sm p-7 rounded-br-3xl rounded-tl-3xl">
-            <Image src="/coursera.svg" alt="Coursera" width={60} height={60} />
+            <Image src="/coursera.png" alt="Coursera" width={60} height={60} />
           </div>
 
           <iframe
@@ -126,11 +155,16 @@ export default function CertificatePage({ params }) {
 
         <div className="relative mt-12 rounded-2xl bg-(--color-surface) mb-20">
           <div className="absolute -top-2 -left-2 z-10 bg-(--color-neutral) backdrop-blur-sm p-7 rounded-br-3xl rounded-tl-3xl">
-            <Image src="/youtube.svg" alt="YouTube" width={60} height={60} />
+            <Image
+              src="/Youtube_logo.png"
+              alt="YouTube"
+              width={60}
+              height={60}
+            />
           </div>
 
           <iframe
-            src={certificate.youtubeUrl || "about:blank"}
+            src={toYoutubeEmbedUrl(certificate.youtubeUrl) || "about:blank"}
             className="w-full h-100 bg-(--color-neutral) rounded-2xl"
             allowFullScreen
           />

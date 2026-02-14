@@ -20,6 +20,12 @@ export default function Navbar() {
   const isRoadmap = pathname === "/roadmap";
   const logoSrc = isRoadmap ? "/orange logo.png" : "/new logo.png";
   const { user, isAuthenticated, logout } = useAuth();
+  const navItems = [
+    { href: "/", label: "Home" },
+    { href: "/challanges", label: "Challanges" },
+    { href: "/certificates", label: "Certificates" },
+    { href: "/roadmap", label: "Roadmap" },
+  ];
 
   // Check if user is admin
   const isAdmin = () => {
@@ -96,30 +102,15 @@ export default function Navbar() {
         </Link>
         {/* Desktop Navigation */}
         <div className="hidden md:flex gap-6 lg:gap-8 text-sm tracking-wide">
-          <Link
-            href="/"
-            className="font-medium hover:text-(--color-primary) transition-colors"
-          >
-            Home
-          </Link>
-          <Link
-            href="/challanges"
-            className="font-medium hover:text-(--color-primary) transition-colors"
-          >
-            Challanges
-          </Link>
-          {/* <Link
-            href="/resources"
-            className="font-medium hover:text-[var(--color-primary)] transition-colors"
-          >
-            Resources
-          </Link> */}
-          <Link
-            href="/roadmap"
-            className="font-medium hover:text-(--color-primary) transition-colors"
-          >
-            Roadmap
-          </Link>
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="font-medium hover:text-(--color-primary) transition-colors"
+            >
+              {item.label}
+            </Link>
+          ))}
           {/* <Link
             href="/notebook-demo"
             className="font-medium hover:text-[var(--color-primary)] transition-colors"
@@ -293,34 +284,16 @@ export default function Navbar() {
 
         {/* Mobile Navigation Links */}
         <div className="flex flex-col gap-6 p-8 mt-12">
-          <Link
-            href="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className="font-medium hover:text-[var(--color-primary)] transition-colors text-lg"
-          >
-            Home
-          </Link>
-          <Link
-            href="/challanges"
-            onClick={() => setMobileMenuOpen(false)}
-            className="font-medium hover:text-[var(--color-primary)] transition-colors text-lg"
-          >
-            Challanges
-          </Link>
-          <Link
-            href="/resources"
-            onClick={() => setMobileMenuOpen(false)}
-            className="font-medium hover:text-[var(--color-primary)] transition-colors text-lg"
-          >
-            Resources
-          </Link>
-          <Link
-            href="/roadmap"
-            onClick={() => setMobileMenuOpen(false)}
-            className="font-medium hover:text-[var(--color-primary)] transition-colors text-lg"
-          >
-            AI Specializations
-          </Link>
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className="font-medium hover:text-[var(--color-primary)] transition-colors text-lg"
+            >
+              {item.label}
+            </Link>
+          ))}
 
           {/* Admin Link - only show for admins */}
           {isAuthenticated() && isAdmin() && (
