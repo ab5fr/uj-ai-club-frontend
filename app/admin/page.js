@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import {
   ApiError,
   adminChallengesApi,
+  adminCertificatesApi,
   adminResourcesApi,
   adminNotebooksApi,
   adminSubmissionsApi,
@@ -55,6 +56,11 @@ function AdminContent() {
               onClick={() => setActiveTab("resources")}
             />
             <TabButton
+              label="Certificates"
+              active={activeTab === "certificates"}
+              onClick={() => setActiveTab("certificates")}
+            />
+            <TabButton
               label="Challenges"
               active={activeTab === "challenges"}
               onClick={() => setActiveTab("challenges")}
@@ -73,6 +79,7 @@ function AdminContent() {
         </div>
 
         {activeTab === "resources" && <ResourcesAdmin />}
+        {activeTab === "certificates" && <CertificatesAdmin />}
         {activeTab === "challenges" && <ChallengesAdmin />}
         {activeTab === "notebooks" && <NotebooksAdmin />}
         {activeTab === "submissions" && <SubmissionsAdmin />}
@@ -321,6 +328,261 @@ function ResourcesAdmin() {
               </button>
               <button
                 onClick={() => onDelete(r.id)}
+                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-danger)_80%,transparent)] hover:bg-[var(--color-danger)] text-sm"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CertificatesAdmin() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const [editingId, setEditingId] = useState(null);
+
+  const [form, setForm] = useState({
+    level: "",
+    title: "",
+    coverImage: null,
+    firstName: "",
+    secondName: "",
+    courseraUrl: "",
+    youtubeUrl: "",
+    visible: true,
+  });
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const load = async () => {
+    try {
+      setLoading(true);
+      const data = await adminCertificatesApi.list(true);
+      setItems(data.items || data);
+      setError("");
+    } catch (err) {
+      handleErr(err, setError);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const payload = toCertificatePayload(form);
+    try {
+      if (editingId) {
+        await adminCertificatesApi.update(editingId, payload);
+      } else {
+        await adminCertificatesApi.create(payload);
+      }
+      resetForm();
+      await load();
+    } catch (err) {
+      handleErr(err, setError);
+    }
+  };
+
+  const onEdit = (c) => {
+    setEditingId(c.id);
+    setForm({
+      level: c.level || "",
+      title: c.title || "",
+      coverImage: null,
+      firstName: c.firstName || "",
+      secondName: c.secondName || "",
+      courseraUrl: c.courseraUrl || "",
+      youtubeUrl: c.youtubeUrl || "",
+      visible: c.visible !== false && c.isHidden !== true,
+    });
+  };
+
+  const onDelete = async (id) => {
+    if (!confirm("Delete this certificate?")) return;
+    try {
+      await adminCertificatesApi.remove(id);
+      await load();
+    } catch (err) {
+      handleErr(err, setError);
+    }
+  };
+
+  const onToggleVisibility = async (c) => {
+    try {
+      await adminCertificatesApi.setVisibility(
+        c.id,
+        !(c.visible ?? !c.isHidden),
+      );
+      await load();
+    } catch (err) {
+      handleErr(err, setError);
+    }
+  };
+
+  const resetForm = () => {
+    setEditingId(null);
+    setForm({
+      level: "",
+      title: "",
+      coverImage: null,
+      firstName: "",
+      secondName: "",
+      courseraUrl: "",
+      youtubeUrl: "",
+      visible: true,
+    });
+  };
+
+  const filtered = items.filter((c) => {
+    const q = search.toLowerCase();
+    return (
+      (c.title || "").toLowerCase().includes(q) ||
+      (c.firstName || "").toLowerCase().includes(q) ||
+      (c.secondName || "").toLowerCase().includes(q)
+    );
+  });
+
+  return (
+    <section>
+      <h2 className="text-2xl font-semibold mb-4">Certificates</h2>
+      {error && (
+        <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)] px-6 py-3 rounded-2xl mb-4">
+          {error}
+        </div>
+      )}
+
+      <form
+        onSubmit={onSubmit}
+        className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 mb-8"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input
+            label="Level"
+            value={form.level}
+            onChange={(v) => setForm({ ...form, level: v })}
+            placeholder="e.g., 1"
+            required
+          />
+          <Input
+            label="Title"
+            value={form.title}
+            onChange={(v) => setForm({ ...form, title: v })}
+            required
+          />
+          <FileInput
+            label="Cover Image"
+            onChange={(file) => setForm({ ...form, coverImage: file })}
+          />
+          <Input
+            label="First Name"
+            value={form.firstName}
+            onChange={(v) => setForm({ ...form, firstName: v })}
+            required
+          />
+          <Input
+            label="Second Name"
+            value={form.secondName}
+            onChange={(v) => setForm({ ...form, secondName: v })}
+            required
+          />
+          <Input
+            label="Coursera URL"
+            value={form.courseraUrl}
+            onChange={(v) => setForm({ ...form, courseraUrl: v })}
+          />
+          <Input
+            label="YouTube URL"
+            value={form.youtubeUrl}
+            onChange={(v) => setForm({ ...form, youtubeUrl: v })}
+          />
+        </div>
+        <div className="mt-4 flex items-center justify-between">
+          <label className="inline-flex items-center gap-2 text-[var(--color-text-muted)]">
+            <input
+              type="checkbox"
+              checked={form.visible}
+              onChange={(e) => setForm({ ...form, visible: e.target.checked })}
+            />
+            Visible
+          </label>
+          <div className="flex gap-3">
+            {editingId && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="px-4 py-2 rounded-xl bg-[var(--color-muted-strong)] hover:bg-[var(--color-muted-surface)]"
+              >
+                Cancel
+              </button>
+            )}
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)]"
+            >
+              {editingId ? "Update Certificate" : "Add Certificate"}
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div className="flex items-center justify-between mb-4">
+        <div className="text-[var(--color-text-muted)]">
+          {loading ? "Loading..." : `${filtered.length} item(s)`}
+        </div>
+        <div className="w-72">
+          <Input placeholder="Search..." value={search} onChange={setSearch} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filtered.map((c) => (
+          <div
+            key={c.id}
+            className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="font-semibold text-[color-mix(in_srgb,var(--color-text)_90%,transparent)] truncate">
+                {c.title}
+              </div>
+              <span
+                className={`text-xs px-2 py-1 rounded-full ${
+                  c.visible === false || c.isHidden
+                    ? "bg-[var(--color-muted-strong)] text-[var(--color-text)]"
+                    : "bg-[color-mix(in_srgb,var(--color-success)_30%,transparent)] text-[var(--color-success)]"
+                }`}
+              >
+                {c.visible === false || c.isHidden ? "Hidden" : "Visible"}
+              </span>
+            </div>
+            <div className="text-sm text-[var(--color-text-muted)] mb-1">
+              Level {c.level}
+            </div>
+            <div className="text-sm text-[var(--color-text-muted)] mb-3">
+              by {c.firstName} · by {c.secondName}
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onEdit(c)}
+                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-primary)_80%,transparent)] hover:bg-[var(--color-primary)] text-sm"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => onToggleVisibility(c)}
+                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-warning)_80%,transparent)] hover:bg-[var(--color-warning)] text-sm"
+              >
+                {c.visible === false || c.isHidden ? "Show" : "Hide"}
+              </button>
+              <button
+                onClick={() => onDelete(c.id)}
                 className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-danger)_80%,transparent)] hover:bg-[var(--color-danger)] text-sm"
               >
                 Delete
@@ -694,6 +956,23 @@ function toResourcePayload(form) {
   }
   if (form.instructorImage) {
     payload.append("instructorImage", form.instructorImage);
+  }
+
+  return payload;
+}
+
+function toCertificatePayload(form) {
+  const payload = new FormData();
+  payload.append("level", form.level);
+  payload.append("title", form.title);
+  payload.append("firstName", form.firstName || "");
+  payload.append("secondName", form.secondName || "");
+  payload.append("courseraUrl", form.courseraUrl || "");
+  payload.append("youtubeUrl", form.youtubeUrl || "");
+  payload.append("visible", form.visible);
+
+  if (form.coverImage) {
+    payload.append("coverImage", form.coverImage);
   }
 
   return payload;
