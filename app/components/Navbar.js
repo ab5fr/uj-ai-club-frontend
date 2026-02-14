@@ -90,7 +90,8 @@ export default function Navbar() {
             alt="Logo"
             width={500}
             height={500}
-            className="md:w-75"
+            sizes="(max-width: 768px) 100px, 200px"
+            className="w-24 h-24 md:w-40 md:h-40 object-contain"
           />
         </Link>
         {/* Desktop Navigation */}
@@ -277,7 +278,7 @@ export default function Navbar() {
 
       {/* Mobile Side Menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-[var(--color-surface)] transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed top-0 right-0 h-screen min-h-screen w-64 bg-[var(--color-ink)] shadow-[0_20px_40px_rgba(0,0,0,0.45)] transform transition-transform duration-300 ease-in-out z-50 ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         } md:hidden`}
       >
@@ -395,7 +396,7 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div
           onClick={() => setMobileMenuOpen(false)}
-          className="fixed inset-0 bg-[color-mix(in_srgb,var(--color-ink)_50%,transparent)] z-40 md:hidden"
+          className="fixed inset-0 bg-[color-mix(in_srgb,var(--color-surface)_60%,transparent)] z-40 md:hidden"
         ></div>
       )}
     </nav>

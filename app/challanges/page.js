@@ -226,13 +226,7 @@ function CompetitionsContent() {
 
   return (
     <main
-      className={`${fredoka.className} min-h-screen relative flex flex-col items-center pt-32 text-(--color-text) pb-20`}
-      style={{
-        backgroundImage: "url('/challenges-bg.jpg')",
-        backgroundSize: "120%",
-        backgroundPosition: "top center",
-        backgroundRepeat: "no-repeat",
-      }}
+      className={`${fredoka.className} min-h-screen relative flex flex-col items-center pt-32 text-(--color-text) pb-20 bg-[url('/challenges-bg.jpg')] bg-cover bg-top bg-no-repeat md:bg-size-[120%] md:bg-top`}
     >
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
@@ -426,11 +420,11 @@ function CompetitionsContent() {
               {challenges.length > 0 && featuredChallenge ? (
                 <div className="flex flex-col items-center gap-10 px-4">
                   <div className="text-center space-y-6">
-                    <h2 className="text-[clamp(2rem,5vw,4rem)] font-bold text-[var(--color-text)] leading-tight">
+                    <h2 className="text-[clamp(2rem,5vw,4rem)] font-bold text-(--color-text) leading-tight">
                       Week {featuredChallenge.week} - {featuredChallenge.title}
                     </h2>
                     <p className="text-lg md:text-xl leading-relaxed text-(--color-text-muted) max-w-4xl mx-auto">
-                      Project Summary:{" "}
+                      {" "}
                       {featuredChallenge.description || "Details coming soon."}
                     </p>
                   </div>

@@ -256,55 +256,32 @@ export default function RoadmapPage() {
                 strokeLinejoin="round"
                 opacity="1"
               />{" "}
-              {/* Draw circles on the path */}
-              {roadmapSteps.map((step, index) => {
-                const circleX = step.position === "left" ? 300 : 900;
-                const circleY = index * stepHeight + stepBaseY + stepOffset;
-                const isActive = getCircleProgress(index);
-
-                return (
-                  <circle
-                    key={`circle-${index}`}
-                    cx={circleX}
-                    cy={circleY}
-                    r="32"
-                    fill={
-                      isActive
-                        ? "var(--color-primary-strong)"
-                        : "var(--color-surface-3)"
-                    }
-                    stroke={
-                      isActive ? "var(--color-primary)" : "var(--color-border)"
-                    }
-                    strokeWidth="4"
-                    opacity={isActive ? "1" : "0.5"}
-                    className="transition-all duration-700"
-                  />
-                );
-              })}
-              {/* Draw circle numbers */}
-              {roadmapSteps.map((step, index) => {
-                const circleX = step.position === "left" ? 300 : 900;
-                const circleY = index * stepHeight + stepBaseY + stepOffset;
-                const isActive = getCircleProgress(index);
-
-                return (
-                  <text
-                    key={`text-${index}`}
-                    x={circleX}
-                    y={circleY + 8}
-                    textAnchor="middle"
-                    fill="var(--color-text)"
-                    fontSize="24"
-                    fontWeight="bold"
-                    opacity={isActive ? "1" : "0.5"}
-                    className="transition-all duration-700"
-                  >
-                    {index + 1}
-                  </text>
-                );
-              })}
             </svg>
+
+            {/* Number Circles */}
+            {roadmapSteps.map((step, index) => {
+              const circleXPercent = step.position === "left" ? 25 : 75;
+              const circleY = index * stepHeight + stepBaseY + stepOffset;
+              const isActive = getCircleProgress(index);
+
+              return (
+                <div
+                  key={`circle-${index}`}
+                  className={`absolute z-20 w-16 h-16 rounded-full border-4 flex items-center justify-center font-bold text-xl transition-all duration-700 ${
+                    isActive
+                      ? "bg-(--color-primary-strong) border-(--color-primary) text-(--color-text)"
+                      : "bg-(--color-surface-3) border-(--color-border) text-(--color-text-muted) opacity-70"
+                  }`}
+                  style={{
+                    left: `${circleXPercent}%`,
+                    top: `${circleY}px`,
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  {index + 1}
+                </div>
+              );
+            })}
 
             {/* Roadmap Steps */}
             {roadmapSteps.map((step, index) => {
@@ -328,10 +305,10 @@ export default function RoadmapPage() {
                     }}
                   >
                     <div className="bg-linear-to-br from-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] to-[color-mix(in_srgb,var(--color-surface-3)_80%,transparent)] backdrop-blur-sm rounded-2xl p-6 border-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)]">
-                      <h3 className="text-2xl font-bold text-(--color-primary-soft) mb-3">
+                      <h3 className="text-2xl font-bold text-(--color-primary-soft) mb-3 wrap-break-word">
                         {step.title}
                       </h3>
-                      <p className="text-(--color-text-muted) leading-relaxed">
+                      <p className="text-(--color-text-muted) leading-relaxed wrap-break-word">
                         {step.description}
                       </p>
 
@@ -394,7 +371,7 @@ export default function RoadmapPage() {
                         cy="35"
                         rx="50"
                         ry="20"
-                        fill="var(--color-warning)"
+                        fill="#000000"
                         stroke="var(--color-accent)"
                         strokeWidth="2"
                       />
@@ -406,7 +383,7 @@ export default function RoadmapPage() {
                         width="30"
                         height="20"
                         rx="5"
-                        fill="var(--color-warning)"
+                        fill="#000000"
                         stroke="var(--color-accent)"
                         strokeWidth="2"
                       />
@@ -428,24 +405,24 @@ export default function RoadmapPage() {
                         cx="40"
                         cy="30"
                         r="6"
-                        fill="var(--color-primary-soft)"
-                        stroke="var(--color-primary-strong)"
+                        fill="var(--color-accent)"
+                        stroke="var(--color-accent-strong)"
                         strokeWidth="2"
                       />
                       <circle
                         cx="60"
                         cy="30"
                         r="6"
-                        fill="var(--color-primary-soft)"
-                        stroke="var(--color-primary-strong)"
+                        fill="var(--color-accent)"
+                        stroke="var(--color-accent-strong)"
                         strokeWidth="2"
                       />
                       <circle
                         cx="80"
                         cy="30"
                         r="6"
-                        fill="var(--color-primary-soft)"
-                        stroke="var(--color-primary-strong)"
+                        fill="var(--color-accent)"
+                        stroke="var(--color-accent-strong)"
                         strokeWidth="2"
                       />
 
@@ -453,8 +430,8 @@ export default function RoadmapPage() {
                       <g transform="translate(110, 35)">
                         <circle
                           r="8"
-                          fill="var(--color-muted)"
-                          stroke="var(--color-muted-strong)"
+                          fill="var(--color-accent)"
+                          stroke="var(--color-accent-strong)"
                           strokeWidth="2"
                         />
                         <line

@@ -23,8 +23,8 @@ export default function TopPlayers({ topPlayers }) {
 
   const rankElevations = {
     "1st": "mt-0",
-    "2nd": "-mt-40 md:-mt-40",
-    "3rd": "-mt-40 md:-mt-40",
+    "2nd": "mt-0 md:-mt-40",
+    "3rd": "mt-0 md:-mt-40",
   };
 
   const rankBorderWidths = {
