@@ -89,10 +89,10 @@ export default function CertificatePage({ params }) {
             {error || "Certificate not found"}
           </h1>
           <button
-            onClick={() => router.push("/certificates")}
+            onClick={() => router.push("/roadmap")}
             className="px-8 py-4 bg-(--color-primary) hover:bg-(--color-primary-strong) text-(--color-text) rounded-2xl font-semibold text-lg transition-all"
           >
-            Back to Certificates
+            Back to Roadmap
           </button>
         </div>
       </main>
@@ -126,9 +126,6 @@ export default function CertificatePage({ params }) {
             <p className="text-(--color-text-muted) mb-2">
               by {certificate.firstName}
             </p>
-            <p className="text-(--color-text-muted) mb-3">
-              by {certificate.secondName}
-            </p>
           </div>
 
           <div className="hidden md:block bg-(--color-primary-glow-solid) rounded-3xl p-6 max-w-md mt-8">
@@ -141,16 +138,41 @@ export default function CertificatePage({ params }) {
           </div>
         </div>
 
-        <div className="relative mt-12 rounded-2xl bg-(--color-surface)">
-          <div className="absolute -top-2 -left-2 z-10 bg-(--color-neutral) backdrop-blur-sm p-7 rounded-br-3xl rounded-tl-3xl">
-            <Image src="/coursera.png" alt="Coursera" width={60} height={60} />
-          </div>
+        <div className="relative mt-12 rounded-2xl bg-(--color-neutral) min-h-20 flex items-center px-8 pl-40 border border-(--color-border)">
+          {certificate.courseraUrl ? (
+            <a
+              href={certificate.courseraUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute -top-2 -left-2 z-10 bg-(--color-neutral) backdrop-blur-sm p-7 rounded-br-3xl rounded-tl-3xl"
+              aria-label="Open Coursera course"
+            >
+              <Image
+                src="/coursera.png"
+                alt="Coursera"
+                width={60}
+                height={60}
+              />
+            </a>
+          ) : (
+            <div className="absolute -top-2 -left-2 z-10 bg-(--color-neutral) backdrop-blur-sm p-7 rounded-br-3xl rounded-tl-3xl">
+              <Image
+                src="/coursera.png"
+                alt="Coursera"
+                width={60}
+                height={60}
+              />
+            </div>
+          )}
 
-          <iframe
-            src={certificate.courseraUrl || "about:blank"}
-            className="w-full h-100 bg-(--color-neutral) rounded-2xl"
-            allowFullScreen
-          />
+          <div className="py-5">
+            <p className="text-5xl font-bold text-(--color-ink)">
+              {certificate.courseTitle || certificate.title}
+            </p>
+            <p className="text-lg text-[color-mix(in_srgb,var(--color-ink)_70%,transparent)]">
+              by {certificate.secondName}
+            </p>
+          </div>
         </div>
 
         <div className="relative mt-12 rounded-2xl bg-(--color-surface) mb-20">

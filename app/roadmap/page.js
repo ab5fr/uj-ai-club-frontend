@@ -1,76 +1,49 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import Navbar from "../components/Navbar";
+import { ApiError, certificatesApi } from "@/lib/api";
 
 export default function RoadmapPage() {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [roadmapSteps, setRoadmapSteps] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const containerRef = useRef(null);
-
-  const roadmapSteps = [
-    {
-      title: "Introduction to AI",
-      description:
-        "Learn the basics of Artificial Intelligence and its applications in modern technology.",
-      position: "right",
-    },
-    {
-      title: "Machine Learning Fundamentals",
-      description:
-        "Understand core ML concepts, algorithms, and how machines learn from data.",
-      position: "left",
-    },
-    {
-      title: "Deep Learning",
-      description:
-        "Dive into neural networks, CNNs, RNNs, and advanced architectures.",
-      position: "right",
-    },
-    {
-      title: "Natural Language Processing",
-      description: "Explore how AI understands and generates human language.",
-      position: "left",
-    },
-    {
-      title: "Computer Vision",
-      description: "Learn how AI interprets and processes visual information.",
-      position: "right",
-    },
-    {
-      title: "Reinforcement Learning",
-      description:
-        "Master training agents to make decisions through rewards and penalties.",
-      position: "left",
-    },
-    {
-      title: "Generative AI & LLMs",
-      description: "Explore large language models and generative AI systems.",
-      position: "right",
-    },
-    {
-      title: "AI in Production",
-      description:
-        "Deploy and manage AI models at scale in real-world applications.",
-      position: "left",
-    },
-    {
-      title: "AI Security & Safety",
-      description:
-        "Understand adversarial attacks, robustness, and AI safety practices.",
-      position: "right",
-    },
-    {
-      title: "Advanced AI & Future",
-      description:
-        "Explore cutting-edge research, AGI concepts, and the future of AI.",
-      position: "left",
-    },
-  ];
 
   const stepHeight = 500;
   const stepOffset = 100;
   const stepBaseY = 50;
-  const totalHeight = roadmapSteps.length * stepHeight + stepOffset;
+  const totalHeight =
+    Math.max(roadmapSteps.length, 1) * stepHeight + stepOffset;
+
+  useEffect(() => {
+    const loadSteps = async () => {
+      try {
+        setLoading(true);
+        const certificates = await certificatesApi.getAll();
+        const mapped = (certificates || []).map((certificate, index) => ({
+          id: certificate.id,
+          title: certificate.title,
+          description: `by ${certificate.firstName} · by ${certificate.secondName}`,
+          position: index % 2 === 0 ? "right" : "left",
+        }));
+        setRoadmapSteps(mapped);
+        setError("");
+      } catch (err) {
+        if (err instanceof ApiError) {
+          setError(err.message);
+        } else {
+          setError("Failed to load roadmap steps");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSteps();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -265,9 +238,10 @@ export default function RoadmapPage() {
               const isActive = getCircleProgress(index);
 
               return (
-                <div
+                <Link
                   key={`circle-${index}`}
-                  className={`absolute z-20 w-16 h-16 rounded-full border-4 flex items-center justify-center font-bold text-xl transition-all duration-700 ${
+                  href={`/certificates/${step.id}`}
+                  className={`absolute z-20 w-16 h-16 rounded-full border-4 flex items-center justify-center font-bold text-xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_color-mix(in_srgb,var(--color-primary)_45%,transparent)] ${
                     isActive
                       ? "bg-(--color-primary-strong) border-(--color-primary) text-(--color-text)"
                       : "bg-(--color-surface-3) border-(--color-border) text-(--color-text-muted) opacity-70"
@@ -279,7 +253,7 @@ export default function RoadmapPage() {
                   }}
                 >
                   {index + 1}
-                </div>
+                </Link>
               );
             })}
 
@@ -304,7 +278,10 @@ export default function RoadmapPage() {
                       width: "45%",
                     }}
                   >
-                    <div className="bg-linear-to-br from-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] to-[color-mix(in_srgb,var(--color-surface-3)_80%,transparent)] backdrop-blur-sm rounded-2xl p-6 border-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)]">
+                    <Link
+                      href={`/certificates/${step.id}`}
+                      className="block bg-linear-to-br from-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] to-[color-mix(in_srgb,var(--color-surface-3)_80%,transparent)] backdrop-blur-sm rounded-2xl p-6 border-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_36px_color-mix(in_srgb,var(--color-primary)_25%,transparent)] hover:border-[color-mix(in_srgb,var(--color-primary)_55%,transparent)]"
+                    >
                       <h3 className="text-2xl font-bold text-(--color-primary-soft) mb-3 wrap-break-word">
                         {step.title}
                       </h3>
@@ -315,7 +292,7 @@ export default function RoadmapPage() {
                       {/* Decorative Corner */}
                       <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)] rounded-tr-2xl"></div>
                       <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)] rounded-bl-2xl"></div>
-                    </div>
+                    </Link>
                   </div>
                 </div>
               );
@@ -467,6 +444,24 @@ export default function RoadmapPage() {
               );
             })}
           </div>
+
+          {loading && (
+            <div className="text-center py-10 text-(--color-text-muted)">
+              Loading roadmap...
+            </div>
+          )}
+
+          {!loading && error && (
+            <div className="text-center py-10 text-(--color-warning)">
+              {error}
+            </div>
+          )}
+
+          {!loading && !error && roadmapSteps.length === 0 && (
+            <div className="text-center py-10 text-(--color-text-muted)">
+              No roadmap steps available yet.
+            </div>
+          )}
 
           {/* Scroll Progress Indicator */}
           <div className="fixed bottom-8 right-8 z-50">

@@ -350,6 +350,7 @@ function CertificatesAdmin() {
   const [form, setForm] = useState({
     level: "",
     title: "",
+    courseTitle: "",
     coverImage: null,
     firstName: "",
     secondName: "",
@@ -396,6 +397,7 @@ function CertificatesAdmin() {
     setForm({
       level: c.level || "",
       title: c.title || "",
+      courseTitle: c.courseTitle || "",
       coverImage: null,
       firstName: c.firstName || "",
       secondName: c.secondName || "",
@@ -432,6 +434,7 @@ function CertificatesAdmin() {
     setForm({
       level: "",
       title: "",
+      courseTitle: "",
       coverImage: null,
       firstName: "",
       secondName: "",
@@ -475,6 +478,12 @@ function CertificatesAdmin() {
             label="Title"
             value={form.title}
             onChange={(v) => setForm({ ...form, title: v })}
+            required
+          />
+          <Input
+            label="Course Title"
+            value={form.courseTitle}
+            onChange={(v) => setForm({ ...form, courseTitle: v })}
             required
           />
           <FileInput
@@ -564,6 +573,9 @@ function CertificatesAdmin() {
             </div>
             <div className="text-sm text-[var(--color-text-muted)] mb-1">
               Level {c.level}
+            </div>
+            <div className="text-sm text-[var(--color-text-muted)] mb-1 line-clamp-1">
+              {c.courseTitle}
             </div>
             <div className="text-sm text-[var(--color-text-muted)] mb-3">
               by {c.firstName} · by {c.secondName}
@@ -965,6 +977,7 @@ function toCertificatePayload(form) {
   const payload = new FormData();
   payload.append("level", form.level);
   payload.append("title", form.title);
+  payload.append("courseTitle", form.courseTitle || "");
   payload.append("firstName", form.firstName || "");
   payload.append("secondName", form.secondName || "");
   payload.append("courseraUrl", form.courseraUrl || "");
