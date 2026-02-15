@@ -89,14 +89,14 @@ export default function Navbar() {
     >
       {/* Left cluster: Logo + Links */}
       <div className="flex items-center gap-2 md:gap-10 shrink-0">
-        <Link href="/" className="shrink-0">
+        <Link href="/" className="shrink-0 mr-4 md:mr-8">
           <Image
             src={logoSrc}
             alt="Logo"
             width={500}
             height={500}
             sizes="(max-width: 768px) 100px, 200px"
-            className="w-24 h-24 md:w-40 md:h-40 object-contain"
+            className="w-24 h-24 md:w-40 md:h-40 object-contain scale-175 md:scale-130 origin-left"
           />
         </Link>
         {/* Desktop Navigation */}
