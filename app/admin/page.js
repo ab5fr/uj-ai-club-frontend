@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -618,6 +619,7 @@ function ChallengesAdmin() {
     title: "",
     description: "",
     week: "",
+    allowedSubmissions: "3",
     challengeUrl: "",
     startDate: "",
     endDate: "",
@@ -647,6 +649,9 @@ function ChallengesAdmin() {
       title: form.title,
       description: form.description,
       week: form.week ? parseInt(form.week) : null,
+      allowedSubmissions: form.allowedSubmissions
+        ? parseInt(form.allowedSubmissions)
+        : 3,
       challengeUrl: form.challengeUrl || null,
       startDate: form.startDate || null,
       endDate: form.endDate || null,
@@ -689,6 +694,10 @@ function ChallengesAdmin() {
       title: c.title || "",
       description: c.description || "",
       week: c.week !== null && c.week !== undefined ? String(c.week) : "",
+      allowedSubmissions:
+        c.allowedSubmissions !== null && c.allowedSubmissions !== undefined
+          ? String(c.allowedSubmissions)
+          : "3",
       challengeUrl: c.challengeUrl || "",
       startDate: formatDateForInput(c.startDate),
       endDate: formatDateForInput(c.endDate),
@@ -724,6 +733,7 @@ function ChallengesAdmin() {
       title: "",
       description: "",
       week: "",
+      allowedSubmissions: "3",
       challengeUrl: "",
       startDate: "",
       endDate: "",
@@ -766,6 +776,14 @@ function ChallengesAdmin() {
             value={form.week}
             onChange={(v) => setForm({ ...form, week: v })}
             placeholder="e.g., 5"
+          />
+          <Input
+            label="Allowed Submissions"
+            type="number"
+            value={form.allowedSubmissions}
+            onChange={(v) => setForm({ ...form, allowedSubmissions: v })}
+            placeholder="e.g., 3"
+            required
           />
           <Textarea
             label="Description"
@@ -852,6 +870,9 @@ function ChallengesAdmin() {
             </div>
             <div className="text-sm text-[var(--color-text-muted)] mb-3 line-clamp-2">
               {c.description}
+            </div>
+            <div className="text-xs text-[var(--color-text-muted)] mb-2">
+              Allowed submissions: {c.allowedSubmissions ?? 3}
             </div>
             <div className="text-xs text-[var(--color-text-muted)] mb-3">
               {c.startDate ? `Start: ${fmtDate(c.startDate)}` : ""}
@@ -1450,10 +1471,32 @@ function NotebooksAdmin() {
 // ===========================================
 
 function SubmissionsAdmin() {
+  const router = useRouter();
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [filter, setFilter] = useState("all"); // all, graded, in_progress, not_started
+  const [filter, setFilter] = useState("all");
+  const [scoreInputs, setScoreInputs] = useState({});
+  const [gradingSubmissionId, setGradingSubmissionId] = useState(null);
+  const [accessingSubmissionId, setAccessingSubmissionId] = useState(null);
+
+  const getFilenameFromDisposition = (contentDisposition, fallback) => {
+    if (!contentDisposition) return fallback;
+
+    const utf8Match = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i);
+    if (utf8Match?.[1]) {
+      try {
+        return decodeURIComponent(utf8Match[1]);
+      } catch {
+        return utf8Match[1];
+      }
+    }
+
+    const quotedMatch = contentDisposition.match(/filename="?([^";]+)"?/i);
+    if (quotedMatch?.[1]) return quotedMatch[1];
+
+    return fallback;
+  };
 
   useEffect(() => {
     load();
@@ -1477,11 +1520,62 @@ function SubmissionsAdmin() {
     return s.status === filter;
   });
 
+  const handleGrade = async (submissionId) => {
+    const raw = scoreInputs[submissionId];
+    const score = raw === undefined || raw === "" ? NaN : Number(raw);
+
+    if (Number.isNaN(score) || score < 0 || score > 100) {
+      setError("Score must be a number between 0 and 100.");
+      return;
+    }
+
+    try {
+      setGradingSubmissionId(submissionId);
+      setError("");
+      await adminSubmissionsApi.grade(submissionId, score);
+      await load();
+    } catch (err) {
+      handleErr(err, setError);
+    } finally {
+      setGradingSubmissionId(null);
+    }
+  };
+
+  const handleDownloadSubmission = async (submissionId) => {
+    try {
+      setAccessingSubmissionId(submissionId);
+      setError("");
+      const { blob, contentDisposition } =
+        await adminSubmissionsApi.getFileBlob(submissionId, true);
+
+      const objectUrl = URL.createObjectURL(blob);
+      const fallbackName = `submission-${submissionId}.ipynb`;
+      const filename = getFilenameFromDisposition(
+        contentDisposition,
+        fallbackName,
+      );
+
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 30_000);
+    } catch (err) {
+      handleErr(err, setError);
+    } finally {
+      setAccessingSubmissionId(null);
+    }
+  };
+
   const statusColors = {
     not_started: "bg-[var(--color-muted-strong)]",
     in_progress: "bg-[var(--color-warning)]",
     submitted: "bg-[var(--color-primary)]",
-    grading: "bg-[var(--color-primary-strong)]",
+    grading: "bg-[var(--color-primary)]",
+    grading_pending: "bg-[var(--color-primary)]",
     graded: "bg-[var(--color-success)]",
     error: "bg-[var(--color-danger)]",
   };
@@ -1491,6 +1585,9 @@ function SubmissionsAdmin() {
     total: submissions.length,
     graded: submissions.filter((s) => s.status === "graded").length,
     inProgress: submissions.filter((s) => s.status === "in_progress").length,
+    pending: submissions.filter((s) =>
+      ["grading_pending", "submitted", "grading"].includes(s.status),
+    ).length,
     totalPoints: submissions
       .filter((s) => s.pointsCredited)
       .reduce((sum, s) => sum + s.pointsAwarded, 0),
@@ -1510,7 +1607,7 @@ function SubmissionsAdmin() {
       )}
 
       {/* Statistics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center">
           <div className="text-3xl font-bold text-[var(--color-text)]">
             {stats.total}
@@ -1534,6 +1631,12 @@ function SubmissionsAdmin() {
           </div>
         </div>
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center">
+          <div className="text-3xl font-bold text-[var(--color-primary)]">
+            {stats.pending}
+          </div>
+          <div className="text-sm text-[var(--color-text-muted)]">Pending</div>
+        </div>
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center">
           <div className="text-3xl font-bold text-[var(--color-accent)]">
             {stats.totalPoints}
           </div>
@@ -1547,21 +1650,25 @@ function SubmissionsAdmin() {
       <div className="flex items-center gap-4 mb-6">
         <span className="text-[var(--color-text-muted)]">Filter:</span>
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-1 inline-flex">
-          {["all", "graded", "in_progress", "submitted", "not_started"].map(
-            (f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                  filter === f
-                    ? "bg-[var(--color-primary)] text-[var(--color-text)]"
-                    : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
-                }`}
-              >
-                {f.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-              </button>
-            ),
-          )}
+          {[
+            "all",
+            "grading_pending",
+            "graded",
+            "in_progress",
+            "not_started",
+          ].map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                filter === f
+                  ? "bg-[var(--color-primary)] text-[var(--color-text)]"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+              }`}
+            >
+              {f.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+            </button>
+          ))}
         </div>
         <button
           onClick={load}
@@ -1584,6 +1691,9 @@ function SubmissionsAdmin() {
                   Challenge
                 </th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
+                  Attempt
+                </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
                   Status
                 </th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
@@ -1598,13 +1708,19 @@ function SubmissionsAdmin() {
                 <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
                   Graded
                 </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
+                  Submission
+                </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
+                  Manual Grade
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[color-mix(in_srgb,var(--color-primary-strong)_20%,transparent)]">
               {loading ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={10}
                     className="px-4 py-8 text-center text-[var(--color-text-muted)]"
                   >
                     Loading...
@@ -1613,7 +1729,7 @@ function SubmissionsAdmin() {
               ) : filteredSubmissions.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={10}
                     className="px-4 py-8 text-center text-[var(--color-text-muted)]"
                   >
                     No submissions found
@@ -1635,6 +1751,9 @@ function SubmissionsAdmin() {
                     </td>
                     <td className="px-4 py-3 text-[var(--color-text-muted)]">
                       {s.challengeTitle}
+                    </td>
+                    <td className="px-4 py-3 text-[var(--color-text-muted)] text-xs">
+                      {s.attemptNumber}/{s.allowedSubmissions}
                     </td>
                     <td className="px-4 py-3">
                       <span
@@ -1672,6 +1791,65 @@ function SubmissionsAdmin() {
                     </td>
                     <td className="px-4 py-3 text-xs text-[var(--color-text-muted)]">
                       {s.gradedAt ? fmtDateTime(s.gradedAt) : "-"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() =>
+                            router.push(`/admin/submissions/${s.id}`)
+                          }
+                          disabled={accessingSubmissionId === s.id}
+                          className="px-3 py-1.5 rounded-lg bg-[color-mix(in_srgb,var(--color-primary)_80%,transparent)] text-[var(--color-text)] text-xs hover:bg-[var(--color-primary)] disabled:opacity-60"
+                        >
+                          View
+                        </button>
+                        <button
+                          onClick={() => handleDownloadSubmission(s.id)}
+                          disabled={accessingSubmissionId === s.id}
+                          className="px-3 py-1.5 rounded-lg bg-[color-mix(in_srgb,var(--color-warning)_80%,transparent)] text-[var(--color-text)] text-xs hover:bg-[var(--color-warning)] disabled:opacity-60"
+                        >
+                          Download
+                        </button>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      {[
+                        "grading_pending",
+                        "submitted",
+                        "grading",
+                        "graded",
+                      ].includes(s.status) ? (
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            step="0.1"
+                            value={scoreInputs[s.id] ?? ""}
+                            onChange={(e) =>
+                              setScoreInputs((prev) => ({
+                                ...prev,
+                                [s.id]: e.target.value,
+                              }))
+                            }
+                            placeholder="0-100"
+                            className="w-24 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-2 py-1 text-sm"
+                          />
+                          <button
+                            onClick={() => handleGrade(s.id)}
+                            disabled={gradingSubmissionId === s.id}
+                            className="px-3 py-1.5 rounded-lg bg-[var(--color-success)] text-[var(--color-text)] text-xs hover:opacity-90 disabled:opacity-60"
+                          >
+                            {gradingSubmissionId === s.id
+                              ? "Saving..."
+                              : "Set Grade"}
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-[var(--color-text-muted)]">
+                          -
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))

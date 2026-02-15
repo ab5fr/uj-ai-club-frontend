@@ -25,6 +25,12 @@ function CompetitionsContent() {
   const [submittingChallenge, setSubmittingChallenge] = useState(null);
   const [error, setError] = useState("");
 
+  const normalizeAllowedSubmissions = (value, fallback = 3) => {
+    const n = Number(value);
+    if (Number.isFinite(n) && n > 0) return n;
+    return fallback;
+  };
+
   useEffect(() => {
     fetchData();
   }, [activeTab]);
@@ -91,6 +97,8 @@ function CompetitionsContent() {
   };
 
   const handleStartChallenge = async (challengeId) => {
+    const popup = window.open("about:blank", "_blank");
+
     try {
       setStartingChallenge(challengeId);
       setError("");
@@ -98,8 +106,12 @@ function CompetitionsContent() {
       const result = await challengesApi.startChallenge(challengeId);
 
       if (result.success && result.jupyterhubUrl) {
-        // Open JupyterHub in a new tab with SSO token
-        window.open(result.jupyterhubUrl, "_blank");
+        // Redirect the tab opened from the user gesture to avoid popup blockers.
+        if (popup && !popup.closed) {
+          popup.location.href = result.jupyterhubUrl;
+        } else {
+          window.open(result.jupyterhubUrl, "_blank");
+        }
 
         // Update local submission state
         setSubmissions((prev) => ({
@@ -107,6 +119,16 @@ function CompetitionsContent() {
           [challengeId]: {
             id: result.submissionId,
             challengeId,
+            attemptNumber: result.attemptNumber,
+            allowedSubmissions: normalizeAllowedSubmissions(
+              (result.attemptsUsed ?? 0) + (result.attemptsRemaining ?? 0),
+              normalizeAllowedSubmissions(
+                prev[challengeId]?.allowedSubmissions,
+                3,
+              ),
+            ),
+            attemptsUsed: result.attemptsUsed,
+            attemptsRemaining: result.attemptsRemaining,
             status: "in_progress",
             score: null,
             maxScore: null,
@@ -116,6 +138,9 @@ function CompetitionsContent() {
         }));
       }
     } catch (err) {
+      if (popup && !popup.closed) {
+        popup.close();
+      }
       console.error("Failed to start challenge:", err);
       if (err instanceof ApiError) {
         setError(err.message);
@@ -140,7 +165,26 @@ function CompetitionsContent() {
           ...prev,
           [challengeId]: {
             ...prev[challengeId],
-            status: result.status || "submitted",
+            status: result.status || "grading_pending",
+            attemptNumber:
+              result.attemptNumber || prev[challengeId]?.attemptNumber || 1,
+            attemptsUsed:
+              result.attemptsUsed ?? prev[challengeId]?.attemptsUsed ?? 0,
+            attemptsRemaining:
+              result.attemptsRemaining ??
+              prev[challengeId]?.attemptsRemaining ??
+              0,
+            allowedSubmissions: normalizeAllowedSubmissions(
+              (result.attemptsUsed ?? prev[challengeId]?.attemptsUsed ?? 0) +
+                (result.attemptsRemaining ??
+                  prev[challengeId]?.attemptsRemaining ??
+                  0),
+              normalizeAllowedSubmissions(
+                prev[challengeId]?.allowedSubmissions,
+                3,
+              ),
+            ),
+            submittedAt: new Date().toISOString(),
           },
         }));
 
@@ -190,12 +234,49 @@ function CompetitionsContent() {
 
   const leaderboardTop10 = leaderboardData.slice(0, 10);
 
-  const featuredChallenge = challenges[0] || null;
+  const featuredChallenge =
+    challenges.find((challenge) => {
+      const submission = submissions[challenge.id];
+      return submission && submission.status === "in_progress";
+    }) ||
+    challenges.find((challenge) => {
+      const submission = submissions[challenge.id];
+      return (
+        submission &&
+        ["grading_pending", "submitted", "grading"].includes(submission.status)
+      );
+    }) ||
+    challenges.find((challenge) => challenge.hasNotebook) ||
+    challenges[0] ||
+    null;
   const featuredSubmission = featuredChallenge
     ? submissions[featuredChallenge.id]
     : null;
   const featuredIsInProgress = featuredSubmission?.status === "in_progress";
+  const featuredIsPending = [
+    "grading_pending",
+    "submitted",
+    "grading",
+  ].includes(featuredSubmission?.status);
   const featuredIsCompleted = featuredSubmission?.status === "graded";
+  const featuredChallengeAllowedSubmissions = normalizeAllowedSubmissions(
+    featuredChallenge?.allowedSubmissions,
+    3,
+  );
+  const featuredAttemptsUsed = featuredSubmission?.attemptsUsed ?? 0;
+  const featuredAttemptsRemaining =
+    featuredSubmission?.attemptsRemaining ??
+    featuredChallengeAllowedSubmissions ??
+    0;
+  const featuredAllowedSubmissions =
+    normalizeAllowedSubmissions(
+      featuredSubmission?.allowedSubmissions,
+      featuredChallengeAllowedSubmissions,
+    ) ?? 0;
+  const featuredLimitReached =
+    featuredSubmission &&
+    featuredAttemptsRemaining <= 0 &&
+    !featuredIsInProgress;
   const featuredHasNotebook = featuredChallenge?.hasNotebook;
   const featuredIsStarting =
     featuredChallenge && startingChallenge === featuredChallenge.id;
@@ -206,9 +287,13 @@ function CompetitionsContent() {
       ? "Starting..."
       : featuredIsCompleted
         ? "✓ Completed"
-        : featuredIsInProgress
-          ? "Continue"
-          : "Start Hunting"
+        : featuredIsPending
+          ? "Grading Pending"
+          : featuredLimitReached
+            ? "No Attempts Left"
+            : featuredIsInProgress
+              ? "Continue"
+              : "Start Hunting"
     : "Start Hunting";
   const submitDisabled =
     !featuredChallenge || !featuredIsInProgress || featuredIsSubmitting;
@@ -216,7 +301,9 @@ function CompetitionsContent() {
     !featuredChallenge ||
     !featuredHasNotebook ||
     featuredIsStarting ||
-    featuredIsCompleted;
+    featuredIsCompleted ||
+    featuredIsPending ||
+    featuredLimitReached;
   const startButtonClasses = startButtonDisabled
     ? "bg-[#1a1a1a] text-[var(--color-text-muted)] cursor-not-allowed opacity-50"
     : "bg-[#111111] text-[#ff0000] hover:bg-[#1a1a1a] hover:scale-[1.01] hover:text-[#ff3333]";
@@ -429,6 +516,20 @@ function CompetitionsContent() {
                     </p>
                   </div>
                   <div className="w-full max-w-xl flex flex-col gap-6 items-center">
+                    {featuredChallenge && (
+                      <div className="w-full rounded-2xl bg-[var(--color-muted-surface-2)] border border-[var(--color-border)] px-5 py-4 text-sm text-[var(--color-text-muted)]">
+                        Attempts: {featuredAttemptsUsed}/
+                        {featuredAllowedSubmissions}
+                        {featuredSubmission?.attemptNumber
+                          ? ` · Current attempt #${featuredSubmission.attemptNumber}`
+                          : ""}
+                        {featuredIsPending
+                          ? " · Status: Grading pending"
+                          : featuredIsCompleted
+                            ? " · Status: Graded"
+                            : ""}
+                      </div>
+                    )}
                     <button
                       onClick={() =>
                         featuredChallenge &&
