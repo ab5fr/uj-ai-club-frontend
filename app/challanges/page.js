@@ -517,7 +517,7 @@ function CompetitionsContent() {
                   </div>
                   <div className="w-full max-w-xl flex flex-col gap-6 items-center">
                     {featuredChallenge && (
-                      <div className="w-full rounded-2xl bg-[var(--color-muted-surface-2)] border border-[var(--color-border)] px-5 py-4 text-sm text-[var(--color-text-muted)]">
+                      <div className="w-full rounded-2xl bg-(--color-muted-surface-2) border border-(--color-border) px-5 py-4 text-sm text-(--color-text-muted)">
                         Attempts: {featuredAttemptsUsed}/
                         {featuredAllowedSubmissions}
                         {featuredSubmission?.attemptNumber
@@ -530,6 +530,8 @@ function CompetitionsContent() {
                             : ""}
                       </div>
                     )}
+
+                    {/*
                     <button
                       onClick={() =>
                         featuredChallenge &&
@@ -544,6 +546,9 @@ function CompetitionsContent() {
                     >
                       {startButtonLabel}
                     </button>
+                    */}
+
+                    {/*
                     {!featuredIsCompleted && (
                       <button
                         onClick={() =>
@@ -560,6 +565,7 @@ function CompetitionsContent() {
                         {featuredIsSubmitting ? "Submitting..." : "Submit"}
                       </button>
                     )}
+                    */}
                   </div>
                 </div>
               ) : (
