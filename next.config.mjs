@@ -26,7 +26,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "api.aiclub-uj.com",
+        hostname: "api.uj-aiclub.com",
         port: "",
         pathname: "/**",
       },

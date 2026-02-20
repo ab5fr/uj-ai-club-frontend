@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const API_BASE_URL = "https://api.aiclub-uj.com/api";
+const API_BASE_URL = "https://api.uj-aiclub.com/api";
 
 export async function GET(request, { params }) {
   const path = params.path.join("/");
@@ -37,7 +37,7 @@ export async function GET(request, { params }) {
   } catch (error) {
     return NextResponse.json(
       { error: "Proxy request failed", message: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -84,7 +84,7 @@ export async function POST(request, { params }) {
   } catch (error) {
     return NextResponse.json(
       { error: "Proxy request failed", message: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -129,7 +129,7 @@ export async function PUT(request, { params }) {
   } catch (error) {
     return NextResponse.json(
       { error: "Proxy request failed", message: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -168,7 +168,7 @@ export async function PATCH(request, { params }) {
   } catch (error) {
     return NextResponse.json(
       { error: "Proxy request failed", message: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -205,7 +205,7 @@ export async function DELETE(request, { params }) {
   } catch (error) {
     return NextResponse.json(
       { error: "Proxy request failed", message: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
