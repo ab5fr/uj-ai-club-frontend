@@ -44,11 +44,9 @@ function CompetitionsContent() {
         const data = await challengesApi.getLeaderboard();
         setLeaderboardData(data || []);
       } else if (activeTab === "challenges") {
-        // Fetch all challenges with notebook info
         const challengeData = await challengesApi.getAll();
         setChallenges(challengeData || []);
 
-        // Fetch submissions for each challenge
         const submissionPromises = (challengeData || []).map(
           async (challenge) => {
             try {
@@ -57,7 +55,6 @@ function CompetitionsContent() {
               );
               return { challengeId: challenge.id, submission };
             } catch (err) {
-              // No submission yet is fine
               return { challengeId: challenge.id, submission: null };
             }
           },
@@ -82,7 +79,6 @@ function CompetitionsContent() {
       } else {
         setError("Failed to load data");
       }
-      // Clear data on error
       if (activeTab === "leaderboard") {
         setLeaderboardData([]);
       } else if (activeTab === "challenges") {
@@ -106,14 +102,12 @@ function CompetitionsContent() {
       const result = await challengesApi.startChallenge(challengeId);
 
       if (result.success && result.jupyterhubUrl) {
-        // Redirect the tab opened from the user gesture to avoid popup blockers.
         if (popup && !popup.closed) {
           popup.location.href = result.jupyterhubUrl;
         } else {
           window.open(result.jupyterhubUrl, "_blank");
         }
 
-        // Update local submission state
         setSubmissions((prev) => ({
           ...prev,
           [challengeId]: {
@@ -160,7 +154,6 @@ function CompetitionsContent() {
       const result = await challengesApi.submitChallenge(challengeId);
 
       if (result.success) {
-        // Update local submission state
         setSubmissions((prev) => ({
           ...prev,
           [challengeId]: {
@@ -188,7 +181,6 @@ function CompetitionsContent() {
           },
         }));
 
-        // Show success message
         alert(result.message || "Challenge submitted successfully!");
       }
     } catch (err) {
@@ -203,7 +195,6 @@ function CompetitionsContent() {
     }
   };
 
-  // Poll for submission updates when on challenges tab
   useEffect(() => {
     if (activeTab !== "challenges" || challenges.length === 0) return;
 
@@ -227,7 +218,6 @@ function CompetitionsContent() {
       setSubmissions(submissionsMap);
     };
 
-    // Poll every 30 seconds
     const interval = setInterval(pollSubmissions, 30000);
     return () => clearInterval(interval);
   }, [activeTab, challenges]);
@@ -249,6 +239,7 @@ function CompetitionsContent() {
     challenges.find((challenge) => challenge.hasNotebook) ||
     challenges[0] ||
     null;
+
   const featuredSubmission = featuredChallenge
     ? submissions[featuredChallenge.id]
     : null;
@@ -282,6 +273,7 @@ function CompetitionsContent() {
     featuredChallenge && startingChallenge === featuredChallenge.id;
   const featuredIsSubmitting =
     featuredChallenge && submittingChallenge === featuredChallenge.id;
+
   const startButtonLabel = featuredChallenge
     ? featuredIsStarting
       ? "Starting..."
@@ -295,6 +287,7 @@ function CompetitionsContent() {
               ? "Continue"
               : "Start Hunting"
     : "Start Hunting";
+
   const submitDisabled =
     !featuredChallenge || !featuredIsInProgress || featuredIsSubmitting;
   const startButtonDisabled =
@@ -304,6 +297,7 @@ function CompetitionsContent() {
     featuredIsCompleted ||
     featuredIsPending ||
     featuredLimitReached;
+
   const startButtonClasses = startButtonDisabled
     ? "bg-[#1a1a1a] text-[var(--color-text-muted)] cursor-not-allowed opacity-50"
     : "bg-[#111111] text-[#ff0000] hover:bg-[#1a1a1a] hover:scale-[1.01] hover:text-[#ff3333]";
@@ -315,7 +309,6 @@ function CompetitionsContent() {
     <main
       className={`${fredoka.className} min-h-screen relative flex flex-col items-center pt-32 text-(--color-text) pb-20 bg-[url('/challenges-bg.jpg')] bg-cover bg-top bg-no-repeat md:bg-size-[120%] md:bg-top`}
     >
-      {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
         {/* Header Text */}
         <div className="text-center mb-16">
@@ -326,9 +319,7 @@ function CompetitionsContent() {
           </p>
           <p
             className="text-[5rem] bg-linear-to-r from-[#dd4e00] to-[#ff0000] text-transparent bg-clip-text"
-            style={{
-              fontFamily: "DK Face Your Fears",
-            }}
+            style={{ fontFamily: "DK Face Your Fears" }}
           >
             THE BEA
             <span
@@ -341,7 +332,8 @@ function CompetitionsContent() {
             </span>
             T
           </p>
-        </div>{" "}
+        </div>
+
         {/* Navigation Buttons - Desktop */}
         <div className="hidden md:flex justify-center gap-1 mb-20">
           <button
@@ -350,10 +342,8 @@ function CompetitionsContent() {
               activeTab === "leaderboard" ? "text-white" : "text-(--color-text)"
             }`}
             style={{ clipPath: "polygon(0 0, 100% 0, 90% 100%, 0% 100%)" }}
-            aria-pressed={activeTab === "leaderboard"}
           >
             <span
-              aria-hidden="true"
               className={`absolute inset-0 bg-cover bg-center transition-all ${
                 activeTab === "leaderboard"
                   ? "brightness-50 saturate-75"
@@ -372,10 +362,8 @@ function CompetitionsContent() {
               activeTab === "challenges" ? "text-white" : "text-(--color-text)"
             }`}
             style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
-            aria-pressed={activeTab === "challenges"}
           >
             <span
-              aria-hidden="true"
               className={`absolute inset-0 bg-cover bg-center transition-all ${
                 activeTab === "challenges"
                   ? "brightness-50 saturate-75"
@@ -394,10 +382,8 @@ function CompetitionsContent() {
               activeTab === "profile" ? "text-white" : "text-(--color-text)"
             }`}
             style={{ clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0% 100%)" }}
-            aria-pressed={activeTab === "profile"}
           >
             <span
-              aria-hidden="true"
               className={`absolute inset-0 bg-cover bg-center transition-all ${
                 activeTab === "profile"
                   ? "brightness-50 saturate-75"
@@ -411,85 +397,7 @@ function CompetitionsContent() {
             <span className="relative z-10">Profile</span>
           </button>
         </div>
-        {/* Navigation Carousel - Mobile */}
-        <div className="md:hidden mb-12">
-          <div className="flex items-center justify-center gap-4 px-4">
-            {/* Left Tab */}
-            <button
-              onClick={() => {
-                const tabs = ["leaderboard", "challenges", "profile"];
-                const currentIndex = tabs.indexOf(activeTab);
-                const prevIndex =
-                  currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
-                setActiveTab(tabs[prevIndex]);
-              }}
-              className="shrink-0 w-20 h-20 rounded-3xl bg-(--color-muted-surface-2) hover:bg-(--color-muted-surface) transition-all flex items-center justify-center"
-            >
-              <Image
-                src={
-                  activeTab === "leaderboard"
-                    ? "/profile.png"
-                    : activeTab === "challenges"
-                      ? "/leadrbrd-icon.png"
-                      : "/hunt.png"
-                }
-                alt={
-                  activeTab === "leaderboard"
-                    ? "Profile"
-                    : activeTab === "challenges"
-                      ? "Leaderboard"
-                      : "Challenges"
-                }
-                width={32}
-                height={32}
-                className="object-contain"
-              />
-            </button>
 
-            {/* Center Active Tab */}
-            <div className="flex-1 max-w-xs h-24 rounded-3xl bg-(--color-muted-surface) flex items-center justify-center px-6">
-              <span className="text-(--color-text) text-lg font-semibold uppercase tracking-wider">
-                {activeTab === "leaderboard"
-                  ? "Leaderboard"
-                  : activeTab === "challenges"
-                    ? "Challenges"
-                    : "Profile"}
-              </span>
-            </div>
-
-            {/* Right Tab */}
-            <button
-              onClick={() => {
-                const tabs = ["leaderboard", "challenges", "profile"];
-                const currentIndex = tabs.indexOf(activeTab);
-                const nextIndex =
-                  currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
-                setActiveTab(tabs[nextIndex]);
-              }}
-              className="shrink-0 w-20 h-20 rounded-3xl bg-(--color-muted-surface-2) hover:bg-(--color-muted-surface) transition-all flex items-center justify-center"
-            >
-              <Image
-                src={
-                  activeTab === "leaderboard"
-                    ? "/hunt.png"
-                    : activeTab === "challenges"
-                      ? "/profile.png"
-                      : "/leadrbrd-icon.png"
-                }
-                alt={
-                  activeTab === "leaderboard"
-                    ? "Challenges"
-                    : activeTab === "challenges"
-                      ? "Profile"
-                      : "Leaderboard"
-                }
-                width={32}
-                height={32}
-                className="object-contain"
-              />
-            </button>
-          </div>
-        </div>
         {/* Content Section */}
         <div className="w-full">
           {error && (
@@ -511,27 +419,23 @@ function CompetitionsContent() {
                       Week {featuredChallenge.week} - {featuredChallenge.title}
                     </h2>
                     <p className="text-lg md:text-xl leading-relaxed text-(--color-text-muted) max-w-4xl mx-auto">
-                      {" "}
                       {featuredChallenge.description || "Details coming soon."}
                     </p>
                   </div>
                   <div className="w-full max-w-xl flex flex-col gap-6 items-center">
-                    {featuredChallenge && (
-                      <div className="w-full rounded-2xl bg-(--color-muted-surface-2) border border-(--color-border) px-5 py-4 text-sm text-(--color-text-muted)">
-                        Attempts: {featuredAttemptsUsed}/
-                        {featuredAllowedSubmissions}
-                        {featuredSubmission?.attemptNumber
-                          ? ` · Current attempt #${featuredSubmission.attemptNumber}`
+                    <div className="w-full rounded-2xl bg-(--color-muted-surface-2) border border-(--color-border) px-5 py-4 text-sm text-(--color-text-muted)">
+                      Attempts: {featuredAttemptsUsed}/
+                      {featuredAllowedSubmissions}
+                      {featuredSubmission?.attemptNumber
+                        ? ` · Current attempt #${featuredSubmission.attemptNumber}`
+                        : ""}
+                      {featuredIsPending
+                        ? " · Status: Grading pending"
+                        : featuredIsCompleted
+                          ? " · Status: Graded"
                           : ""}
-                        {featuredIsPending
-                          ? " · Status: Grading pending"
-                          : featuredIsCompleted
-                            ? " · Status: Graded"
-                            : ""}
-                      </div>
-                    )}
+                    </div>
 
-                    {/*
                     <button
                       onClick={() =>
                         featuredChallenge &&
@@ -546,9 +450,7 @@ function CompetitionsContent() {
                     >
                       {startButtonLabel}
                     </button>
-                    */}
 
-                    {/*
                     {!featuredIsCompleted && (
                       <button
                         onClick={() =>
@@ -565,7 +467,6 @@ function CompetitionsContent() {
                         {featuredIsSubmitting ? "Submitting..." : "Submit"}
                       </button>
                     )}
-                    */}
                   </div>
                 </div>
               ) : (
@@ -577,7 +478,6 @@ function CompetitionsContent() {
               )}
             </div>
           ) : activeTab === "leaderboard" ? (
-            // Leaderboard Section
             <div className="container mx-auto max-w-3xl px-2">
               {leaderboardTop10.length > 0 ? (
                 <>
@@ -593,7 +493,6 @@ function CompetitionsContent() {
               )}
             </div>
           ) : (
-            // Profile Section
             <ProfileSection userProfile={userProfile} />
           )}
         </div>
