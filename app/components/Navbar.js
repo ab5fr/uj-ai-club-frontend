@@ -209,7 +209,7 @@ export default function Navbar() {
                       setProfileDropdownOpen(false);
                       logout();
                     }}
-                    className="w-full text-left px-4 py-3 text-[var(--color-text)] hover:bg-[color-mix(in_srgb,var(--color-danger)_20%,transparent)] transition-colors"
+                    className="logout-btn w-full text-left px-4 py-3 text-[var(--color-text)] transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <svg
@@ -341,7 +341,7 @@ export default function Navbar() {
                     logout();
                     setMobileMenuOpen(false);
                   }}
-                  className="px-6 py-2.5 rounded-full bg-[color-mix(in_srgb,var(--color-danger)_90%,transparent)] text-[var(--color-text)] hover:bg-[var(--color-danger)] transition-colors font-medium"
+                  className="logout-btn px-6 py-2.5 rounded-full bg-[color-mix(in_srgb,#e74904_20%,transparent)] text-[var(--color-text)] transition-colors font-medium"
                 >
                   Logout
                 </button>

@@ -13,6 +13,8 @@
     "@codemirror/theme-one-dark": "^6.1.3",
     "@heroicons/react": "^2.2.0",
     "codemirror": "^6.0.2",
+    "firebase": "^12.15.0",
+    "lucide-react": "^1.23.0",
     "next": "^15.5.10",
     "pyodide": "^0.28.3",
     "react": "19.1.0",

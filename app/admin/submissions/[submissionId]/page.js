@@ -110,61 +110,63 @@ function AdminSubmissionViewer() {
 
   if (!isAdmin) {
     return (
-      <main className="min-h-screen bg-[var(--color-surface-2)] text-[var(--color-text)] pt-24">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="bg-[color-mix(in_srgb,var(--color-warning)_12%,transparent)] border border-[var(--color-warning)] text-[var(--color-warning)] px-6 py-4 rounded-2xl">
-            You must be an administrator to access this page.
+      <main className="page admin-page">
+        <section className="section">
+          <div className="container">
+            <div className="admin-alert admin-alert--warning">
+              You must be an administrator to access this page.
+            </div>
           </div>
-        </div>
+        </section>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[var(--color-surface-2)] text-[var(--color-text)] pt-24 pb-10">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-5 mb-6 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-semibold">Submission Notebook</h1>
-            <p className="text-sm text-[var(--color-text-muted)] mt-1">
-              {filename || `submission-${submissionId}.ipynb`}
-            </p>
+    <main className="page admin-page">
+      <section className="section admin-section">
+        <div className="container">
+          <div className="card admin-viewer-header">
+            <div>
+              <h1 className="admin-section-title" style={{ marginBottom: 0 }}>
+                Submission Notebook
+              </h1>
+              <p className="admin-viewer-header__meta">
+                {filename || `submission-${submissionId}.ipynb`}
+              </p>
+            </div>
+            <div className="admin-viewer-header__actions">
+              <button
+                type="button"
+                onClick={() => router.push("/admin")}
+                className="btn btn-outline btn-sm"
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                onClick={handleDownload}
+                disabled={downloading || loading}
+                className="btn btn-warning btn-sm"
+              >
+                {downloading ? "Downloading..." : "Download"}
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => router.push("/admin")}
-              className="px-4 py-2 rounded-xl bg-[var(--color-surface-2)] border border-[var(--color-border)] text-sm hover:bg-[color-mix(in_srgb,var(--color-surface-2)_60%,var(--color-primary))]"
-            >
-              Back
-            </button>
-            <button
-              onClick={handleDownload}
-              disabled={downloading || loading}
-              className="px-4 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-warning)_80%,transparent)] text-sm hover:bg-[var(--color-warning)] disabled:opacity-60"
-            >
-              {downloading ? "Downloading..." : "Download"}
-            </button>
-          </div>
+
+          {error && <div className="admin-alert admin-alert--error">{error}</div>}
+
+          {loading ? (
+            <div className="card admin-empty">Loading notebook...</div>
+          ) : (
+            <div>
+              {(notebook?.cells || []).map((cell, idx) => (
+                <NotebookCellView key={idx} cell={cell} index={idx} />
+              ))}
+            </div>
+          )}
         </div>
-
-        {error && (
-          <div className="bg-[color-mix(in_srgb,var(--color-danger)_15%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)] px-6 py-3 rounded-2xl mb-6">
-            {error}
-          </div>
-        )}
-
-        {loading ? (
-          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl px-6 py-10 text-center text-[var(--color-text-muted)]">
-            Loading notebook...
-          </div>
-        ) : (
-          <div className="space-y-5">
-            {(notebook?.cells || []).map((cell, idx) => (
-              <NotebookCellView key={idx} cell={cell} index={idx} />
-            ))}
-          </div>
-        )}
-      </div>
+      </section>
     </main>
   );
 }
@@ -174,31 +176,27 @@ function NotebookCellView({ cell, index }) {
   const source = normalizeCellText(cell?.source);
 
   return (
-    <article className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
-      <div className="px-4 py-2.5 border-b border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-primary-strong)_10%,transparent)] flex items-center justify-between">
-        <span className="text-xs uppercase tracking-wider text-[var(--color-text-muted)]">
-          Cell {index + 1}
-        </span>
-        <span className="px-2 py-1 rounded-full text-[11px] bg-[color-mix(in_srgb,var(--color-primary)_30%,transparent)] text-[var(--color-text)]">
-          {cellType}
-        </span>
+    <article className="card admin-notebook-cell">
+      <div className="admin-notebook-cell__head">
+        <span className="admin-notebook-cell__label">Cell {index + 1}</span>
+        <span className="admin-badge admin-badge--status">{cellType}</span>
       </div>
 
-      <div className="p-4">
+      <div className="admin-notebook-cell__body">
         {cellType === "markdown" ? (
           <MarkdownBlock source={source} />
         ) : (
-          <pre className="text-sm leading-6 p-4 rounded-xl bg-[var(--color-surface-2)] border border-[var(--color-border)] overflow-x-auto text-[var(--color-text)]">
+          <pre className="admin-code">
             <code>{source}</code>
           </pre>
         )}
 
         {Array.isArray(cell?.outputs) && cell.outputs.length > 0 && (
-          <div className="mt-4">
-            <div className="text-xs uppercase tracking-wider text-[var(--color-text-muted)] mb-2">
+          <div style={{ marginTop: "1rem" }}>
+            <div className="admin-notebook-cell__label" style={{ marginBottom: ".5rem" }}>
               Output
             </div>
-            <div className="space-y-2">
+            <div>
               {cell.outputs.map((output, i) => (
                 <OutputBlock output={output} key={i} />
               ))}
@@ -214,52 +212,28 @@ function MarkdownBlock({ source }) {
   const blocks = parseMarkdownBlocks(source);
 
   return (
-    <div className="space-y-3 text-[var(--color-text)]">
+    <div className="admin-markdown">
       {blocks.map((block, idx) => {
         if (block.type === "h1") {
-          return (
-            <h1 key={idx} className="text-2xl font-bold">
-              {block.text}
-            </h1>
-          );
+          return <h1 key={idx}>{block.text}</h1>;
         }
         if (block.type === "h2") {
-          return (
-            <h2 key={idx} className="text-xl font-semibold">
-              {block.text}
-            </h2>
-          );
+          return <h2 key={idx}>{block.text}</h2>;
         }
         if (block.type === "h3") {
-          return (
-            <h3 key={idx} className="text-lg font-semibold">
-              {block.text}
-            </h3>
-          );
+          return <h3 key={idx}>{block.text}</h3>;
         }
         if (block.type === "li") {
-          return (
-            <div key={idx} className="flex items-start gap-2 text-sm leading-6">
-              <span className="text-[var(--color-primary)] mt-1">•</span>
-              <span>{block.text}</span>
-            </div>
-          );
+          return <li key={idx}>{block.text}</li>;
         }
         if (block.type === "code") {
           return (
-            <pre
-              key={idx}
-              className="text-sm leading-6 p-4 rounded-xl bg-[var(--color-surface-2)] border border-[var(--color-border)] overflow-x-auto"
-            >
+            <pre key={idx} className="admin-code">
               <code>{block.text}</code>
             </pre>
           );
         }
-        return (
-          <p key={idx} className="text-sm leading-7 text-[var(--color-text)]">
-            {block.text}
-          </p>
-        );
+        return <p key={idx}>{block.text}</p>;
       })}
     </div>
   );
@@ -270,7 +244,7 @@ function OutputBlock({ output }) {
   if (!outputText) return null;
 
   return (
-    <pre className="text-xs leading-6 p-3 rounded-xl bg-[var(--color-surface-2)] border border-[var(--color-border)] overflow-x-auto text-[var(--color-text-muted)]">
+    <pre className="admin-code admin-code--muted">
       <code>{outputText}</code>
     </pre>
   );

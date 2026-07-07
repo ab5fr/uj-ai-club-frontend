@@ -2,12 +2,17 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import {
+  reauthenticateWithPopup,
+  updatePassword,
+} from "firebase/auth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
+import { getFirebaseAuth, getGoogleProvider } from "@/lib/firebase";
 import { userApi, ApiError, getImageUrl } from "@/lib/api";
 
 function SettingsContent() {
-  const { user, login } = useAuth();
+  const { user, updateUser } = useAuth();
   const router = useRouter();
   const fileInputRef = useRef(null);
 
@@ -16,7 +21,6 @@ function SettingsContent() {
   });
 
   const [passwordForm, setPasswordForm] = useState({
-    currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
@@ -52,21 +56,18 @@ function SettingsContent() {
     setLoading(true);
 
     try {
-      // Update profile image if changed
       let imageUrl = user?.image;
       if (imageFile) {
         const uploadResult = await userApi.uploadAvatar(imageFile);
         imageUrl = uploadResult.imageUrl;
       }
 
-      // Update profile info
       const updatedUser = await userApi.updateProfile({
         fullName: profileForm.fullName,
         image: imageUrl,
       });
 
-      // Update local auth state
-      login(updatedUser, localStorage.getItem("token"));
+      updateUser(updatedUser);
       setSuccess("Profile updated successfully!");
       setImageFile(null);
     } catch (err) {
@@ -98,19 +99,40 @@ function SettingsContent() {
     setLoading(true);
 
     try {
-      await userApi.changePassword(
-        passwordForm.currentPassword,
-        passwordForm.newPassword,
-      );
+      const auth = getFirebaseAuth();
+      const firebaseUser = auth?.currentUser;
+      if (!firebaseUser?.email) {
+        setError("You must be signed in to change your password.");
+        return;
+      }
+
+      const applyPassword = async () => {
+        await updatePassword(firebaseUser, passwordForm.newPassword);
+      };
+
+      try {
+        await applyPassword();
+      } catch (err) {
+        if (err?.code === "auth/requires-recent-login") {
+          await reauthenticateWithPopup(firebaseUser, getGoogleProvider());
+          await applyPassword();
+        } else {
+          throw err;
+        }
+      }
+
       setSuccess("Password changed successfully!");
       setPasswordForm({
-        currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       });
     } catch (err) {
-      if (err instanceof ApiError) {
-        setError(err.data?.message || err.message);
+      if (err?.code === "auth/weak-password") {
+        setError("New password is too weak");
+      } else if (err?.code === "auth/requires-recent-login") {
+        setError("Please sign in again and retry changing your password.");
+      } else if (err?.code === "auth/popup-closed-by-user") {
+        setError("Sign-in was cancelled. Password was not changed.");
       } else {
         setError("Failed to change password");
       }
@@ -144,12 +166,10 @@ function SettingsContent() {
           </div>
         )}
 
-        {/* Profile Settings */}
         <section className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 md:p-8 mb-8">
           <h2 className="text-2xl font-semibold mb-6">Profile Information</h2>
 
           <form onSubmit={handleProfileUpdate}>
-            {/* Profile Picture */}
             <div className="flex flex-col md:flex-row items-center gap-6 mb-6">
               <div className="relative">
                 <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-[var(--color-text)] font-semibold text-3xl overflow-hidden">
@@ -209,7 +229,6 @@ function SettingsContent() {
               </div>
             </div>
 
-            {/* Name and Email Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div>
                 <label className="block text-sm text-[var(--color-text-muted)] mb-2">
@@ -248,29 +267,11 @@ function SettingsContent() {
           </form>
         </section>
 
-        {/* Password Change */}
         <section className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 md:p-8">
           <h2 className="text-2xl font-semibold mb-6">Change Password</h2>
 
           <form onSubmit={handlePasswordChange}>
             <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-sm text-[var(--color-text-muted)] mb-2">
-                  Current Password
-                </label>
-                <input
-                  type="password"
-                  value={passwordForm.currentPassword}
-                  onChange={(e) =>
-                    setPasswordForm({
-                      ...passwordForm,
-                      currentPassword: e.target.value,
-                    })
-                  }
-                  className="w-full bg-[var(--color-surface-2)] border-2 border-[var(--color-border)] rounded-xl py-3 px-4 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-border-strong)]"
-                  required
-                />
-              </div>
               <div>
                 <label className="block text-sm text-[var(--color-text-muted)] mb-2">
                   New Password

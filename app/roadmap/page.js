@@ -1,503 +1,368 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Navbar from "../components/Navbar";
-import { ApiError, certificatesApi } from "@/lib/api";
 
 export default function RoadmapPage() {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [roadmapSteps, setRoadmapSteps] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const containerRef = useRef(null);
-
-  const stepHeight = 500;
-  const stepOffset = 100;
-  const stepBaseY = 50;
-  const totalHeight =
-    Math.max(roadmapSteps.length, 1) * stepHeight + stepOffset;
-
-  useEffect(() => {
-    const loadSteps = async () => {
-      try {
-        setLoading(true);
-        const certificates = await certificatesApi.getAll();
-        const mapped = (certificates || []).map((certificate, index) => ({
-          id: certificate.id,
-          title: certificate.title,
-          description: `by ${certificate.firstName} · by ${certificate.secondName}`,
-          position: index % 2 === 0 ? "right" : "left",
-        }));
-        setRoadmapSteps(mapped);
-        setError("");
-      } catch (err) {
-        if (err instanceof ApiError) {
-          setError(err.message);
-        } else {
-          setError("Failed to load roadmap steps");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadSteps();
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current) {
-        const scrollTop = window.scrollY;
-        const docHeight =
-          containerRef.current.offsetHeight - window.innerHeight;
-        const progress = Math.min(scrollTop / docHeight, 1);
-        setScrollProgress(progress);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const getSubmarinePosition = (index, total) => {
-    // Calculate position along curved path
-    const pathProgress = scrollProgress * (total - 1);
-
-    // Find which segment the submarine is currently on
-    const currentSegment = Math.floor(pathProgress);
-
-    // Make submarine visible only on the current segment
-    if (currentSegment !== index) {
-      return { x: 0, y: 0, rotation: 0, visible: false };
-    }
-
-    const localProgress = pathProgress - currentSegment;
-    const currentStep = roadmapSteps[index];
-    const nextStep = roadmapSteps[index + 1];
-
-    const startX = currentStep.position === "left" ? 300 : 900;
-    const endX = nextStep ? (nextStep.position === "left" ? 300 : 900) : startX;
-    const startY = index * stepHeight + stepBaseY + stepOffset;
-    const endY = (index + 1) * stepHeight + stepBaseY + stepOffset;
-
-    // Calculate position on very smooth cubic bezier curve matching the path
-    const verticalDistance = endY - startY;
-    const horizontalDistance = endX - startX;
-
-    // Use same control points as the path for perfect alignment
-    const controlX1 = startX;
-    const controlY1 = startY + verticalDistance * 0.5;
-    const controlX2 = endX;
-    const controlY2 = startY + verticalDistance * 0.5;
-
-    const t = localProgress;
-    const invT = 1 - t;
-
-    // Cubic bezier formula: B(t) = (1-t)³P0 + 3(1-t)²tP1 + 3(1-t)t²P2 + t³P3
-    const x =
-      invT * invT * invT * startX +
-      3 * invT * invT * t * controlX1 +
-      3 * invT * t * t * controlX2 +
-      t * t * t * endX;
-
-    const y =
-      invT * invT * invT * startY +
-      3 * invT * invT * t * controlY1 +
-      3 * invT * t * t * controlY2 +
-      t * t * t * endY;
-
-    // Calculate rotation based on tangent of curve
-    const dx =
-      3 * invT * invT * (controlX1 - startX) +
-      6 * invT * t * (controlX2 - controlX1) +
-      3 * t * t * (endX - controlX2);
-
-    const dy =
-      3 * invT * invT * (controlY1 - startY) +
-      6 * invT * t * (controlY2 - controlY1) +
-      3 * t * t * (endY - controlY2);
-
-    // Calculate rotation to face movement direction
-    const rotation = Math.atan2(dy, dx) * (180 / Math.PI);
-
-    return { x, y, rotation, visible: true };
-  };
-
-  const getCircleProgress = (index) => {
-    const totalSteps = roadmapSteps.length;
-    const scrollPerStep = 1 / totalSteps;
-    return scrollProgress >= index * scrollPerStep;
-  };
-
   return (
-    <div className="min-h-screen relative">
-      {/* Ocean Background Image */}
-      <div
-        className="absolute inset-0 w-full h-full bg-cover bg-top bg-no-repeat z-0"
-        style={{
-          backgroundImage: "url('/ocean.jpg')",
-          minHeight: "100%",
-        }}
-      >
-        <div className="absolute inset-0 bg-[color-mix(in_srgb,var(--color-ink)_20%,transparent)]"></div>
+    <main className="page">
+      <div className="page-hero">
+        <div
+          style={{
+            position: "absolute",
+            top: -40,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 700,
+            height: 350,
+            background:
+              "radial-gradient(ellipse, rgba(18,187,254,.07) 0%, transparent 65%)",
+            pointerEvents: "none",
+          }}
+        />
+        <div className="container">
+          <div className="page-hero__tag">Step-by-Step Plan</div>
+          <h1 className="anim-1">
+            AI Learning <span className="text-gradient">Roadmap</span>
+          </h1>
+          <p className="anim-2">
+            Go from your first Python script to building real AI systems. Three
+            phases, no guesswork.
+          </p>
+        </div>
       </div>
 
-      <div className="relative z-10">
-        <Navbar />{" "}
-        <div className="relative pt-24 pb-32" ref={containerRef}>
-          <div className="flex justify-center px-4 mt-16 mb-8">
-            <img
-              src="/ai-roadmap.png"
-              alt="AI Roadmap"
-              className="w-full max-w-xl h-auto"
-            />
-          </div>
+      <section className="section">
+        <div className="container">
+          <div className="roadmap-layout">
+            <aside className="roadmap-nav anim-1">
+              <div
+                style={{
+                  fontSize: ".68rem",
+                  fontWeight: 700,
+                  letterSpacing: ".18em",
+                  textTransform: "uppercase",
+                  color: "var(--text-dim)",
+                  marginBottom: ".9rem",
+                }}
+              >
+                Go to Phase
+              </div>
+              <ul>
+                <li>
+                  <a href="#beginner" className="active-phase">
+                    <span className="phase-dot dot-beginner" />
+                    Beginner
+                  </a>
+                </li>
+                <li>
+                  <a href="#intermediate">
+                    <span className="phase-dot dot-inter" />
+                    Intermediate
+                  </a>
+                </li>
+                <li>
+                  <a href="#advanced">
+                    <span className="phase-dot dot-advanced" />
+                    Advanced
+                  </a>
+                </li>
+              </ul>
 
-          {/* Roadmap Container */}
-          <div
-            className="relative max-w-6xl mx-auto px-4 mt-8"
-            style={{ minHeight: `${totalHeight}px` }}
-          >
-            {/* Curved Path with SVG */}
-            <svg
-              className="absolute left-0 top-0 w-full h-full pointer-events-none"
-              style={{ minHeight: `${totalHeight}px` }}
-              viewBox={`0 0 1200 ${totalHeight}`}
-              preserveAspectRatio="none"
-            >
-              <defs>
-                <linearGradient
-                  id="pathGradient"
-                  x1="0%"
-                  y1="0%"
-                  x2="0%"
-                  y2="100%"
-                >
-                  <stop
-                    offset="0%"
-                    stopColor="var(--color-primary)"
-                    stopOpacity="0.8"
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor="var(--color-primary-strong)"
-                    stopOpacity="0.4"
-                  />
-                </linearGradient>
-              </defs>
-              {/* Draw ONE continuous curved path through all circles */}
-              <path
-                d={(() => {
-                  let pathData = "";
-
-                  roadmapSteps.forEach((step, index) => {
-                    const x = step.position === "left" ? 300 : 900;
-                    const y = index * stepHeight + stepBaseY + stepOffset;
-
-                    if (index === 0) {
-                      // Start at first circle
-                      pathData += `M ${x} ${y}`;
-                    } else {
-                      // Create smooth curve to next circle
-                      const prevStep = roadmapSteps[index - 1];
-                      const prevX = prevStep.position === "left" ? 300 : 900;
-                      const prevY =
-                        (index - 1) * stepHeight + stepBaseY + stepOffset;
-
-                      const verticalDistance = y - prevY;
-                      const horizontalDistance = x - prevX;
-
-                      // Control points for very smooth S-curve
-                      // Place control points much further apart vertically for gradual curves
-                      const cp1x = prevX;
-                      const cp1y = prevY + verticalDistance * 0.5;
-                      const cp2x = x;
-                      const cp2y = prevY + verticalDistance * 0.5;
-
-                      pathData += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x} ${y}`;
-                    }
-                  });
-
-                  return pathData;
-                })()}
-                fill="none"
-                stroke="url(#pathGradient)"
-                strokeWidth="4"
-                strokeDasharray="15,10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                opacity="1"
-              />{" "}
-            </svg>
-
-            {/* Number Circles */}
-            {roadmapSteps.map((step, index) => {
-              const circleXPercent = step.position === "left" ? 25 : 75;
-              const circleY = index * stepHeight + stepBaseY + stepOffset;
-              const isActive = getCircleProgress(index);
-
-              return (
-                <Link
-                  key={`circle-${index}`}
-                  href={`/certificates/${step.id}`}
-                  className={`absolute z-20 w-16 h-16 rounded-full border-4 flex items-center justify-center font-bold text-xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_color-mix(in_srgb,var(--color-primary)_45%,transparent)] ${
-                    isActive
-                      ? "bg-(--color-primary-strong) border-(--color-primary) text-(--color-text)"
-                      : "bg-(--color-surface-3) border-(--color-border) text-(--color-text-muted) opacity-70"
-                  }`}
-                  style={{
-                    left: `${circleXPercent}%`,
-                    top: `${circleY}px`,
-                    transform: "translate(-50%, -50%)",
-                  }}
-                >
-                  {index + 1}
-                </Link>
-              );
-            })}
-
-            {/* Roadmap Steps */}
-            {roadmapSteps.map((step, index) => {
-              const isLeft = step.position === "left";
-              const isActive = getCircleProgress(index);
-
-              return (
+              <div className="card" style={{ marginTop: "2rem", padding: "1.25rem" }}>
                 <div
-                  key={index}
-                  className="relative"
                   style={{
-                    height: "500px",
+                    fontSize: ".68rem",
+                    fontWeight: 700,
+                    letterSpacing: ".15em",
+                    textTransform: "uppercase",
+                    color: "var(--text-muted)",
+                    marginBottom: "1rem",
                   }}
                 >
-                  {/* Card - positioned on opposite side of circle */}
+                  Your Progress
+                </div>
+                <div style={{ marginBottom: "1rem" }}>
                   <div
-                    className="absolute top-0 z-10"
                     style={{
-                      left: isLeft ? "50%" : "0%",
-                      width: "45%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      fontSize: ".78rem",
+                      marginBottom: ".4rem",
                     }}
                   >
-                    <Link
-                      href={`/certificates/${step.id}`}
-                      className="block bg-linear-to-br from-[color-mix(in_srgb,var(--color-surface-2)_80%,transparent)] to-[color-mix(in_srgb,var(--color-surface-3)_80%,transparent)] backdrop-blur-sm rounded-2xl p-6 border-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_36px_color-mix(in_srgb,var(--color-primary)_25%,transparent)] hover:border-[color-mix(in_srgb,var(--color-primary)_55%,transparent)]"
-                    >
-                      <h3 className="text-2xl font-bold text-(--color-primary-soft) mb-3 wrap-break-word">
-                        {step.title}
-                      </h3>
-                      <p className="text-(--color-text-muted) leading-relaxed wrap-break-word">
-                        {step.description}
-                      </p>
-
-                      {/* Decorative Corner */}
-                      <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)] rounded-tr-2xl"></div>
-                      <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-[color-mix(in_srgb,var(--color-primary)_30%,transparent)] rounded-bl-2xl"></div>
-                    </Link>
+                    <span style={{ color: "#04d464" }}>Beginner</span>
+                    <span style={{ color: "var(--text-muted)" }}>—%</span>
+                  </div>
+                  <div className="progress-track">
+                    <div
+                      className="progress-fill"
+                      style={{
+                        width: "0%",
+                        background: "linear-gradient(90deg,#04d464,#04d464aa)",
+                      }}
+                    />
                   </div>
                 </div>
-              );
-            })}
+                <div style={{ marginBottom: "1rem" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      fontSize: ".78rem",
+                      marginBottom: ".4rem",
+                    }}
+                  >
+                    <span style={{ color: "var(--c-cyan)" }}>Intermediate</span>
+                    <span style={{ color: "var(--text-muted)" }}>—%</span>
+                  </div>
+                  <div className="progress-track">
+                    <div className="progress-fill" style={{ width: "0%" }} />
+                  </div>
+                </div>
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      fontSize: ".78rem",
+                      marginBottom: ".4rem",
+                    }}
+                  >
+                    <span style={{ color: "var(--c-orange)" }}>Advanced</span>
+                    <span style={{ color: "var(--text-muted)" }}>—%</span>
+                  </div>
+                  <div className="progress-track">
+                    <div
+                      className="progress-fill"
+                      style={{
+                        width: "0%",
+                        background:
+                          "linear-gradient(90deg,var(--c-orange),#ff9055)",
+                      }}
+                    />
+                  </div>
+                </div>
+                <Link
+                  href="/signup"
+                  className="btn btn-primary btn-block"
+                  style={{ marginTop: "1.25rem", fontSize: ".78rem" }}
+                >
+                  Track Your Progress
+                </Link>
+              </div>
+            </aside>
 
-            {/* Submarine - render separately to follow the path */}
-            {roadmapSteps.map((step, index) => {
-              const submarinePos = getSubmarinePosition(
-                index,
-                roadmapSteps.length,
-              );
-              if (!submarinePos.visible) return null;
-
-              // Determine if submarine should be flipped based on rotation
-              // When rotation is between 90 and 270 degrees, the submarine is moving leftward
-              let adjustedRotation = submarinePos.rotation;
-              const facingLeft =
-                adjustedRotation > 90 || adjustedRotation < -90;
-
-              // If facing left, flip the submarine and adjust rotation
-              if (facingLeft) {
-                adjustedRotation =
-                  adjustedRotation > 0
-                    ? adjustedRotation - 180
-                    : adjustedRotation + 180;
-              }
-
-              return (
+            <div className="roadmap-phases">
+              <div className="roadmap-phase beginner-phase" id="beginner">
+                <div className="phase-marker" />
+                <div className="phase-eyebrow">Phase 01 — Foundation</div>
+                <h3 className="phase-title">Beginner</h3>
+                <p className="phase-desc">
+                  No AI experience needed. You&apos;ll learn the basic math and
+                  coding skills used in every area of AI. Estimated time:{" "}
+                  <strong style={{ color: "var(--c-light)" }}>4–6 weeks</strong>.
+                </p>
+                <div className="phase-steps">
+                  {[
+                    ["01", "Python Basics", "Variables, loops, functions, and classes. Work with data using NumPy and Pandas."],
+                    ["02", "Math for AI", "Learn the key math: linear algebra, basic calculus, probability, and statistics."],
+                    ["03", "Exploring Data", "Look at data, make charts, handle missing values, and pick useful features."],
+                    ["04", "Classic ML Models", "Linear regression, decision trees, k-NN, and k-means using scikit-learn on real data."],
+                    ["05", "Checking Your Model", "Split data for testing, use cross-validation, and learn accuracy scores like precision and recall."],
+                    ["06", "Your First Full Project", "Build a complete pipeline: load data → clean it → train a model → check results → submit."],
+                  ].map(([num, title, desc]) => (
+                    <div key={num} className="step-card">
+                      <div className="step-num">{num}</div>
+                      <h4>{title}</h4>
+                      <p>{desc}</p>
+                    </div>
+                  ))}
+                </div>
                 <div
-                  key={`submarine-${index}`}
-                  className="absolute z-30 pointer-events-none"
                   style={{
-                    left: `${(submarinePos.x / 1200) * 100}%`,
-                    top: `${(submarinePos.y / totalHeight) * 100}%`,
-                    transform: `translate(-50%, -50%) rotate(${adjustedRotation}deg) ${
-                      facingLeft ? "scaleX(-1)" : ""
-                    }`,
-                    transition: "transform 0.15s ease-out",
+                    marginTop: "1.75rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    flexWrap: "wrap",
                   }}
                 >
-                  <div className="relative">
-                    {/* Submarine Body */}
-                    <svg
-                      width="120"
-                      height="60"
-                      viewBox="0 0 120 60"
-                      className="drop-shadow-2xl"
-                      style={{ transform: "scaleX(-1)" }}
-                    >
-                      {/* Main Hull */}
-                      <ellipse
-                        cx="60"
-                        cy="35"
-                        rx="50"
-                        ry="20"
-                        fill="#000000"
-                        stroke="var(--color-accent)"
-                        strokeWidth="2"
-                      />
-
-                      {/* Conning Tower */}
-                      <rect
-                        x="45"
-                        y="15"
-                        width="30"
-                        height="20"
-                        rx="5"
-                        fill="#000000"
-                        stroke="var(--color-accent)"
-                        strokeWidth="2"
-                      />
-
-                      {/* Periscope */}
-                      <line
-                        x1="60"
-                        y1="15"
-                        x2="60"
-                        y2="5"
-                        stroke="var(--color-accent)"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                      />
-                      <circle cx="60" cy="5" r="3" fill="var(--color-danger)" />
-
-                      {/* Windows */}
-                      <circle
-                        cx="40"
-                        cy="30"
-                        r="6"
-                        fill="var(--color-accent)"
-                        stroke="var(--color-accent-strong)"
-                        strokeWidth="2"
-                      />
-                      <circle
-                        cx="60"
-                        cy="30"
-                        r="6"
-                        fill="var(--color-accent)"
-                        stroke="var(--color-accent-strong)"
-                        strokeWidth="2"
-                      />
-                      <circle
-                        cx="80"
-                        cy="30"
-                        r="6"
-                        fill="var(--color-accent)"
-                        stroke="var(--color-accent-strong)"
-                        strokeWidth="2"
-                      />
-
-                      {/* Propeller */}
-                      <g transform="translate(110, 35)">
-                        <circle
-                          r="8"
-                          fill="var(--color-accent)"
-                          stroke="var(--color-accent-strong)"
-                          strokeWidth="2"
-                        />
-                        <line
-                          x1="-6"
-                          y1="0"
-                          x2="6"
-                          y2="0"
-                          stroke="var(--color-muted-strong)"
-                          strokeWidth="2"
-                        />
-                        <line
-                          x1="0"
-                          y1="-6"
-                          x2="0"
-                          y2="6"
-                          stroke="var(--color-muted-strong)"
-                          strokeWidth="2"
-                        />
-                      </g>
-
-                      {/* Front Detail */}
-                      <circle
-                        cx="15"
-                        cy="35"
-                        r="8"
-                        fill="var(--color-accent)"
-                        stroke="var(--color-accent-strong)"
-                        strokeWidth="2"
-                      />
-                    </svg>
-                  </div>
+                  <Link
+                    href="/challanges"
+                    className="btn btn-primary"
+                    style={{
+                      borderColor: "#04d464",
+                      background: "rgba(4,212,100,.1)",
+                      color: "#04d464",
+                      boxShadow: "none",
+                    }}
+                  >
+                    Start Beginner Challenges →
+                  </Link>
+                  <span style={{ fontSize: ".8rem", color: "var(--text-muted)" }}>
+                    6 challenges · 750 total pts
+                  </span>
                 </div>
-              );
-            })}
-          </div>
+              </div>
 
-          {loading && (
-            <div className="text-center py-10 text-(--color-text-muted)">
-              Loading roadmap...
-            </div>
-          )}
+              <div className="roadmap-phase inter-phase" id="intermediate">
+                <div className="phase-marker" />
+                <div className="phase-eyebrow">Phase 02 — Depth</div>
+                <h3 className="phase-title">Intermediate</h3>
+                <p className="phase-desc">
+                  Go deeper into neural networks, deep learning tools, and pick a
+                  focus area: Computer Vision, NLP, or Reinforcement Learning.
+                  Estimated time:{" "}
+                  <strong style={{ color: "var(--c-light)" }}>8–12 weeks</strong>.
+                </p>
+                <div className="phase-steps">
+                  {[
+                    ["07", "Neural Networks In Depth", "How backpropagation works, choosing activation functions, weight setup, and batch normalization."],
+                    ["08", "PyTorch Basics", "Tensors, auto-gradients, training loops, GPU speed-up, and loading data."],
+                    ["09", "Computer Vision Track", "CNNs, ResNets, reusing trained models, object detection with YOLO, and image segmentation."],
+                    ["10", "NLP Track", "Tokenization, word vectors, RNNs, LSTMs, attention, and fine-tuning BERT."],
+                    ["11", "Reinforcement Learning", "MDPs, Q-learning, policy gradients, PPO, and DQN with Gym environments."],
+                    ["12", "MLOps Basics", "Track experiments with MLflow, save model versions, and build repeatable pipelines."],
+                  ].map(([num, title, desc]) => (
+                    <div key={num} className="step-card">
+                      <div className="step-num">{num}</div>
+                      <h4>{title}</h4>
+                      <p>{desc}</p>
+                    </div>
+                  ))}
+                </div>
+                <div
+                  style={{
+                    marginTop: "1.75rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <Link
+                    href="/challanges"
+                    className="btn btn-primary"
+                    style={{
+                      borderColor: "var(--c-cyan)",
+                      background: "rgba(18,187,254,.1)",
+                      color: "var(--c-cyan)",
+                      boxShadow: "none",
+                    }}
+                  >
+                    Start Intermediate Challenges →
+                  </Link>
+                  <span style={{ fontSize: ".8rem", color: "var(--text-muted)" }}>
+                    8 challenges · 1,820 total pts
+                  </span>
+                </div>
+              </div>
 
-          {!loading && error && (
-            <div className="text-center py-10 text-(--color-warning)">
-              {error}
-            </div>
-          )}
-
-          {!loading && !error && roadmapSteps.length === 0 && (
-            <div className="text-center py-10 text-(--color-text-muted)">
-              No roadmap steps available yet.
-            </div>
-          )}
-
-          {/* Scroll Progress Indicator */}
-          <div className="fixed bottom-8 right-8 z-50">
-            <div className="relative w-16 h-16">
-              <svg className="transform -rotate-90 w-16 h-16">
-                <circle
-                  cx="32"
-                  cy="32"
-                  r="28"
-                  stroke="var(--color-primary-strong)"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <circle
-                  cx="32"
-                  cy="32"
-                  r="28"
-                  stroke="var(--color-primary)"
-                  strokeWidth="4"
-                  fill="none"
-                  strokeDasharray={`${2 * Math.PI * 28}`}
-                  strokeDashoffset={`${
-                    2 * Math.PI * 28 * (1 - scrollProgress)
-                  }`}
-                  className="transition-all duration-300"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-(--color-primary) text-xs font-bold">
-                  {Math.round(scrollProgress * 100)}%
-                </span>
+              <div className="roadmap-phase advanced-phase" id="advanced">
+                <div className="phase-marker" />
+                <div className="phase-eyebrow">Phase 03 — Mastery</div>
+                <h3 className="phase-title">Advanced</h3>
+                <p className="phase-desc">
+                  Learn the latest AI models, recreate research papers, and build
+                  real-world AI systems. This is where you go from learner to
+                  expert. Estimated time:{" "}
+                  <strong style={{ color: "var(--c-light)" }}>12–20 weeks</strong>.
+                </p>
+                <div className="phase-steps">
+                  {[
+                    ["13", "Transformers & Attention", "Build the \"Attention is All You Need\" model from scratch. Learn about GPT, T5, and CLIP."],
+                    ["14", "Generative AI", "VAEs, GANs, and Diffusion Models. Train your own image generator and check the results."],
+                    ["15", "Large Language Models", "Fine-tune LLMs, use LoRA, RLHF, prompt tricks, RAG pipelines, and LangChain."],
+                    ["16", "Making Models Smaller", "Quantization (INT8/FP16), pruning, knowledge distillation, and deploying with TensorRT."],
+                    ["17", "Recreate a Research Paper", "Pick a recent AI paper, build it end-to-end, and present what you learned to the club."],
+                    ["18", "Final AI Project", "Design and launch a real AI app: build the API, add monitoring, and set up auto-deploy."],
+                  ].map(([num, title, desc]) => (
+                    <div key={num} className="step-card">
+                      <div className="step-num">{num}</div>
+                      <h4>{title}</h4>
+                      <p>{desc}</p>
+                    </div>
+                  ))}
+                </div>
+                <div
+                  style={{
+                    marginTop: "1.75rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <Link href="/challanges" className="btn btn-orange">
+                    Start Advanced Challenges →
+                  </Link>
+                  <span style={{ fontSize: ".8rem", color: "var(--text-muted)" }}>
+                    6 challenges · 2,600 total pts
+                  </span>
+                </div>
               </div>
             </div>
           </div>
+
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "5rem",
+              padding: "3.5rem",
+              background: "var(--bg-card)",
+              border: "1px solid var(--border)",
+              borderRadius: "var(--r-lg)",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                height: 200,
+                background:
+                  "radial-gradient(ellipse, rgba(4,112,252,.09) 0%, transparent 70%)",
+                pointerEvents: "none",
+              }}
+            />
+            <div className="section-eyebrow" style={{ marginBottom: ".9rem" }}>
+              Ready to Start?
+            </div>
+            <h2 style={{ marginBottom: "1rem", fontSize: "2rem" }}>
+              Start Your AI Journey Today
+            </h2>
+            <p
+              style={{
+                color: "var(--text-muted)",
+                maxWidth: 480,
+                marginInline: "auto",
+                marginBottom: "2rem",
+              }}
+            >
+              Make a free account, pick your level, and track your progress
+              through each phase.
+            </p>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "1rem",
+                flexWrap: "wrap",
+              }}
+            >
+              <Link href="/signup" className="btn btn-orange btn-lg">
+                Create Free Account
+              </Link>
+              <Link href="/challanges" className="btn btn-outline btn-lg">
+                Browse Challenges
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

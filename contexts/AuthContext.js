@@ -1,66 +1,129 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { getRedirectResult, onIdTokenChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { getFirebaseAuth } from "@/lib/firebase";
+import { authApi } from "@/lib/api";
 
-const AuthContext = createContext({});
+const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const [needsProfileCompletion, setNeedsProfileCompletion] = useState(false);
+  const [authError, setAuthError] = useState("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Load user data from localStorage on mount
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-
-    if (storedToken && storedUser && storedUser !== "undefined") {
-      try {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-      }
+  const syncSession = useCallback(async (firebaseUser) => {
+    if (!firebaseUser) {
+      setUser(null);
+      setNeedsProfileCompletion(false);
+      return;
     }
-    setLoading(false);
+
+    const session = await authApi.session();
+    setUser(session.user);
+    setNeedsProfileCompletion(session.needsProfileCompletion ?? false);
+    setAuthError("");
   }, []);
 
-  const login = (userData, authToken) => {
-    setUser(userData);
-    setToken(authToken);
-    localStorage.setItem("token", authToken);
-    localStorage.setItem("user", JSON.stringify(userData));
-  };
+  useEffect(() => {
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      setAuthError(
+        "Firebase is not configured. Restart the dev server after setting .env.local.",
+      );
+      setLoading(false);
+      return undefined;
+    }
 
-  const logout = () => {
+    let active = true;
+
+    const initAuth = async () => {
+      try {
+        await getRedirectResult(auth);
+      } catch (error) {
+        if (!active) return;
+        console.error("Google redirect sign-in failed:", error);
+        setAuthError(error?.message || "Google sign-in failed.");
+      }
+    };
+
+    initAuth();
+
+    const unsubscribe = onIdTokenChanged(auth, async (firebaseUser) => {
+      if (!active) return;
+
+      try {
+        await syncSession(firebaseUser);
+      } catch (error) {
+        console.error("Failed to sync session with backend:", error);
+        setAuthError(
+          error?.message ||
+            "Could not connect to the server. Check that the backend is running.",
+        );
+        try {
+          await signOut(auth);
+        } catch {
+          // ignore sign-out errors
+        }
+        setUser(null);
+        setNeedsProfileCompletion(false);
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    });
+
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, [syncSession]);
+
+  const logout = async () => {
+    const auth = getFirebaseAuth();
+    if (auth) {
+      try {
+        await signOut(auth);
+      } catch {
+        // ignore sign-out errors
+      }
+    }
     setUser(null);
-    setToken(null);
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    setNeedsProfileCompletion(false);
+    setAuthError("");
     router.push("/login");
   };
 
   const updateUser = (userData) => {
     setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+  };
+
+  const refreshSession = async () => {
+    const auth = getFirebaseAuth();
+    if (auth?.currentUser) {
+      await syncSession(auth.currentUser);
+    }
   };
 
   const isAuthenticated = () => {
-    return !!token && !!user;
+    const auth = getFirebaseAuth();
+    return !!auth?.currentUser && !!user;
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        token,
+        needsProfileCompletion,
+        authError,
         loading,
-        login,
         logout,
         updateUser,
+        refreshSession,
         isAuthenticated,
       }}
     >
@@ -71,7 +134,7 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === null) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;

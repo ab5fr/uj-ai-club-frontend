@@ -11,7 +11,12 @@ import {
   adminResourcesApi,
   adminNotebooksApi,
   adminSubmissionsApi,
+  adminContactMessagesApi,
 } from "@/lib/api";
+import {
+  formatBackendDate,
+  formatBackendDateTime,
+} from "@/lib/formatDate";
 
 export default function AdminPage() {
   return (
@@ -27,30 +32,42 @@ function AdminContent() {
 
   const isAdmin = useMemo(() => {
     if (!user) return false;
-    // Support either role or isAdmin flags depending on backend
-    console.log(user);
     return user.role === "admin" || user.isAdmin === true;
   }, [user]);
 
   if (!isAdmin) {
     return (
-      <main className="min-h-screen bg-[var(--color-surface-2)] text-[var(--color-text)] pt-24">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <h1 className="text-4xl font-bold mb-6">Admin</h1>
-          <div className="bg-[color-mix(in_srgb,var(--color-warning)_10%,transparent)] border border-[var(--color-warning)] text-[var(--color-warning)] px-6 py-4 rounded-2xl">
-            You must be an administrator to access this page.
+      <main className="page admin-page">
+        <section className="section">
+          <div className="container">
+            <h1>Admin</h1>
+            <div className="admin-alert admin-alert--warning">
+              You must be an administrator to access this page.
+            </div>
           </div>
-        </div>
+        </section>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[var(--color-surface-2)] text-[var(--color-text)] pt-50">
-      <div className="container mx-auto px-4 max-w-7xl">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold">Admin Dashboard</h1>
-          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-1">
+    <main className="page admin-page">
+      <div className="page-hero">
+        <div className="container">
+          <div className="page-hero__tag">Administration</div>
+          <h1 className="anim-1">
+            Admin <span className="text-gradient">Dashboard</span>
+          </h1>
+          <p className="anim-2">
+            Manage resources, challenges, notebooks, submissions, and contact
+            messages.
+          </p>
+        </div>
+      </div>
+
+      <section className="section admin-section">
+        <div className="container">
+          <div className="admin-tabs">
             <TabButton
               label="Resources"
               active={activeTab === "resources"}
@@ -76,15 +93,21 @@ function AdminContent() {
               active={activeTab === "submissions"}
               onClick={() => setActiveTab("submissions")}
             />
+            <TabButton
+              label="Messages"
+              active={activeTab === "messages"}
+              onClick={() => setActiveTab("messages")}
+            />
           </div>
-        </div>
 
-        {activeTab === "resources" && <ResourcesAdmin />}
-        {activeTab === "certificates" && <CertificatesAdmin />}
-        {activeTab === "challenges" && <ChallengesAdmin />}
-        {activeTab === "notebooks" && <NotebooksAdmin />}
-        {activeTab === "submissions" && <SubmissionsAdmin />}
-      </div>
+          {activeTab === "resources" && <ResourcesAdmin />}
+          {activeTab === "certificates" && <CertificatesAdmin />}
+          {activeTab === "challenges" && <ChallengesAdmin />}
+          {activeTab === "notebooks" && <NotebooksAdmin />}
+          {activeTab === "submissions" && <SubmissionsAdmin />}
+          {activeTab === "messages" && <ContactMessagesAdmin />}
+        </div>
+      </section>
     </main>
   );
 }
@@ -92,12 +115,9 @@ function AdminContent() {
 function TabButton({ label, active, onClick }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-        active
-          ? "bg-[var(--color-primary)] text-[var(--color-text)]"
-          : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
-      }`}
+      className={`admin-tab${active ? " active" : ""}`}
     >
       {label}
     </button>
@@ -209,19 +229,12 @@ function ResourcesAdmin() {
 
   return (
     <section>
-      <h2 className="text-2xl font-semibold mb-4">Resources</h2>
-      {error && (
-        <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)] px-6 py-3 rounded-2xl mb-4">
-          {error}
-        </div>
-      )}
+      <h2 className="admin-section-title">Resources</h2>
+      {error && <div className="admin-alert admin-alert--error">{error}</div>}
 
       {/* Create / Edit form */}
-      <form
-        onSubmit={onSubmit}
-        className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 mb-8"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form onSubmit={onSubmit} className="card admin-form">
+        <div className="admin-form-grid">
           <Input
             label="Title"
             value={form.title}
@@ -253,8 +266,8 @@ function ResourcesAdmin() {
             onChange={(file) => setForm({ ...form, instructorImage: file })}
           />
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <label className="inline-flex items-center gap-2 text-[var(--color-text-muted)]">
+        <div className="admin-form-footer">
+          <label className="admin-check">
             <input
               type="checkbox"
               checked={form.visible}
@@ -262,75 +275,55 @@ function ResourcesAdmin() {
             />
             Visible
           </label>
-          <div className="flex gap-3">
+          <div className="admin-form-actions">
             {editingId && (
-              <button
-                type="button"
-                onClick={resetForm}
-                className="px-4 py-2 rounded-xl bg-[var(--color-muted-strong)] hover:bg-[var(--color-muted-surface)]"
-              >
+              <button type="button" onClick={resetForm} className="btn btn-outline">
                 Cancel
               </button>
             )}
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)]"
-            >
+            <button type="submit" className="btn btn-primary">
               {editingId ? "Update Resource" : "Add Resource"}
             </button>
           </div>
         </div>
       </form>
 
-      <div className="flex items-center justify-between mb-4">
-        <div className="text-[var(--color-text-muted)]">
+      <div className="admin-toolbar">
+        <div className="admin-toolbar-meta">
           {loading ? "Loading..." : `${filtered.length} item(s)`}
         </div>
-        <div className="w-72">
+        <div className="admin-search">
           <Input placeholder="Search..." value={search} onChange={setSearch} />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="admin-card-grid">
         {filtered.map((r) => (
-          <div
-            key={r.id}
-            className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="font-semibold text-[color-mix(in_srgb,var(--color-text)_90%,transparent)] truncate">
-                {r.title}
-              </div>
+          <div key={r.id} className="card admin-item">
+            <div className="admin-item__head">
+              <div className="admin-item__title">{r.title}</div>
               <span
-                className={`text-xs px-2 py-1 rounded-full ${
+                className={`admin-badge ${
                   r.visible === false || r.isHidden
-                    ? "bg-[var(--color-muted-strong)] text-[var(--color-text)]"
-                    : "bg-[color-mix(in_srgb,var(--color-success)_30%,transparent)] text-[var(--color-success)]"
+                    ? "admin-badge--hidden"
+                    : "admin-badge--visible"
                 }`}
               >
                 {r.visible === false || r.isHidden ? "Hidden" : "Visible"}
               </span>
             </div>
-            <div className="text-sm text-[var(--color-text-muted)] mb-3">
-              by {r.provider}
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => onEdit(r)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-primary)_80%,transparent)] hover:bg-[var(--color-primary)] text-sm"
-              >
+            <div className="admin-item__meta">by {r.provider}</div>
+            <div className="admin-item__actions">
+              <button onClick={() => onEdit(r)} className="btn btn-primary btn-sm">
                 Edit
               </button>
               <button
                 onClick={() => onToggleVisibility(r)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-warning)_80%,transparent)] hover:bg-[var(--color-warning)] text-sm"
+                className="btn btn-warning btn-sm"
               >
                 {r.visible === false || r.isHidden ? "Show" : "Hide"}
               </button>
-              <button
-                onClick={() => onDelete(r.id)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-danger)_80%,transparent)] hover:bg-[var(--color-danger)] text-sm"
-              >
+              <button onClick={() => onDelete(r.id)} className="btn btn-danger btn-sm">
                 Delete
               </button>
             </div>
@@ -456,18 +449,11 @@ function CertificatesAdmin() {
 
   return (
     <section>
-      <h2 className="text-2xl font-semibold mb-4">Certificates</h2>
-      {error && (
-        <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)] px-6 py-3 rounded-2xl mb-4">
-          {error}
-        </div>
-      )}
+      <h2 className="admin-section-title">Certificates</h2>
+      {error && <div className="admin-alert admin-alert--error">{error}</div>}
 
-      <form
-        onSubmit={onSubmit}
-        className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 mb-8"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form onSubmit={onSubmit} className="card admin-form">
+        <div className="admin-form-grid">
           <Input
             label="Level"
             value={form.level}
@@ -514,8 +500,8 @@ function CertificatesAdmin() {
             onChange={(v) => setForm({ ...form, youtubeUrl: v })}
           />
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <label className="inline-flex items-center gap-2 text-[var(--color-text-muted)]">
+        <div className="admin-form-footer">
+          <label className="admin-check">
             <input
               type="checkbox"
               checked={form.visible}
@@ -523,81 +509,61 @@ function CertificatesAdmin() {
             />
             Visible
           </label>
-          <div className="flex gap-3">
+          <div className="admin-form-actions">
             {editingId && (
-              <button
-                type="button"
-                onClick={resetForm}
-                className="px-4 py-2 rounded-xl bg-[var(--color-muted-strong)] hover:bg-[var(--color-muted-surface)]"
-              >
+              <button type="button" onClick={resetForm} className="btn btn-outline">
                 Cancel
               </button>
             )}
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)]"
-            >
+            <button type="submit" className="btn btn-primary">
               {editingId ? "Update Certificate" : "Add Certificate"}
             </button>
           </div>
         </div>
       </form>
 
-      <div className="flex items-center justify-between mb-4">
-        <div className="text-[var(--color-text-muted)]">
+      <div className="admin-toolbar">
+        <div className="admin-toolbar-meta">
           {loading ? "Loading..." : `${filtered.length} item(s)`}
         </div>
-        <div className="w-72">
+        <div className="admin-search">
           <Input placeholder="Search..." value={search} onChange={setSearch} />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="admin-card-grid">
         {filtered.map((c) => (
-          <div
-            key={c.id}
-            className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="font-semibold text-[color-mix(in_srgb,var(--color-text)_90%,transparent)] truncate">
-                {c.title}
-              </div>
+          <div key={c.id} className="card admin-item">
+            <div className="admin-item__head">
+              <div className="admin-item__title">{c.title}</div>
               <span
-                className={`text-xs px-2 py-1 rounded-full ${
+                className={`admin-badge ${
                   c.visible === false || c.isHidden
-                    ? "bg-[var(--color-muted-strong)] text-[var(--color-text)]"
-                    : "bg-[color-mix(in_srgb,var(--color-success)_30%,transparent)] text-[var(--color-success)]"
+                    ? "admin-badge--hidden"
+                    : "admin-badge--visible"
                 }`}
               >
                 {c.visible === false || c.isHidden ? "Hidden" : "Visible"}
               </span>
             </div>
-            <div className="text-sm text-[var(--color-text-muted)] mb-1">
-              Level {c.level}
-            </div>
-            <div className="text-sm text-[var(--color-text-muted)] mb-1 line-clamp-1">
+            <div className="admin-item__meta">Level {c.level}</div>
+            <div className="admin-item__meta admin-item__meta--sm">
               {c.courseTitle}
             </div>
-            <div className="text-sm text-[var(--color-text-muted)] mb-3">
+            <div className="admin-item__meta">
               by {c.firstName} · by {c.secondName}
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => onEdit(c)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-primary)_80%,transparent)] hover:bg-[var(--color-primary)] text-sm"
-              >
+            <div className="admin-item__actions">
+              <button onClick={() => onEdit(c)} className="btn btn-primary btn-sm">
                 Edit
               </button>
               <button
                 onClick={() => onToggleVisibility(c)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-warning)_80%,transparent)] hover:bg-[var(--color-warning)] text-sm"
+                className="btn btn-warning btn-sm"
               >
                 {c.visible === false || c.isHidden ? "Show" : "Hide"}
               </button>
-              <button
-                onClick={() => onDelete(c.id)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-danger)_80%,transparent)] hover:bg-[var(--color-danger)] text-sm"
-              >
+              <button onClick={() => onDelete(c.id)} className="btn btn-danger btn-sm">
                 Delete
               </button>
             </div>
@@ -751,19 +717,12 @@ function ChallengesAdmin() {
 
   return (
     <section>
-      <h2 className="text-2xl font-semibold mb-4">Challenges</h2>
-      {error && (
-        <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)] px-6 py-3 rounded-2xl mb-4">
-          {error}
-        </div>
-      )}
+      <h2 className="admin-section-title">Challenges</h2>
+      {error && <div className="admin-alert admin-alert--error">{error}</div>}
 
       {/* Create / Edit form */}
-      <form
-        onSubmit={onSubmit}
-        className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 mb-8"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form onSubmit={onSubmit} className="card admin-form">
+        <div className="admin-form-grid">
           <Input
             label="Title"
             value={form.title}
@@ -789,7 +748,7 @@ function ChallengesAdmin() {
             label="Description"
             value={form.description}
             onChange={(v) => setForm({ ...form, description: v })}
-            className="md:col-span-2"
+            className="form-group--full"
           />
           <Input
             label="Challenge URL"
@@ -810,8 +769,8 @@ function ChallengesAdmin() {
             onChange={(v) => setForm({ ...form, endDate: v })}
           />
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <label className="inline-flex items-center gap-2 text-[var(--color-text-muted)]">
+        <div className="admin-form-footer">
+          <label className="admin-check">
             <input
               type="checkbox"
               checked={form.visible}
@@ -819,82 +778,62 @@ function ChallengesAdmin() {
             />
             Visible
           </label>
-          <div className="flex gap-3">
+          <div className="admin-form-actions">
             {editingId && (
-              <button
-                type="button"
-                onClick={resetForm}
-                className="px-4 py-2 rounded-xl bg-[var(--color-muted-strong)] hover:bg-[var(--color-muted-surface)]"
-              >
+              <button type="button" onClick={resetForm} className="btn btn-outline">
                 Cancel
               </button>
             )}
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-strong)]"
-            >
+            <button type="submit" className="btn btn-primary">
               {editingId ? "Update Challenge" : "Add Challenge"}
             </button>
           </div>
         </div>
       </form>
 
-      <div className="flex items-center justify-between mb-4">
-        <div className="text-[var(--color-text-muted)]">
+      <div className="admin-toolbar">
+        <div className="admin-toolbar-meta">
           {loading ? "Loading..." : `${filtered.length} item(s)`}
         </div>
-        <div className="w-72">
+        <div className="admin-search">
           <Input placeholder="Search..." value={search} onChange={setSearch} />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="admin-card-grid">
         {filtered.map((c) => (
-          <div
-            key={c.id}
-            className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="font-semibold text-[color-mix(in_srgb,var(--color-text)_90%,transparent)] truncate">
-                {c.title}
-              </div>
+          <div key={c.id} className="card admin-item">
+            <div className="admin-item__head">
+              <div className="admin-item__title">{c.title}</div>
               <span
-                className={`text-xs px-2 py-1 rounded-full ${
+                className={`admin-badge ${
                   c.visible === false || c.isHidden
-                    ? "bg-[var(--color-muted-strong)] text-[var(--color-text)]"
-                    : "bg-[color-mix(in_srgb,var(--color-success)_30%,transparent)] text-[var(--color-success)]"
+                    ? "admin-badge--hidden"
+                    : "admin-badge--visible"
                 }`}
               >
                 {c.visible === false || c.isHidden ? "Hidden" : "Visible"}
               </span>
             </div>
-            <div className="text-sm text-[var(--color-text-muted)] mb-3 line-clamp-2">
-              {c.description}
-            </div>
-            <div className="text-xs text-[var(--color-text-muted)] mb-2">
+            <div className="admin-item__meta">{c.description}</div>
+            <div className="admin-item__meta admin-item__meta--sm">
               Allowed submissions: {c.allowedSubmissions ?? 3}
             </div>
-            <div className="text-xs text-[var(--color-text-muted)] mb-3">
+            <div className="admin-item__meta admin-item__meta--sm">
               {c.startDate ? `Start: ${fmtDate(c.startDate)}` : ""}
               {c.endDate ? ` · End: ${fmtDate(c.endDate)}` : ""}
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => onEdit(c)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-primary)_80%,transparent)] hover:bg-[var(--color-primary)] text-sm"
-              >
+            <div className="admin-item__actions">
+              <button onClick={() => onEdit(c)} className="btn btn-primary btn-sm">
                 Edit
               </button>
               <button
                 onClick={() => onToggleVisibility(c)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-warning)_80%,transparent)] hover:bg-[var(--color-warning)] text-sm"
+                className="btn btn-warning btn-sm"
               >
                 {c.visible === false || c.isHidden ? "Show" : "Hide"}
               </button>
-              <button
-                onClick={() => onDelete(c.id)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-danger)_80%,transparent)] hover:bg-[var(--color-danger)] text-sm"
-              >
+              <button onClick={() => onDelete(c.id)} className="btn btn-danger btn-sm">
                 Delete
               </button>
             </div>
@@ -915,21 +854,17 @@ function Input({
   className = "",
 }) {
   return (
-    <label className={`block ${className}`}>
-      {label && (
-        <span className="block text-sm text-[var(--color-text-muted)] mb-1">
-          {label}
-        </span>
-      )}
+    <div className={`form-group ${className}`}>
+      {label && <label className="form-label">{label}</label>}
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required}
         placeholder={placeholder}
-        className="w-full bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-xl py-3 px-4 text-sm placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-strong)]"
+        className="form-input"
       />
-    </label>
+    </div>
   );
 }
 
@@ -941,38 +876,30 @@ function Textarea({
   className = "",
 }) {
   return (
-    <label className={`block ${className}`}>
-      {label && (
-        <span className="block text-sm text-[var(--color-text-muted)] mb-1">
-          {label}
-        </span>
-      )}
+    <div className={`form-group ${className}`}>
+      {label && <label className="form-label">{label}</label>}
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={4}
-        className="w-full bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-xl py-3 px-4 text-sm placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-strong)]"
+        className="form-textarea"
       />
-    </label>
+    </div>
   );
 }
 
-function FileInput({ label, onChange, className = "" }) {
+function FileInput({ label, onChange, className = "", accept = "image/*" }) {
   return (
-    <label className={`block ${className}`}>
-      {label && (
-        <span className="block text-sm text-[var(--color-text-muted)] mb-1">
-          {label}
-        </span>
-      )}
+    <div className={`form-group ${className}`}>
+      {label && <label className="form-label">{label}</label>}
       <input
         type="file"
-        accept="image/*"
+        accept={accept}
         onChange={(e) => onChange(e.target.files[0] || null)}
-        className="w-full bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-xl py-3 px-4 text-sm text-[var(--color-text-muted)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[var(--color-primary)] file:text-[var(--color-text)] hover:file:bg-[var(--color-primary-strong)] focus:outline-none focus:border-[var(--color-border-strong)]"
+        className="form-input"
       />
-    </label>
+    </div>
   );
 }
 
@@ -1012,12 +939,12 @@ function toCertificatePayload(form) {
   return payload;
 }
 
-function fmtDate(s) {
-  try {
-    return new Date(s).toLocaleDateString();
-  } catch {
-    return s;
-  }
+function fmtDate(value) {
+  return formatBackendDate(value);
+}
+
+function fmtDateTime(value) {
+  return formatBackendDateTime(value);
 }
 
 function handleErr(err, setError) {
@@ -1198,73 +1125,44 @@ function NotebooksAdmin() {
 
   return (
     <section>
-      <h2 className="text-2xl font-semibold mb-4">Challenge Notebooks</h2>
-      <p className="text-[var(--color-text-muted)] mb-6">
+      <h2 className="admin-section-title">Challenge Notebooks</h2>
+      <p className="admin-section-desc">
         Upload Jupyter notebooks for challenges. Students will complete these
         notebooks and be auto-graded using nbgrader.
       </p>
 
-      {/* Grading Setup Instructions */}
-      <div className="bg-[color-mix(in_srgb,var(--color-primary)_10%,transparent)] border border-[var(--color-primary)] text-[var(--color-primary-soft)] px-6 py-4 rounded-2xl mb-6">
-        <h3 className="font-semibold mb-2">📝 Setting Up Grading Cells</h3>
-        <p className="text-sm mb-2">
+      <div className="admin-alert admin-alert--info">
+        <h3 className="admin-form-title">Setting Up Grading Cells</h3>
+        <p className="admin-section-desc" style={{ marginBottom: ".75rem" }}>
           For notebooks to be graded properly, you need to add special markers:
         </p>
-        <ul className="text-sm list-disc list-inside space-y-1">
+        <ul className="admin-markdown">
           <li>
-            <code className="bg-[color-mix(in_srgb,var(--color-primary-strong)_50%,transparent)] px-1 rounded">
-              ### BEGIN SOLUTION
-            </code>{" "}
-            and{" "}
-            <code className="bg-[color-mix(in_srgb,var(--color-primary-strong)_50%,transparent)] px-1 rounded">
-              ### END SOLUTION
-            </code>{" "}
-            - wrap the solution code
+            <code>### BEGIN SOLUTION</code> and <code>### END SOLUTION</code> —
+            wrap the solution code
           </li>
           <li>
-            <code className="bg-[color-mix(in_srgb,var(--color-primary-strong)_50%,transparent)] px-1 rounded">
-              ### BEGIN HIDDEN TESTS
-            </code>{" "}
-            and{" "}
-            <code className="bg-[color-mix(in_srgb,var(--color-primary-strong)_50%,transparent)] px-1 rounded">
-              ### END HIDDEN TESTS
-            </code>{" "}
-            - wrap hidden test cases
+            <code>### BEGIN HIDDEN TESTS</code> and{" "}
+            <code>### END HIDDEN TESTS</code> — wrap hidden test cases
           </li>
         </ul>
-        <p className="text-sm mt-2">
-          Click <strong>"Edit in JupyterHub"</strong> to add these markers, then{" "}
-          <strong>"Sync to nbgrader"</strong> to apply changes.
+        <p className="admin-section-desc" style={{ marginBottom: 0, marginTop: ".75rem" }}>
+          Click <strong>Edit in JupyterHub</strong> to add these markers, then{" "}
+          <strong>Sync to nbgrader</strong> to apply changes.
         </p>
       </div>
 
-      {error && (
-        <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)] px-6 py-3 rounded-2xl mb-4">
-          {error}
-        </div>
-      )}
+      {error && <div className="admin-alert admin-alert--error">{error}</div>}
+      {success && <div className="admin-alert admin-alert--success">{success}</div>}
 
-      {success && (
-        <div className="bg-[color-mix(in_srgb,var(--color-success)_25%,transparent)] border border-[var(--color-success)] text-[var(--color-success)] px-6 py-3 rounded-2xl mb-4">
-          {success}
-        </div>
-      )}
-
-      {/* Create / Edit form */}
-      <form
-        onSubmit={onSubmit}
-        className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 mb-8"
-      >
-        <h3 className="text-lg font-medium mb-4">
+      <form onSubmit={onSubmit} className="card admin-form">
+        <h3 className="admin-form-title">
           {editingId ? "Edit Notebook Settings" : "Upload New Notebook"}
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Challenge Selection */}
-          <label className="block">
-            <span className="block text-sm text-[var(--color-text-muted)] mb-1">
-              Challenge *
-            </span>
+        <div className="admin-form-grid">
+          <div className="form-group">
+            <label className="form-label">Challenge *</label>
             <select
               value={form.challengeId}
               onChange={(e) =>
@@ -1272,7 +1170,7 @@ function NotebooksAdmin() {
               }
               disabled={editingId !== null}
               required
-              className="w-full bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-[var(--color-border-strong)] disabled:opacity-50"
+              className="form-select"
             >
               <option value="">Select a challenge</option>
               {(editingId ? challenges : availableChallenges).map((c) => (
@@ -1281,9 +1179,8 @@ function NotebooksAdmin() {
                 </option>
               ))}
             </select>
-          </label>
+          </div>
 
-          {/* Assignment Name */}
           <Input
             label="Assignment Name *"
             value={form.assignmentName}
@@ -1292,25 +1189,14 @@ function NotebooksAdmin() {
             placeholder="e.g., week5_challenge"
           />
 
-          {/* Notebook File Upload (only for new) */}
           {!editingId && (
-            <label className="block">
-              <span className="block text-sm text-[var(--color-text-muted)] mb-1">
-                Notebook File (.ipynb) *
-              </span>
-              <input
-                type="file"
-                accept=".ipynb"
-                onChange={(e) =>
-                  setForm({ ...form, notebookFile: e.target.files[0] || null })
-                }
-                required={!editingId}
-                className="w-full bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-xl py-3 px-4 text-sm text-[var(--color-text-muted)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[var(--color-accent)] file:text-[var(--color-text)] hover:file:bg-[var(--color-accent-strong)] focus:outline-none focus:border-[var(--color-border-strong)]"
-              />
-            </label>
+            <FileInput
+              label="Notebook File (.ipynb) *"
+              accept=".ipynb"
+              onChange={(file) => setForm({ ...form, notebookFile: file })}
+            />
           )}
 
-          {/* Max Points */}
           <Input
             label="Max Points"
             type="number"
@@ -1319,7 +1205,6 @@ function NotebooksAdmin() {
             placeholder="100"
           />
 
-          {/* CPU Limit */}
           <Input
             label="CPU Limit (cores)"
             type="number"
@@ -1329,26 +1214,22 @@ function NotebooksAdmin() {
             placeholder="0.5"
           />
 
-          {/* Memory Limit */}
-          <label className="block">
-            <span className="block text-sm text-[var(--color-text-muted)] mb-1">
-              Memory Limit
-            </span>
+          <div className="form-group">
+            <label className="form-label">Memory Limit</label>
             <select
               value={form.memoryLimit}
               onChange={(e) =>
                 setForm({ ...form, memoryLimit: e.target.value })
               }
-              className="w-full bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-[var(--color-border-strong)]"
+              className="form-select"
             >
               <option value="256M">256 MB</option>
               <option value="512M">512 MB</option>
               <option value="1G">1 GB</option>
               <option value="2G">2 GB</option>
             </select>
-          </label>
+          </div>
 
-          {/* Time Limit */}
           <Input
             label="Time Limit (minutes)"
             type="number"
@@ -1358,9 +1239,8 @@ function NotebooksAdmin() {
           />
         </div>
 
-        {/* Network Disabled */}
-        <div className="mt-4">
-          <label className="inline-flex items-center gap-2 text-[var(--color-text-muted)]">
+        <div style={{ marginTop: "1rem" }}>
+          <label className="admin-check">
             <input
               type="checkbox"
               checked={form.networkDisabled}
@@ -1372,83 +1252,65 @@ function NotebooksAdmin() {
           </label>
         </div>
 
-        <div className="mt-4 flex items-center justify-end gap-3">
-          {editingId && (
-            <button
-              type="button"
-              onClick={resetForm}
-              className="px-4 py-2 rounded-xl bg-[var(--color-muted-strong)] hover:bg-[var(--color-muted-surface)]"
-            >
-              Cancel
+        <div className="admin-form-footer" style={{ justifyContent: "flex-end" }}>
+          <div className="admin-form-actions">
+            {editingId && (
+              <button type="button" onClick={resetForm} className="btn btn-outline">
+                Cancel
+              </button>
+            )}
+            <button type="submit" className="btn btn-orange">
+              {editingId ? "Update Settings" : "Upload Notebook"}
             </button>
-          )}
-          <button
-            type="submit"
-            className="px-4 py-2 rounded-xl bg-[var(--color-accent)] hover:bg-[var(--color-accent-strong)]"
-          >
-            {editingId ? "Update Settings" : "Upload Notebook"}
-          </button>
+          </div>
         </div>
       </form>
 
-      {/* Notebooks List */}
-      <div className="text-[var(--color-text-muted)] mb-4">
+      <div className="admin-toolbar-meta" style={{ marginBottom: "1rem" }}>
         {loading ? "Loading..." : `${notebooks.length} notebook(s)`}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="admin-card-grid">
         {notebooks.map((nb) => (
-          <div
-            key={nb.id}
-            className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="font-semibold text-[color-mix(in_srgb,var(--color-text)_90%,transparent)] truncate">
+          <div key={nb.id} className="card admin-item">
+            <div className="admin-item__head">
+              <div className="admin-item__title">
                 {getChallengeTitle(nb.challengeId)}
               </div>
-              <span className="text-xs px-2 py-1 rounded-full bg-[color-mix(in_srgb,var(--color-accent)_30%,transparent)] text-[var(--color-accent-soft)]">
+              <span className="admin-badge admin-badge--points">
                 {nb.maxPoints} pts
               </span>
             </div>
-            <div className="text-sm text-[var(--color-text-muted)] mb-2">
-              Assignment:{" "}
-              <span className="text-[var(--color-text)]">
-                {nb.assignmentName}
-              </span>
+            <div className="admin-item__meta">
+              Assignment: <span style={{ color: "var(--c-light)" }}>{nb.assignmentName}</span>
             </div>
-            <div className="text-xs text-[var(--color-text-muted)] mb-2">
+            <div className="admin-item__meta admin-item__meta--sm">
               File: {nb.notebookFilename}
             </div>
-            <div className="text-xs text-[var(--color-text-muted)] mb-3">
+            <div className="admin-item__meta admin-item__meta--sm">
               CPU: {nb.cpuLimit} | RAM: {nb.memoryLimit} | Time:{" "}
               {nb.timeLimitMinutes}min
-              {nb.networkDisabled && " | 🔒 No Network"}
+              {nb.networkDisabled && " | No Network"}
             </div>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="admin-item__actions">
               <button
                 onClick={() => onEditInJupyterHub(nb.id)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-primary-strong)_80%,transparent)] hover:bg-[var(--color-primary-strong)] text-sm"
+                className="btn btn-primary btn-sm"
                 title="Open in JupyterHub to edit grading cells"
               >
-                📝 Edit in JupyterHub
+                Edit in JupyterHub
               </button>
               <button
                 onClick={() => onSyncToNbgrader(nb.id)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-success)_80%,transparent)] hover:bg-[var(--color-success)] text-sm"
+                className="btn btn-success btn-sm"
                 title="Sync notebook to nbgrader for grading"
               >
-                🔄 Sync to nbgrader
+                Sync to nbgrader
               </button>
-              <button
-                onClick={() => onEdit(nb)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-primary)_80%,transparent)] hover:bg-[var(--color-primary)] text-sm"
-              >
+              <button onClick={() => onEdit(nb)} className="btn btn-outline btn-sm">
                 Settings
               </button>
-              <button
-                onClick={() => onDelete(nb.id)}
-                className="px-3 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-danger)_80%,transparent)] hover:bg-[var(--color-danger)] text-sm"
-              >
+              <button onClick={() => onDelete(nb.id)} className="btn btn-danger btn-sm">
                 Delete
               </button>
             </div>
@@ -1457,7 +1319,7 @@ function NotebooksAdmin() {
       </div>
 
       {notebooks.length === 0 && !loading && (
-        <div className="text-center text-[var(--color-text-muted)] py-8">
+        <div className="admin-empty">
           No notebooks uploaded yet. Upload a notebook to enable auto-grading
           for challenges.
         </div>
@@ -1570,14 +1432,14 @@ function SubmissionsAdmin() {
     }
   };
 
-  const statusColors = {
-    not_started: "bg-[var(--color-muted-strong)]",
-    in_progress: "bg-[var(--color-warning)]",
-    submitted: "bg-[var(--color-primary)]",
-    grading: "bg-[var(--color-primary)]",
-    grading_pending: "bg-[var(--color-primary)]",
-    graded: "bg-[var(--color-success)]",
-    error: "bg-[var(--color-danger)]",
+  const statusBadgeClass = (status) => {
+    if (status === "graded") return "admin-badge--done";
+    if (status === "in_progress") return "admin-badge--progress";
+    if (status === "error") return "admin-badge--error";
+    if (["submitted", "grading", "grading_pending"].includes(status)) {
+      return "admin-badge--status";
+    }
+    return "admin-badge--hidden";
   };
 
   // Statistics
@@ -1595,61 +1457,47 @@ function SubmissionsAdmin() {
 
   return (
     <section>
-      <h2 className="text-2xl font-semibold mb-4">Challenge Submissions</h2>
-      <p className="text-[var(--color-text-muted)] mb-6">
+      <h2 className="admin-section-title">Challenge Submissions</h2>
+      <p className="admin-section-desc">
         View and monitor student submissions for notebook challenges.
       </p>
 
-      {error && (
-        <div className="bg-[color-mix(in_srgb,var(--color-danger)_25%,transparent)] border border-[var(--color-danger)] text-[var(--color-warning)] px-6 py-3 rounded-2xl mb-4">
-          {error}
-        </div>
-      )}
+      {error && <div className="admin-alert admin-alert--error">{error}</div>}
 
-      {/* Statistics */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center">
-          <div className="text-3xl font-bold text-[var(--color-text)]">
-            {stats.total}
-          </div>
-          <div className="text-sm text-[var(--color-text-muted)]">
-            Total Submissions
-          </div>
+      <div className="admin-stat-grid">
+        <div className="card admin-stat">
+          <div className="admin-stat__value">{stats.total}</div>
+          <div className="admin-stat__label">Total Submissions</div>
         </div>
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center">
-          <div className="text-3xl font-bold text-[var(--color-success)]">
+        <div className="card admin-stat">
+          <div className="admin-stat__value admin-stat__value--success">
             {stats.graded}
           </div>
-          <div className="text-sm text-[var(--color-text-muted)]">Graded</div>
+          <div className="admin-stat__label">Graded</div>
         </div>
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center">
-          <div className="text-3xl font-bold text-[var(--color-warning)]">
+        <div className="card admin-stat">
+          <div className="admin-stat__value admin-stat__value--warning">
             {stats.inProgress}
           </div>
-          <div className="text-sm text-[var(--color-text-muted)]">
-            In Progress
-          </div>
+          <div className="admin-stat__label">In Progress</div>
         </div>
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center">
-          <div className="text-3xl font-bold text-[var(--color-primary)]">
+        <div className="card admin-stat">
+          <div className="admin-stat__value admin-stat__value--primary">
             {stats.pending}
           </div>
-          <div className="text-sm text-[var(--color-text-muted)]">Pending</div>
+          <div className="admin-stat__label">Pending</div>
         </div>
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center">
-          <div className="text-3xl font-bold text-[var(--color-accent)]">
+        <div className="card admin-stat">
+          <div className="admin-stat__value admin-stat__value--accent">
             {stats.totalPoints}
           </div>
-          <div className="text-sm text-[var(--color-text-muted)]">
-            Total Points Awarded
-          </div>
+          <div className="admin-stat__label">Total Points Awarded</div>
         </div>
       </div>
 
-      {/* Filter */}
-      <div className="flex items-center gap-4 mb-6">
-        <span className="text-[var(--color-text-muted)]">Filter:</span>
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-1 inline-flex">
+      <div className="admin-filter">
+        <span className="admin-filter__label">Filter:</span>
+        <div className="admin-filter__group">
           {[
             "all",
             "grading_pending",
@@ -1659,167 +1507,119 @@ function SubmissionsAdmin() {
           ].map((f) => (
             <button
               key={f}
+              type="button"
               onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                filter === f
-                  ? "bg-[var(--color-primary)] text-[var(--color-text)]"
-                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
-              }`}
+              className={`admin-filter__btn${filter === f ? " active" : ""}`}
             >
               {f.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
             </button>
           ))}
         </div>
         <button
+          type="button"
           onClick={load}
-          className="ml-auto px-4 py-2 rounded-xl bg-[color-mix(in_srgb,var(--color-primary)_80%,transparent)] hover:bg-[var(--color-primary)] text-sm"
+          className="btn btn-primary btn-sm"
+          style={{ marginLeft: "auto" }}
         >
           Refresh
         </button>
       </div>
 
-      {/* Submissions Table */}
-      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-[color-mix(in_srgb,var(--color-primary-strong)_20%,transparent)]">
+      <div className="admin-table-wrap">
+        <div className="admin-table-scroll">
+          <table className="admin-table">
+            <thead>
               <tr>
-                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
-                  User
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
-                  Challenge
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
-                  Attempt
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
-                  Status
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
-                  Score
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
-                  Points
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
-                  Started
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
-                  Graded
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
-                  Submission
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">
-                  Manual Grade
-                </th>
+                <th>User</th>
+                <th>Challenge</th>
+                <th>Attempt</th>
+                <th>Status</th>
+                <th>Score</th>
+                <th>Points</th>
+                <th>Started</th>
+                <th>Graded</th>
+                <th>Submission</th>
+                <th>Manual Grade</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[color-mix(in_srgb,var(--color-primary-strong)_20%,transparent)]">
+            <tbody>
               {loading ? (
                 <tr>
-                  <td
-                    colSpan={10}
-                    className="px-4 py-8 text-center text-[var(--color-text-muted)]"
-                  >
+                  <td colSpan={10} className="admin-table__empty">
                     Loading...
                   </td>
                 </tr>
               ) : filteredSubmissions.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={10}
-                    className="px-4 py-8 text-center text-[var(--color-text-muted)]"
-                  >
+                  <td colSpan={10} className="admin-table__empty">
                     No submissions found
                   </td>
                 </tr>
               ) : (
                 filteredSubmissions.map((s) => (
-                  <tr
-                    key={s.id}
-                    className="hover:bg-[color-mix(in_srgb,var(--color-primary-strong)_10%,transparent)]"
-                  >
-                    <td className="px-4 py-3">
-                      <div className="font-medium text-[var(--color-text)]">
-                        {s.userName}
-                      </div>
-                      <div className="text-xs text-[var(--color-text-muted)]">
-                        {s.userEmail}
-                      </div>
+                  <tr key={s.id}>
+                    <td>
+                      <div className="admin-table__primary">{s.userName}</div>
+                      <div className="admin-table__sub">{s.userEmail}</div>
                     </td>
-                    <td className="px-4 py-3 text-[var(--color-text-muted)]">
-                      {s.challengeTitle}
-                    </td>
-                    <td className="px-4 py-3 text-[var(--color-text-muted)] text-xs">
+                    <td>{s.challengeTitle}</td>
+                    <td>
                       {s.attemptNumber}/{s.allowedSubmissions}
                     </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          statusColors[s.status] ||
-                          "bg-[var(--color-muted-strong)]"
-                        }`}
-                      >
+                    <td>
+                      <span className={`admin-badge ${statusBadgeClass(s.status)}`}>
                         {s.status.replace("_", " ")}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-[var(--color-text-muted)]">
+                    <td>
                       {s.score !== null && s.maxScore !== null
                         ? `${s.score}/${s.maxScore}`
                         : "-"}
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       <span
                         className={
-                          s.pointsCredited
-                            ? "text-[var(--color-success)]"
-                            : "text-[var(--color-text-muted)]"
+                          s.pointsCredited ? "admin-points--credited" : ""
                         }
                       >
                         {s.pointsAwarded} pts
                       </span>
                       {s.pointsCredited && (
-                        <span className="ml-1 text-xs text-[var(--color-success)]">
-                          ✓
-                        </span>
+                        <span className="admin-points--credited"> ✓</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-xs text-[var(--color-text-muted)]">
-                      {s.startedAt ? fmtDateTime(s.startedAt) : "-"}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-[var(--color-text-muted)]">
-                      {s.gradedAt ? fmtDateTime(s.gradedAt) : "-"}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
+                    <td>{s.startedAt ? fmtDateTime(s.startedAt) : "-"}</td>
+                    <td>{s.gradedAt ? fmtDateTime(s.gradedAt) : "-"}</td>
+                    <td>
+                      <div className="admin-table__actions">
                         <button
+                          type="button"
                           onClick={() =>
                             router.push(`/admin/submissions/${s.id}`)
                           }
                           disabled={accessingSubmissionId === s.id}
-                          className="px-3 py-1.5 rounded-lg bg-[color-mix(in_srgb,var(--color-primary)_80%,transparent)] text-[var(--color-text)] text-xs hover:bg-[var(--color-primary)] disabled:opacity-60"
+                          className="btn btn-primary btn-sm"
                         >
                           View
                         </button>
                         <button
+                          type="button"
                           onClick={() => handleDownloadSubmission(s.id)}
                           disabled={accessingSubmissionId === s.id}
-                          className="px-3 py-1.5 rounded-lg bg-[color-mix(in_srgb,var(--color-warning)_80%,transparent)] text-[var(--color-text)] text-xs hover:bg-[var(--color-warning)] disabled:opacity-60"
+                          className="btn btn-warning btn-sm"
                         >
                           Download
                         </button>
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td>
                       {[
                         "grading_pending",
                         "submitted",
                         "grading",
                         "graded",
                       ].includes(s.status) ? (
-                        <div className="flex items-center gap-2">
+                        <div className="admin-table__grade">
                           <input
                             type="number"
                             min="0"
@@ -1833,12 +1633,13 @@ function SubmissionsAdmin() {
                               }))
                             }
                             placeholder="0-100"
-                            className="w-24 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-2 py-1 text-sm"
+                            className="form-input admin-table__grade-input"
                           />
                           <button
+                            type="button"
                             onClick={() => handleGrade(s.id)}
                             disabled={gradingSubmissionId === s.id}
-                            className="px-3 py-1.5 rounded-lg bg-[var(--color-success)] text-[var(--color-text)] text-xs hover:opacity-90 disabled:opacity-60"
+                            className="btn btn-success btn-sm"
                           >
                             {gradingSubmissionId === s.id
                               ? "Saving..."
@@ -1846,9 +1647,7 @@ function SubmissionsAdmin() {
                           </button>
                         </div>
                       ) : (
-                        <span className="text-xs text-[var(--color-text-muted)]">
-                          -
-                        </span>
+                        <span className="admin-table__sub">-</span>
                       )}
                     </td>
                   </tr>
@@ -1862,10 +1661,97 @@ function SubmissionsAdmin() {
   );
 }
 
-function fmtDateTime(s) {
-  try {
-    return new Date(s).toLocaleString();
-  } catch {
-    return s;
-  }
+
+function ContactMessagesAdmin() {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const load = async () => {
+    try {
+      setLoading(true);
+      const data = await adminContactMessagesApi.list();
+      setMessages(data.items || data || []);
+      setError("");
+    } catch (err) {
+      handleErr(err, setError);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredMessages = messages.filter((message) => {
+    if (!search.trim()) return true;
+    const q = search.toLowerCase();
+    return (
+      message.name?.toLowerCase().includes(q) ||
+      message.email?.toLowerCase().includes(q) ||
+      message.message?.toLowerCase().includes(q)
+    );
+  });
+
+  return (
+    <section>
+      <div className="admin-toolbar">
+        <div>
+          <h2 className="admin-section-title">Contact Messages</h2>
+          <p className="admin-section-desc" style={{ marginBottom: 0 }}>
+            Messages submitted from the homepage contact form.
+          </p>
+        </div>
+        <button type="button" onClick={load} className="btn btn-outline btn-sm">
+          Refresh
+        </button>
+      </div>
+
+      {error && <div className="admin-alert admin-alert--error">{error}</div>}
+
+      <div className="admin-search" style={{ marginBottom: "1.25rem" }}>
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by name, email, or message..."
+          className="form-input"
+        />
+      </div>
+
+      {loading ? (
+        <p className="admin-toolbar-meta">Loading messages...</p>
+      ) : filteredMessages.length === 0 ? (
+        <div className="card admin-empty">
+          {search.trim()
+            ? "No messages match your search."
+            : "No messages yet."}
+        </div>
+      ) : (
+        <div className="admin-message-list">
+          {filteredMessages.map((message) => (
+            <article key={message.id} className="card admin-message">
+              <div className="admin-message__head">
+                <div>
+                  <h3 className="admin-message__name">{message.name}</h3>
+                  <a
+                    href={`mailto:${message.email}`}
+                    className="admin-message__email"
+                  >
+                    {message.email}
+                  </a>
+                </div>
+                <time className="admin-message__time">
+                  {fmtDateTime(message.createdAt)}
+                </time>
+              </div>
+              <p className="admin-message__body">{message.message}</p>
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
+  );
 }
