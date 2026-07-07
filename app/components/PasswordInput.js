@@ -6,7 +6,7 @@ function EyeIcon({ hidden }) {
   if (hidden) {
     return (
       <svg
-        className="h-5 w-5"
+        className="icon-sm"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -24,7 +24,7 @@ function EyeIcon({ hidden }) {
 
   return (
     <svg
-      className="h-5 w-5"
+      className="icon-sm"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -45,11 +45,11 @@ function EyeIcon({ hidden }) {
   );
 }
 
-export default function PasswordInput({ className, ...props }) {
+export default function PasswordInput({ className = "form-input", ...props }) {
   const [visible, setVisible] = useState(false);
 
   return (
-    <div className="relative">
+    <div className="password-field">
       <input
         type={visible ? "text" : "password"}
         className={className}
@@ -58,7 +58,7 @@ export default function PasswordInput({ className, ...props }) {
       <button
         type="button"
         onClick={() => setVisible((v) => !v)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
+        className="password-toggle"
         aria-label={visible ? "Hide password" : "Show password"}
         aria-pressed={visible}
       >

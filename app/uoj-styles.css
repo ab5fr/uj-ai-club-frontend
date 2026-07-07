@@ -828,6 +828,54 @@ p  { line-height: 1.72; }
 
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
+.form-hint {
+  font-size: .78rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.form-error {
+  background: rgba(231, 73, 4, 0.12);
+  border: 1px solid rgba(231, 73, 4, 0.35);
+  color: #ffb48a;
+  padding: .85rem 1rem;
+  border-radius: var(--r);
+  font-size: .85rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-divider {
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0 1rem;
+  padding-top: .25rem;
+}
+
+.password-field { position: relative; }
+.password-field .form-input { padding-right: 2.75rem; }
+.password-toggle {
+  position: absolute;
+  right: .75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  padding: .25rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: .35rem;
+  transition: color var(--t);
+}
+.password-toggle:hover { color: var(--c-light); }
+.password-toggle:focus-visible {
+  outline: 2px solid var(--c-blue);
+  outline-offset: 2px;
+}
+
+.auth-card--wide { max-width: 560px; }
+
 /* ── Keyframes ──────────────────────────────────────────────── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(22px); }
