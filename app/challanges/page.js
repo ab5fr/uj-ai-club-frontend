@@ -6,7 +6,9 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { ApiError, challengesApi } from "@/lib/api";
 
 function safeText(value, fallback = "—") {
-  return value === null || value === undefined || value === "" ? fallback : value;
+  return value === null || value === undefined || value === ""
+    ? fallback
+    : value;
 }
 
 function formatWindow(startDate, endDate) {
@@ -140,7 +142,10 @@ function ChallengesContent() {
                 return (
                   <div key={challenge.id} className="card ch-card anim-1">
                     <div className="ch-top">
-                      <div className="ch-icon" style={{ color: "var(--c-blue)" }}>
+                      <div
+                        className="ch-icon"
+                        style={{ color: "var(--c-blue)" }}
+                      >
                         <Target size={22} />
                       </div>
                       <span className="badge badge-intermediate">
@@ -150,7 +155,10 @@ function ChallengesContent() {
                     <div>
                       <h4 className="ch-title">{safeText(challenge.title)}</h4>
                       <p className="ch-desc">
-                        {safeText(challenge.description, "Details coming soon.")}
+                        {safeText(
+                          challenge.description,
+                          "Details coming soon.",
+                        )}
                       </p>
                     </div>
                     <div className="ch-meta">
@@ -177,7 +185,10 @@ function ChallengesContent() {
                       }}
                     >
                       <span
-                        style={{ fontSize: ".75rem", color: "var(--text-muted)" }}
+                        style={{
+                          fontSize: ".75rem",
+                          color: "var(--text-muted)",
+                        }}
                       >
                         {windowLabel} · {notebookLabel}
                       </span>
