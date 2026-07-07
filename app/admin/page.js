@@ -637,7 +637,6 @@ function ChallengesAdmin() {
   };
 
   const onEdit = (c) => {
-    console.log("Editing challenge:", c); // Debug log
     setEditingId(c.id);
 
     // Helper function to format date for input[type="date"]
@@ -647,9 +646,7 @@ function ChallengesAdmin() {
         const date = new Date(dateString);
         if (isNaN(date.getTime())) return "";
         // Format as YYYY-MM-DD
-        const formatted = date.toISOString().split("T")[0];
-        console.log("Formatted date:", dateString, "->", formatted); // Debug log
-        return formatted;
+        return date.toISOString().split("T")[0];
       } catch (error) {
         console.error("Date formatting error:", error);
         return "";
@@ -670,7 +667,6 @@ function ChallengesAdmin() {
       visible: c.visible !== false && c.isHidden !== true,
     };
 
-    console.log("Setting form data:", formData); // Debug log
     setForm(formData);
   };
 
