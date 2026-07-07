@@ -1,8 +1,28 @@
 import Link from "next/link";
+import { BreadcrumbJsonLd, CourseJsonLd } from "@/components/JsonLd";
+import { createPageMetadata } from "@/lib/metadata";
+
+export const metadata = createPageMetadata({
+  title: "AI Learning Roadmap",
+  description:
+    "A step-by-step path from your first Python script to building real AI systems. Three phases designed for beginners through advanced learners.",
+  path: "/roadmap",
+});
 
 export default function RoadmapPage() {
   return (
     <main className="page">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Roadmap", href: "/roadmap" },
+        ]}
+      />
+      <CourseJsonLd
+        title="UJ AI Club Learning Roadmap"
+        description="A three-phase learning path from Python basics to building real AI systems."
+        url="/roadmap"
+      />
       <div className="page-hero">
         <div
           style={{

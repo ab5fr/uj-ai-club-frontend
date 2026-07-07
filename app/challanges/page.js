@@ -145,6 +145,7 @@ function ChallengesContent() {
                       <div
                         className="ch-icon"
                         style={{ color: "var(--c-blue)" }}
+                        aria-hidden="true"
                       >
                         <Target size={22} />
                       </div>
@@ -153,7 +154,7 @@ function ChallengesContent() {
                       </span>
                     </div>
                     <div>
-                      <h4 className="ch-title">{safeText(challenge.title)}</h4>
+                      <h3 className="ch-title">{safeText(challenge.title)}</h3>
                       <p className="ch-desc">
                         {safeText(
                           challenge.description,

@@ -45,13 +45,14 @@ export default function ResourcesPage() {
         {/* Search Bar */}
         <div className="relative mb-16 mt-8">
           <input
-            type="text"
+            type="search"
             placeholder="Search resources..."
+            aria-label="Search learning resources"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-(--color-surface) border-2 border-(--color-border) rounded-xl py-4 px-6 text-lg placeholder:text-(--color-text-muted) focus:outline-none focus:border-(--color-border-strong)"
           />
-          <div className="absolute right-6 top-1/2 -translate-y-1/2">
+          <div className="absolute right-6 top-1/2 -translate-y-1/2" aria-hidden="true">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"

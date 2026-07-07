@@ -1,0 +1,16 @@
+{
+  "name": "UJ AI Club",
+  "short_name": "AI Club",
+  "description": "Learn AI together with hands-on challenges, curated resources, and a clear learning roadmap.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#00072c",
+  "theme_color": "#0470fc",
+  "icons": [
+    {
+      "src": "/mainlogo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
