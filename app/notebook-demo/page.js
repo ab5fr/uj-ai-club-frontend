@@ -128,7 +128,7 @@ print("For deep learning, use TensorFlow.js with JavaScript!")`,
       if (!window.loadPyodide) {
         console.log("Loading Pyodide script from CDN...");
         const script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js";
+        script.src = "https://cdn.jsdelivr.net/pyodide/v314.0.2/full/pyodide.js";
         script.async = true;
 
         await new Promise((resolve, reject) => {
@@ -140,7 +140,7 @@ print("For deep learning, use TensorFlow.js with JavaScript!")`,
       }
 
       const pyodideInstance = await window.loadPyodide({
-        indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/",
+        indexURL: "https://cdn.jsdelivr.net/pyodide/v314.0.2/full/",
       });
       console.log("Pyodide instance loaded");
 
