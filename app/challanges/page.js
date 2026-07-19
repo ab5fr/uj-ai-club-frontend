@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Clock, Repeat, Star, Target } from "lucide-react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { ApiError, challengesApi } from "@/lib/api";
@@ -19,17 +19,35 @@ function formatWindow(startDate, endDate) {
   return `${start.toLocaleDateString(undefined, options)} - ${end.toLocaleDateString(undefined, options)}`;
 }
 
+function formatTimeRemaining(expiresAt) {
+  if (!expiresAt) return null;
+  const diff = new Date(expiresAt).getTime() - Date.now();
+  if (diff <= 0) return "Time expired";
+  const mins = Math.floor(diff / 60000);
+  const secs = Math.floor((diff % 60000) / 1000);
+  return `${mins}:${String(secs).padStart(2, "0")} left`;
+}
+
+function statusLabel(status) {
+  if (!status) return null;
+  const labels = {
+    in_progress: "In progress",
+    grading_pending: "Pending grading",
+    graded: "Graded",
+    error: "Error",
+  };
+  return labels[status] || status.replace("_", " ");
+}
+
 function ChallengesContent() {
   const [challenges, setChallenges] = useState([]);
   const [status, setStatus] = useState("Loading challenges…");
   const [loading, setLoading] = useState(true);
-  const [startingId, setStartingId] = useState(null);
+  const [actionId, setActionId] = useState(null);
+  const [tick, setTick] = useState(0);
+  const closedSessionsRef = useRef(new Set());
 
-  useEffect(() => {
-    loadChallenges();
-  }, []);
-
-  const loadChallenges = async () => {
+  const loadChallenges = useCallback(async () => {
     try {
       setLoading(true);
       const data = await challengesApi.getAll();
@@ -50,39 +68,107 @@ function ChallengesContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleStart = async (challengeId, hasNotebook) => {
-    if (!hasNotebook) return;
+  useEffect(() => {
+    loadChallenges();
+  }, [loadChallenges]);
 
+  useEffect(() => {
+    const timer = setInterval(() => setTick((t) => t + 1), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    void tick;
+
+    for (const challenge of challenges) {
+      if (challenge.submissionStatus !== "in_progress") continue;
+      if (!challenge.sessionExpiresAt) continue;
+      if (closedSessionsRef.current.has(challenge.id)) continue;
+
+      const remaining =
+        new Date(challenge.sessionExpiresAt).getTime() - Date.now();
+      if (remaining > 0) continue;
+
+      closedSessionsRef.current.add(challenge.id);
+
+      challengesApi
+        .closeSession(challenge.id)
+        .then((result) => {
+          setStatus(
+            result.message ||
+              "Time is up. Your notebook was saved and your Jupyter session was closed.",
+          );
+          return loadChallenges();
+        })
+        .catch((err) => {
+          closedSessionsRef.current.delete(challenge.id);
+          if (err instanceof ApiError && err.status === 400) {
+            return;
+          }
+          setStatus(
+            err instanceof ApiError
+              ? err.message || "Unable to close notebook session."
+              : "Unable to close notebook session.",
+          );
+        });
+    }
+  }, [challenges, tick, loadChallenges]);
+
+  const openJupyter = async (challengeId) => {
     const popup = window.open("about:blank", "_blank");
-
     try {
-      setStartingId(challengeId);
-      setStatus("Starting challenge...");
-
+      setActionId(challengeId);
       const result = await challengesApi.startChallenge(challengeId);
-
       if (result.success && result.jupyterhubUrl) {
         if (popup && !popup.closed) {
           popup.location.href = result.jupyterhubUrl;
         } else {
           window.open(result.jupyterhubUrl, "_blank");
         }
-        setStatus("Challenge started. Your notebook is opening in a new tab.");
-      } else {
-        if (popup && !popup.closed) popup.close();
-        setStatus("Challenge started.");
+        setStatus("Notebook opened in a new tab.");
+        await loadChallenges();
+      } else if (popup && !popup.closed) {
+        popup.close();
       }
     } catch (err) {
       if (popup && !popup.closed) popup.close();
-      if (err instanceof ApiError) {
-        setStatus(err.message || "Unable to start challenge.");
-      } else {
-        setStatus("Unable to start challenge.");
-      }
+      setStatus(
+        err instanceof ApiError
+          ? err.message || "Unable to open notebook."
+          : "Unable to open notebook.",
+      );
     } finally {
-      setStartingId(null);
+      setActionId(null);
+    }
+  };
+
+  const handleSubmit = async (challengeId) => {
+    if (
+      !confirm(
+        "Submit this attempt? Your Jupyter session will be closed and you won't be able to edit the notebook afterward.",
+      )
+    ) {
+      return;
+    }
+
+    try {
+      setActionId(challengeId);
+      const result = await challengesApi.submitChallenge(challengeId);
+      setStatus(
+        (result.message || "Submission received.") +
+          " Your Jupyter notebook server has been stopped — close the notebook tab if it is still open.",
+      );
+      await loadChallenges();
+    } catch (err) {
+      setStatus(
+        err instanceof ApiError
+          ? err.message || "Unable to submit."
+          : "Unable to submit.",
+      );
+    } finally {
+      setActionId(null);
     }
   };
 
@@ -137,7 +223,12 @@ function ChallengesContent() {
                 const notebookLabel = challenge.hasNotebook
                   ? "Notebook available"
                   : "Notebook unavailable";
-                const isStarting = startingId === challenge.id;
+                const isBusy = actionId === challenge.id;
+                const timeLeft =
+                  challenge.submissionStatus === "in_progress"
+                    ? formatTimeRemaining(challenge.sessionExpiresAt)
+                    : null;
+                void tick;
 
                 return (
                   <div key={challenge.id} className="card ch-card anim-1">
@@ -173,9 +264,22 @@ function ChallengesContent() {
                       </span>
                       <span className="ch-meta-item">
                         <Repeat size={13} />
-                        {safeText(challenge.allowedSubmissions)} submissions
+                        {safeText(challenge.attemptsRemaining ?? challenge.allowedSubmissions)}{" "}
+                        left / {safeText(challenge.allowedSubmissions)}
                       </span>
                     </div>
+                    {challenge.submissionStatus && (
+                      <div
+                        style={{
+                          fontSize: ".8rem",
+                          color: "var(--text-muted)",
+                          marginTop: ".5rem",
+                        }}
+                      >
+                        Status: {statusLabel(challenge.submissionStatus)}
+                        {timeLeft ? ` · ${timeLeft}` : ""}
+                      </div>
+                    )}
                     <div
                       style={{
                         display: "flex",
@@ -183,6 +287,7 @@ function ChallengesContent() {
                         alignItems: "center",
                         marginTop: "1rem",
                         gap: ".75rem",
+                        flexWrap: "wrap",
                       }}
                     >
                       <span
@@ -193,16 +298,38 @@ function ChallengesContent() {
                       >
                         {windowLabel} · {notebookLabel}
                       </span>
-                      <button
-                        type="button"
-                        className="btn btn-outline"
-                        disabled={!challenge.hasNotebook || isStarting}
-                        onClick={() =>
-                          handleStart(challenge.id, challenge.hasNotebook)
-                        }
-                      >
-                        {isStarting ? "Starting..." : "Start"}
-                      </button>
+                      <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
+                        {challenge.canContinue && (
+                          <button
+                            type="button"
+                            className="btn btn-outline"
+                            disabled={!challenge.hasNotebook || isBusy}
+                            onClick={() => openJupyter(challenge.id)}
+                          >
+                            {isBusy ? "Opening..." : "Continue"}
+                          </button>
+                        )}
+                        {challenge.canStart && (
+                          <button
+                            type="button"
+                            className="btn btn-outline"
+                            disabled={!challenge.hasNotebook || isBusy}
+                            onClick={() => openJupyter(challenge.id)}
+                          >
+                            {isBusy ? "Starting..." : "Start"}
+                          </button>
+                        )}
+                        {challenge.canSubmit && (
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            disabled={isBusy}
+                            onClick={() => handleSubmit(challenge.id)}
+                          >
+                            {isBusy ? "Submitting..." : "Submit"}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 );

@@ -59,17 +59,29 @@ export function AuthProvider({ children }) {
         await syncSession(firebaseUser);
       } catch (error) {
         console.error("Failed to sync session with backend:", error);
-        setAuthError(
-          error?.message ||
-            "Could not connect to the server. Check that the backend is running.",
-        );
-        try {
-          await signOut(auth);
-        } catch {
-          // ignore sign-out errors
+        // Keep Firebase identity so Neon-backed features (blog admin) still work
+        // when the Rust API is unreachable.
+        if (firebaseUser) {
+          setUser({
+            email: firebaseUser.email || "",
+            fullName: firebaseUser.displayName || "",
+            image: firebaseUser.photoURL || null,
+            role: "user",
+            firebaseUid: firebaseUser.uid,
+            offline: true,
+          });
+          setNeedsProfileCompletion(false);
+          setAuthError(
+            "Backend unreachable — signed in with limited mode. Blog admin still works if your account is admin in the database.",
+          );
+        } else {
+          setUser(null);
+          setNeedsProfileCompletion(false);
+          setAuthError(
+            error?.message ||
+              "Could not connect to the server. Check that the backend is running.",
+          );
         }
-        setUser(null);
-        setNeedsProfileCompletion(false);
       } finally {
         if (active) {
           setLoading(false);

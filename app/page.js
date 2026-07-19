@@ -2,15 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  BarChart2,
-  Clock,
-  Cpu,
-  Mail,
-  MapPin,
-  Users,
-  Zap,
-} from "lucide-react";
+import { BarChart2, Clock, Cpu, Mail, MapPin, Users, Zap } from "lucide-react";
 import HeroNetworkSvg from "./components/uoj/HeroNetworkSvg";
 import {
   ApiError,
@@ -128,7 +120,9 @@ export default function Home() {
 
         <div className="container hero__grid">
           <div className="hero__content">
-            <div className="hero__eyebrow anim-1">Artificial Intelligence Club</div>
+            <div className="hero__eyebrow anim-1">
+              Artificial Intelligence Club
+            </div>
             <h1 className="anim-2">
               Build the
               <br />
@@ -295,7 +289,10 @@ export default function Home() {
                   <tr>
                     <td
                       colSpan={3}
-                      style={{ textAlign: "center", color: "var(--text-muted)" }}
+                      style={{
+                        textAlign: "center",
+                        color: "var(--text-muted)",
+                      }}
                     >
                       Loading leaderboard…
                     </td>
@@ -304,7 +301,10 @@ export default function Home() {
                   <tr>
                     <td
                       colSpan={3}
-                      style={{ textAlign: "center", color: "var(--text-muted)" }}
+                      style={{
+                        textAlign: "center",
+                        color: "var(--text-muted)",
+                      }}
                     >
                       No leaderboard data yet.
                     </td>
@@ -375,7 +375,9 @@ export default function Home() {
 
           <div className="grid-2" style={{ gap: "4rem", alignItems: "start" }}>
             <div>
-              <h3 style={{ marginBottom: "1.5rem" }}>Let&apos;s Work Together</h3>
+              <h3 style={{ marginBottom: "1.5rem" }}>
+                Let&apos;s Work Together
+              </h3>
               <p
                 style={{
                   color: "var(--text-muted)",
@@ -454,7 +456,10 @@ export default function Home() {
                       placeholder="you@example.com"
                       value={contactForm.email}
                       onChange={(e) =>
-                        setContactForm({ ...contactForm, email: e.target.value })
+                        setContactForm({
+                          ...contactForm,
+                          email: e.target.value,
+                        })
                       }
                       required
                     />
@@ -470,7 +475,10 @@ export default function Home() {
                     placeholder="Write your message here…"
                     value={contactForm.message}
                     onChange={(e) =>
-                      setContactForm({ ...contactForm, message: e.target.value })
+                      setContactForm({
+                        ...contactForm,
+                        message: e.target.value,
+                      })
                     }
                     required
                   />

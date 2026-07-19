@@ -45,6 +45,11 @@ export default function UojNavbar() {
               </Link>
             </li>
             <li>
+              <Link href="/blog" className={navClass(pathname, "/blog")}>
+                Blog
+              </Link>
+            </li>
+            <li>
               <Link href="/roadmap" className={navClass(pathname, "/roadmap")}>
                 Roadmap
               </Link>
