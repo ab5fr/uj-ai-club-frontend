@@ -1,5 +1,5 @@
 import { Barlow, Barlow_Condensed } from "next/font/google";
-import "./uoj-styles.css";
+import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import AppShell from "./components/uoj/AppShell";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/JsonLd";

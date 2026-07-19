@@ -24,11 +24,10 @@ export default async function BlogPage() {
 
   return (
     <main className="page">
-      <div className="page-hero">
+      <div className="page-hero blog-hero">
         <div className="container">
-          <div className="page-hero__tag">Blog</div>
           <h1 className="anim-1">
-            Club <span className="text-gradient">Articles</span>
+            <span className="text-gradient">Blog</span>
           </h1>
           <p className="anim-2">
             Tutorials, announcements, and write-ups from the AI Club.
@@ -48,32 +47,37 @@ export default async function BlogPage() {
 
           <div className="blog-grid">
             {articles.map((article) => (
-              <article key={article.id} className="blog-card">
-                {article.coverImage && (
-                  <Link href={`/blog/${article.slug}`} className="blog-card__media">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
+              <Link
+                key={article.id}
+                href={`/blog/${article.slug}`}
+                className="blog-card"
+              >
+                <div className="blog-card__media">
+                  {article.coverImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={article.coverImage}
                       alt=""
                       className="blog-card__image"
                     />
-                  </Link>
-                )}
+                  ) : (
+                    <div className="blog-card__placeholder" aria-hidden="true" />
+                  )}
+                </div>
                 <div className="blog-card__body">
-                  <time className="blog-card__date" dateTime={article.createdAt}>
+                  <time
+                    className="blog-card__date"
+                    dateTime={article.createdAt}
+                  >
                     {formatBackendDate(article.createdAt)}
                   </time>
-                  <h2 className="blog-card__title">
-                    <Link href={`/blog/${article.slug}`}>{article.title}</Link>
-                  </h2>
+                  <h2 className="blog-card__title">{article.title}</h2>
                   {article.excerpt && (
                     <p className="blog-card__excerpt">{article.excerpt}</p>
                   )}
-                  <Link href={`/blog/${article.slug}`} className="blog-card__link">
-                    Read article →
-                  </Link>
+                  <span className="blog-card__link">Read article →</span>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         </div>

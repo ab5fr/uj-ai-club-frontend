@@ -21,7 +21,8 @@ export async function generateMetadata({ params }) {
 
     return createPageMetadata({
       title: article.title,
-      description: article.excerpt || `Read ${article.title} on the UJ AI Club blog.`,
+      description:
+        article.excerpt || `Read ${article.title} on the UJ AI Club blog.`,
       path: `/blog/${article.slug}`,
       ogImage: article.coverImage?.startsWith("http")
         ? article.coverImage
@@ -56,14 +57,15 @@ export default async function BlogArticlePage({ params }) {
             <Link href="/blog" className="blog-article__back">
               ← All articles
             </Link>
-            <div className="page-hero__tag">Article</div>
             <h1 className="anim-1">{article.title}</h1>
             <p className="anim-2 blog-article__meta">
               <time dateTime={article.createdAt}>
                 {formatBackendDate(article.createdAt)}
               </time>
-              {article.excerpt ? ` · ${article.excerpt}` : null}
             </p>
+            {article.excerpt && (
+              <p className="blog-article__excerpt anim-2">{article.excerpt}</p>
+            )}
           </div>
         </div>
 
