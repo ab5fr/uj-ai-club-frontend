@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { adminChallengesApi, adminNotebooksApi } from "@/lib/api";
-import { Input, Textarea, FileInput, fmtDate, handleErr } from "./shared";
+import { Input, Textarea, FileInput, handleErr } from "./shared";
 
 const emptyNotebookForm = {
-  assignmentName: "",
   notebookFile: null,
   maxPoints: "100",
   cpuLimit: "0.5",
@@ -30,7 +29,6 @@ export default function ChallengesAdmin() {
     description: "",
     week: "",
     allowedSubmissions: "3",
-    challengeUrl: "",
     startDate: "",
     endDate: "",
     visible: true,
@@ -64,6 +62,16 @@ export default function ChallengesAdmin() {
     }
   };
 
+  const appendNotebookFormData = (formData) => {
+    formData.append("maxPoints", form.maxPoints);
+    formData.append("cpuLimit", form.cpuLimit);
+    formData.append("memoryLimit", form.memoryLimit);
+    formData.append("timeLimitMinutes", form.timeLimitMinutes);
+    formData.append("networkDisabled", form.networkDisabled);
+    formData.append("autoGradeEnabled", form.autoGradeEnabled);
+    formData.append("notebook", form.notebookFile);
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const payload = {
@@ -73,7 +81,6 @@ export default function ChallengesAdmin() {
       allowedSubmissions: form.allowedSubmissions
         ? parseInt(form.allowedSubmissions)
         : 3,
-      challengeUrl: form.challengeUrl || null,
       startDate: form.startDate || null,
       endDate: form.endDate || null,
       visible: form.visible,
@@ -87,7 +94,6 @@ export default function ChallengesAdmin() {
         await adminChallengesApi.update(editingId, payload);
         if (editingNotebookId) {
           await adminNotebooksApi.update(editingNotebookId, {
-            assignmentName: form.assignmentName,
             maxPoints: parseInt(form.maxPoints),
             cpuLimit: parseFloat(form.cpuLimit),
             memoryLimit: form.memoryLimit,
@@ -95,34 +101,24 @@ export default function ChallengesAdmin() {
             networkDisabled: form.networkDisabled,
             autoGradeEnabled: form.autoGradeEnabled,
           });
-        } else if (form.notebookFile && form.assignmentName) {
+        } else if (form.notebookFile) {
           const formData = new FormData();
           formData.append("challengeId", String(editingId));
-          formData.append("assignmentName", form.assignmentName);
-          formData.append("maxPoints", form.maxPoints);
-          formData.append("cpuLimit", form.cpuLimit);
-          formData.append("memoryLimit", form.memoryLimit);
-          formData.append("timeLimitMinutes", form.timeLimitMinutes);
-          formData.append("networkDisabled", form.networkDisabled);
-          formData.append("autoGradeEnabled", form.autoGradeEnabled);
-          formData.append("notebook", form.notebookFile);
+          appendNotebookFormData(formData);
           await adminNotebooksApi.create(formData);
         }
         setSuccess("Challenge updated.");
       } else {
+        if (!form.notebookFile) {
+          setError("Please upload a notebook (.ipynb) file.");
+          return;
+        }
         const created = await adminChallengesApi.create(payload);
         const challengeId = created.item?.id || created.id;
-        if (form.notebookFile && form.assignmentName && challengeId) {
+        if (challengeId) {
           const formData = new FormData();
           formData.append("challengeId", String(challengeId));
-          formData.append("assignmentName", form.assignmentName);
-          formData.append("maxPoints", form.maxPoints);
-          formData.append("cpuLimit", form.cpuLimit);
-          formData.append("memoryLimit", form.memoryLimit);
-          formData.append("timeLimitMinutes", form.timeLimitMinutes);
-          formData.append("networkDisabled", form.networkDisabled);
-          formData.append("autoGradeEnabled", form.autoGradeEnabled);
-          formData.append("notebook", form.notebookFile);
+          appendNotebookFormData(formData);
           await adminNotebooksApi.create(formData);
         }
         setSuccess("Challenge created.");
@@ -157,11 +153,9 @@ export default function ChallengesAdmin() {
         c.allowedSubmissions !== null && c.allowedSubmissions !== undefined
           ? String(c.allowedSubmissions)
           : "3",
-      challengeUrl: c.challengeUrl || "",
       startDate: formatDateForInput(c.startDate),
       endDate: formatDateForInput(c.endDate),
       visible: c.visible !== false && c.isHidden !== true,
-      assignmentName: nb?.assignmentName || "",
       notebookFile: null,
       maxPoints: String(nb?.maxPoints ?? 100),
       cpuLimit: String(nb?.cpuLimit ?? 0.5),
@@ -191,30 +185,6 @@ export default function ChallengesAdmin() {
     }
   };
 
-  const onEditInJupyterHub = async (notebookId) => {
-    try {
-      setError("");
-      const result = await adminNotebooksApi.getEditUrl(notebookId);
-      if (result.success && result.jupyterhubUrl) {
-        window.open(result.jupyterhubUrl, "_blank");
-      }
-    } catch (err) {
-      handleErr(err, setError);
-    }
-  };
-
-  const onOpenFormgrader = async () => {
-    try {
-      setError("");
-      const result = await adminNotebooksApi.getFormgraderUrl();
-      if (result.jupyterhubUrl) {
-        window.open(result.jupyterhubUrl, "_blank");
-      }
-    } catch (err) {
-      handleErr(err, setError);
-    }
-  };
-
   const resetForm = () => {
     setEditingId(null);
     setEditingNotebookId(null);
@@ -223,7 +193,6 @@ export default function ChallengesAdmin() {
       description: "",
       week: "",
       allowedSubmissions: "3",
-      challengeUrl: "",
       startDate: "",
       endDate: "",
       visible: true,
@@ -244,7 +213,8 @@ export default function ChallengesAdmin() {
       <h2 className="admin-section-title">Challenges & Notebooks</h2>
       <p className="admin-section-desc">
         Create challenges with notebooks in one place. Upload the .ipynb, configure
-        limits, and enable auto-grading when ready.
+        limits, and enable auto-grading when ready. The assignment name is taken
+        from the notebook filename automatically.
       </p>
 
       {error && <div className="admin-alert admin-alert--error">{error}</div>}
@@ -281,11 +251,6 @@ export default function ChallengesAdmin() {
             className="form-group--full"
           />
           <Input
-            label="Challenge URL"
-            value={form.challengeUrl}
-            onChange={(v) => setForm({ ...form, challengeUrl: v })}
-          />
-          <Input
             label="Start Date"
             type="date"
             value={form.startDate}
@@ -303,18 +268,12 @@ export default function ChallengesAdmin() {
           Notebook
         </h3>
         <div className="admin-form-grid">
-          <Input
-            label="Assignment Name"
-            value={form.assignmentName}
-            onChange={(v) => setForm({ ...form, assignmentName: v })}
-            placeholder="week5_challenge"
-            required={!editingNotebookId}
-          />
           {!editingNotebookId && (
             <FileInput
               label="Notebook (.ipynb)"
               accept=".ipynb"
               onChange={(file) => setForm({ ...form, notebookFile: file })}
+              required={!editingId}
             />
           )}
           <Input
@@ -383,13 +342,6 @@ export default function ChallengesAdmin() {
         </div>
 
         <div className="admin-form-footer">
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={onOpenFormgrader}
-          >
-            Open Formgrader
-          </button>
           <div className="admin-form-actions">
             {editingId && (
               <button type="button" onClick={resetForm} className="btn btn-outline">
@@ -452,14 +404,6 @@ export default function ChallengesAdmin() {
                 >
                   {c.visible === false || c.isHidden ? "Show" : "Hide"}
                 </button>
-                {nb && (
-                  <button
-                    onClick={() => onEditInJupyterHub(nb.id)}
-                    className="btn btn-outline btn-sm"
-                  >
-                    Edit in JupyterHub
-                  </button>
-                )}
                 <button onClick={() => onDelete(c.id)} className="btn btn-danger btn-sm">
                   Delete
                 </button>

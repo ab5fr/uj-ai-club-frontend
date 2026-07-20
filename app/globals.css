@@ -1452,6 +1452,94 @@ p  { line-height: 1.72; }
   width: 5.5rem;
 }
 .admin-points--credited { color: #04d464; }
+.admin-submissions-groups {
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+}
+.admin-submissions-group {
+  padding: 0;
+  overflow: hidden;
+}
+.admin-submissions-group__head,
+.admin-submissions-student__head {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  padding: 1rem 1.15rem;
+}
+.admin-submissions-group__head {
+  width: 100%;
+}
+.admin-submissions-student__head {
+  flex: 1;
+  min-width: 0;
+}
+.admin-submissions-group__head:hover,
+.admin-submissions-student__head:hover {
+  background: rgba(4, 112, 252, 0.06);
+}
+.admin-submissions-group__chevron {
+  width: 1rem;
+  flex-shrink: 0;
+  color: var(--text-dim);
+  font-size: .9rem;
+}
+.admin-submissions-group__title {
+  font-weight: 700;
+  color: var(--c-light);
+  font-size: 1rem;
+}
+.admin-submissions-group__meta {
+  margin-left: auto;
+  font-size: .78rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.admin-submissions-group__body {
+  border-top: 1px solid var(--border);
+}
+.admin-submissions-student {
+  border-top: 1px solid var(--border);
+}
+.admin-submissions-student:first-child {
+  border-top: 0;
+}
+.admin-submissions-student__bar {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  background: rgba(255, 255, 255, 0.02);
+  padding-right: 1rem;
+  flex-wrap: wrap;
+}
+.admin-submissions-student__head {
+  padding-left: 2rem;
+  background: transparent;
+}
+.admin-submissions-student__grant {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.admin-submissions-student__grant .admin-table__grade-input {
+  max-width: 4rem;
+}
+.admin-submissions-student__table {
+  border: 0;
+  border-radius: 0;
+  border-top: 1px solid var(--border);
+}
+.admin-submissions__attempt-row td:first-child {
+  padding-left: 2.5rem;
+}
 .admin-empty {
   text-align: center;
   color: var(--text-muted);

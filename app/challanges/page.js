@@ -45,7 +45,7 @@ function ChallengesContent() {
   const [loading, setLoading] = useState(true);
   const [actionId, setActionId] = useState(null);
   const [tick, setTick] = useState(0);
-  const closedSessionsRef = useRef(new Set());
+  const autoSubmittedRef = useRef(new Set());
 
   const loadChallenges = useCallback(async () => {
     try {
@@ -85,32 +85,33 @@ function ChallengesContent() {
     for (const challenge of challenges) {
       if (challenge.submissionStatus !== "in_progress") continue;
       if (!challenge.sessionExpiresAt) continue;
-      if (closedSessionsRef.current.has(challenge.id)) continue;
+      if (autoSubmittedRef.current.has(challenge.id)) continue;
 
       const remaining =
         new Date(challenge.sessionExpiresAt).getTime() - Date.now();
       if (remaining > 0) continue;
 
-      closedSessionsRef.current.add(challenge.id);
+      autoSubmittedRef.current.add(challenge.id);
 
       challengesApi
-        .closeSession(challenge.id)
+        .submitChallenge(challenge.id)
         .then((result) => {
           setStatus(
             result.message ||
-              "Time is up. Your notebook was saved and your Jupyter session was closed.",
+              "Time is up. Your attempt was submitted automatically.",
           );
           return loadChallenges();
         })
         .catch((err) => {
-          closedSessionsRef.current.delete(challenge.id);
+          autoSubmittedRef.current.delete(challenge.id);
           if (err instanceof ApiError && err.status === 400) {
-            return;
+            // Already submitted by the expiry worker or a prior click.
+            return loadChallenges();
           }
           setStatus(
             err instanceof ApiError
-              ? err.message || "Unable to close notebook session."
-              : "Unable to close notebook session.",
+              ? err.message || "Unable to auto-submit after time expired."
+              : "Unable to auto-submit after time expired.",
           );
         });
     }

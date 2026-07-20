@@ -10,4 +10,5 @@ ENV PORT=3000
 EXPOSE 3000
 
 # Install deps on start so package.json changes are picked up; node_modules lives in a named volume.
+# Use webpack (not Turbopack) so WATCHPACK polling works on Docker Desktop bind mounts.
 CMD ["sh", "-c", "npm install && npm run dev -- -H 0.0.0.0 -p 3000"]

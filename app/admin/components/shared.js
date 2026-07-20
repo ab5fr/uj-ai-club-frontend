@@ -64,13 +64,20 @@ export function Textarea({
   );
 }
 
-export function FileInput({ label, onChange, className = "", accept = "image/*" }) {
+export function FileInput({
+  label,
+  onChange,
+  className = "",
+  accept = "image/*",
+  required = false,
+}) {
   return (
     <div className={`form-group ${className}`}>
       {label && <label className="form-label">{label}</label>}
       <input
         type="file"
         accept={accept}
+        required={required}
         onChange={(e) => onChange(e.target.files[0] || null)}
         className="form-input"
       />
