@@ -13,7 +13,6 @@ export default function robots() {
         "/auth/",
         "/login",
         "/signup",
-        "/notebook-demo/",
       ],
     },
     sitemap: [

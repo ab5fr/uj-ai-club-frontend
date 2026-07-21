@@ -1,6 +1,6 @@
 # UJ AI Club — Frontend
 
-The public-facing web application for the **University of Jordan AI Club**. Built with Next.js, it provides the landing page, learning resources, weekly challenges, leaderboards, member profiles, and an admin dashboard — all backed by the [Rust/Axum API](../uj-ai-club-backend/README.md) and **Firebase Authentication**.
+The public-facing web application for the **University of Jordan AI Club**. Built with Next.js, it provides the landing page, learning resources, weekly challenges, leaderboards, member profiles, blog, and an admin dashboard — backed by the [Rust/Axum API](../uj-ai-club-backend/README.md), **Firebase Authentication**, and a **Neon Postgres** connection for blog articles.
 
 **Production:** [uj-aiclub.com](https://uj-aiclub.com) · **API:** [api.uj-aiclub.com](https://api.uj-aiclub.com)
 
@@ -19,7 +19,7 @@ The public-facing web application for the **University of Jordan AI Club**. Buil
 - [Building for Production](#building-for-production)
 - [Routes](#routes)
 - [Authentication Flow](#authentication-flow)
-- [API Client Layer](#api-client-layer)
+- [API Client & Articles](#api-client--articles)
 - [Styling](#styling)
 - [SEO & Metadata](#seo--metadata)
 - [Deployment](#deployment)
@@ -32,12 +32,12 @@ The public-facing web application for the **University of Jordan AI Club**. Buil
 
 This frontend is a **Next.js 16 App Router** application that serves as the primary interface for club members and visitors. It handles:
 
-- **Public pages** — landing, roadmap, resources, certificates, contact form
+- **Public pages** — landing, roadmap, blog, contact form
 - **Member features** — weekly AI challenges, profile settings, leaderboards
-- **Admin panel** — CRUD for resources, certificates, challenges, notebooks, submissions, and contact messages
+- **Admin panel** — CRUD for resources, certificates, challenges, notebooks, submissions, articles, and contact messages
 - **Auth** — Firebase (Google sign-in + email/password) with backend session sync
 
-All authenticated API calls send a Firebase ID token to the backend, which verifies it and resolves the user record in PostgreSQL.
+Most authenticated features call the Rust API with a Firebase ID token. **Blog articles** are an exception: they use Next.js server actions that talk to Neon Postgres directly (same `users` table for admin checks), so article admin can still work when the Rust API is unreachable.
 
 ---
 
@@ -49,14 +49,13 @@ All authenticated API calls send a Firebase ID token to the backend, which verif
 | UI | React 19 |
 | Language | JavaScript (no TypeScript) |
 | Auth | [Firebase Auth](https://firebase.google.com/docs/auth) |
-| HTTP client | Native `fetch` via `lib/api.js` |
-| Icons | Lucide React, Heroicons |
-| Notebook demo | CodeMirror + Pyodide (in-browser Python) |
-| 3D / visuals | Three.js, custom SVG |
-| CSS | Custom design system (`app/uoj-styles.css`) |
+| Club API | Native `fetch` via `lib/api.js` → Rust/Axum |
+| Blog / articles | Server actions + [@neondatabase/serverless](https://neon.tech/) + [jose](https://github.com/panva/jose) (Firebase JWT verify) |
+| Markdown | `react-markdown` + `remark-gfm` |
+| Icons | Lucide React |
+| Hero visual | Custom SVG (`HeroNetworkSvg`) |
+| CSS | Custom design system in `app/globals.css` (+ Tailwind v4 lightly) |
 | Package manager | **npm** |
-
-Tailwind CSS v4 is installed but used minimally — the main UI relies on the custom CSS design system.
 
 ---
 
@@ -67,17 +66,27 @@ flowchart LR
   browser[Browser] --> nextApp[Next.js App]
   nextApp --> firebase[Firebase Auth]
   nextApp -->|"Bearer ID token"| api[Rust API :8000]
-  api --> db[(Neon Postgres)]
+  nextApp -->|"Server actions"| neon[(Neon Postgres)]
+  api --> db[(Postgres)]
   firebase -->|"ID token verification"| api
+  firebase -->|"JWKS verify in Next"| neon
 ```
 
-**Request flow (authenticated):**
+**Two data paths:**
+
+| Feature | Path |
+|---------|------|
+| Auth session, challenges, resources, certificates, contact, submissions | Browser → `lib/api.js` → Rust API → Postgres |
+| Blog list/detail + article admin CRUD | Next.js server actions → Neon (`DATABASE_URL`) |
+
+**Request flow (authenticated, Rust API):**
 
 1. User signs in via Firebase (Google or email/password).
 2. `AuthContext` listens for token changes and calls `POST /auth/session` on the backend.
 3. Backend returns the user record and `needsProfileCompletion` flag.
-4. All subsequent API calls attach `Authorization: Bearer <firebase_id_token>`.
+4. Subsequent API calls attach `Authorization: Bearer <firebase_id_token>`.
 5. On `401`, the client signs out and redirects to `/login`.
+6. If the Rust API is down, AuthContext keeps a limited Firebase identity so Neon-backed blog admin can still work for DB admins.
 
 ---
 
@@ -88,38 +97,40 @@ uj-ai-club-frontend/
 ├── app/                          # Next.js App Router
 │   ├── layout.js                 # Root layout (fonts, AuthProvider, AppShell)
 │   ├── page.js                   # Landing page
-│   ├── uoj-styles.css            # Primary design system
-│   ├── globals.css               # Tailwind import (not actively used by layout)
+│   ├── globals.css               # Tailwind + primary design system
+│   ├── actions/
+│   │   └── articles.js           # Server actions for blog CRUD / admin check
 │   ├── admin/                    # Admin dashboard & submission grading
+│   │   ├── page.js
+│   │   ├── components/           # Tab panels (articles, challenges, …)
+│   │   └── submissions/[submissionId]/
 │   ├── auth/complete-profile/    # Profile completion after first sign-in
-│   ├── challanges/               # Weekly challenges (note: route spelling)
-│   ├── certificates/[id]/        # Public certificate detail pages
+│   ├── challanges/               # Weekly challenges (route spelling as-is)
+│   ├── blog/                     # Blog index + [slug] articles
 │   ├── login/                    # Email/password + Google sign-in
 │   ├── signup/                   # Google-only registration
-│   ├── notebook-demo/            # In-browser Python notebook demo
-│   ├── resources/                # Learning resources (list + detail)
 │   ├── roadmap/                  # Static AI learning roadmap
 │   ├── settings/                 # User profile & avatar settings
-│   ├── components/               # Page-specific components
-│   │   └── uoj/                  # App shell, navbar, footer, hero SVG
-│   ├── sitemap.js                # Dynamic sitemap (fetches from API)
+│   ├── components/uoj/           # App shell, navbar, footer, hero SVG
+│   ├── sitemap.js                # Dynamic sitemap
 │   └── robots.js                 # SEO robots rules
 ├── components/                   # Shared components
 │   ├── JsonLd.js                 # Structured data for SEO
+│   ├── MarkdownContent.js        # Blog markdown renderer
 │   └── ProtectedRoute.js         # Client-side route guard
 ├── contexts/
 │   └── AuthContext.js            # Global auth state & session sync
 ├── lib/
-│   ├── api.js                    # Client-side API layer (primary)
-│   ├── server-api.js             # Server-side public fetches (SEO/metadata)
+│   ├── api.js                    # Client API layer (Rust backend)
+│   ├── articles/                 # Neon schema, queries, JWT admin auth
 │   ├── firebase.js               # Firebase app & auth initialization
 │   ├── googleSignIn.js           # Google sign-in (popup + redirect fallback)
 │   ├── metadata.js               # Shared metadata helpers
 │   ├── site.js                   # Site URL constants
 │   └── profileOptions.js         # University/major dropdown options
-├── public/                       # Static assets
+├── public/                       # Static assets & fonts
 ├── .env.example                  # Environment variable template
-├── next.config.mjs               # Next.js config (CORS headers, image domains)
+├── next.config.mjs               # Webpack poll (Docker), CORS, image domains
 ├── jsconfig.json                 # Path alias: @/* → ./*
 └── postcss.config.mjs            # Tailwind v4 PostCSS plugin
 ```
@@ -130,7 +141,8 @@ uj-ai-club-frontend/
 
 - **Node.js** 18.17+ (20 LTS recommended)
 - **npm** (comes with Node.js)
-- A running instance of the [backend API](../uj-ai-club-backend/README.md) (local or remote)
+- A running instance of the [backend API](../uj-ai-club-backend/README.md) (local or remote) for most features
+- A **Neon** (or compatible Postgres) `DATABASE_URL` for blog/articles — typically the same DB the API uses
 - A **Firebase project** with Authentication enabled (Google + Email/Password providers)
 
 ---
@@ -138,8 +150,6 @@ uj-ai-club-frontend/
 ## Installation
 
 ```bash
-# Clone the repo
-git clone <frontend-repo-url>
 cd uj-ai-club-frontend
 
 # Install dependencies
@@ -148,6 +158,8 @@ npm install
 # Copy environment template
 cp .env.example .env.local
 ```
+
+On Windows PowerShell: `Copy-Item .env.example .env.local`
 
 Fill in `.env.local` — see [Environment Variables](#environment-variables) below.
 
@@ -158,13 +170,16 @@ Fill in `.env.local` — see [Environment Variables](#environment-variables) bel
 Create `.env.local` in the project root (gitignored). Copy from `.env.example`:
 
 ```env
-# Backend API base URL (no trailing slash)
+# Backend API + public site (no trailing slash) — required; no code defaults
 NEXT_PUBLIC_API_URL=http://localhost:8000
-
-# Public site URL (used for SEO, sitemap, Open Graph)
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-# Firebase client config (from Firebase Console → Project Settings → Your apps)
+# Server-only — never expose as NEXT_PUBLIC_
+# Blog/articles Neon Postgres (often the same DB as the API)
+DATABASE_URL=postgresql://user:password@host:5432/dbname?sslmode=require
+
+# Firebase client config (Firebase Console → Project Settings → Your apps)
+# Project ID is also used server-side for article-admin JWT verification
 NEXT_PUBLIC_FIREBASE_API_KEY=
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=
@@ -173,14 +188,13 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `NEXT_PUBLIC_API_URL` | Yes (dev) | Backend API URL. Defaults to `https://api.uj-aiclub.com` if unset. |
-| `NEXT_PUBLIC_SITE_URL` | Yes (prod) | Canonical site URL. Defaults to `https://uj-aiclub.com`. |
+| `NEXT_PUBLIC_API_URL` | Yes | Backend API URL (e.g. `http://localhost:8000` or `https://api.uj-aiclub.com`) |
+| `NEXT_PUBLIC_SITE_URL` | Yes | Canonical site URL (e.g. `http://localhost:3000` or `https://uj-aiclub.com`) |
+| `DATABASE_URL` | Yes (blog) | Server-only Neon/Postgres URL for articles. Never prefix with `NEXT_PUBLIC_`. |
 | `NEXT_PUBLIC_FIREBASE_API_KEY` | Yes | Firebase Web API key |
 | `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Yes | e.g. `your-project.firebaseapp.com` |
-| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Yes | Must match backend `FIREBASE_PROJECT_ID` |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Yes | Firebase project ID — client SDK + server JWT verify; must match backend `FIREBASE_PROJECT_ID` |
 | `NEXT_PUBLIC_FIREBASE_APP_ID` | Yes | Firebase app ID |
-
-> **Note:** `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` and `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` appear in `.env.example` but are not used by the current code.
 
 ### Firebase setup
 
@@ -188,6 +202,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 2. Enable **Authentication** → sign-in methods: **Google** and **Email/Password**.
 3. Register a **Web app** and copy the config values into `.env.local`.
 4. Ensure `NEXT_PUBLIC_FIREBASE_PROJECT_ID` matches the backend's `FIREBASE_PROJECT_ID`.
+5. Add authorized domains for local (`localhost`) and production.
 
 ### Cross-repo configuration
 
@@ -195,44 +210,36 @@ These values must align with the [backend](../uj-ai-club-backend/README.md):
 
 | Frontend | Backend | Notes |
 |----------|---------|-------|
-| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | `FIREBASE_PROJECT_ID` | Must be identical |
-| `NEXT_PUBLIC_API_URL` | `SERVER_ADDRESS` | e.g. `http://localhost:8000` in dev |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | `FIREBASE_PROJECT_ID` | Same Firebase project |
+| `NEXT_PUBLIC_API_URL` | API listen address | e.g. `http://localhost:8000` in dev |
+| `DATABASE_URL` | `DATABASE_URL` | Same Neon DB so article admin can resolve `users.role` |
 
 ---
 
 ## Running Locally
 
-Start the backend first:
+Start the backend first (see [backend README](../uj-ai-club-backend/README.md)), verify `http://localhost:8000/health`, then:
 
 ```bash
-cd ../uj-ai-club-backend
-cp .env.example .env
-# Set DATABASE_URL, FIREBASE_PROJECT_ID, JWT_SECRET in .env
-cargo run
-```
-
-Verify the API at `http://localhost:8000/health`, then start the frontend:
-
-```bash
-# Standard dev server (http://localhost:3000)
+# Standard dev server (http://localhost:3000) — webpack (reliable HMR on Windows/Docker)
 npm run dev
 
-# Dev server with Turbopack (faster HMR)
+# Dev server with Turbopack (faster HMR when it works for you)
 npm run dev:turbo
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-**Full local stack:**
+**Local URLs:**
 
-| Service | URL | Repo |
-|---------|-----|------|
-| Frontend | http://localhost:3000 | this repo |
-| Backend API | http://localhost:8000 | `uj-ai-club-backend` |
-| JupyterHub | http://localhost:8888 | backend `docker-compose.local.yml` |
-| Grading service | http://localhost:9100 | backend `docker-compose.local.yml` |
+| Service | URL |
+|---------|-----|
+| Frontend | http://localhost:3000 |
+| Backend API | http://localhost:8000 |
+| JupyterHub | http://localhost:8888 |
+| Grading service | http://localhost:9100 |
 
-To run the full challenge stack (API + JupyterHub + grading), see the backend README's [Running with Docker](../uj-ai-club-backend/README.md#running-with-docker) section.
+Challenge notebooks and grading require the backend Docker stack — see the backend README's [Running with Docker](../uj-ai-club-backend/README.md#running-with-docker) section.
 
 ---
 
@@ -256,21 +263,21 @@ The production server runs on port **3000** by default. Set `PORT` to override.
 |-------|------|-------------|
 | `/` | Public | Landing page — stats, leaderboard preview, contact form |
 | `/roadmap` | Public | Static AI learning roadmap (3 phases) |
-| `/resources` | Public | Browse learning resources |
-| `/resources/[id]` | Public | Resource detail page |
-| `/certificates/[id]` | Public | Certificate detail (YouTube embed support) |
+| `/blog` | Public | Blog index (Neon) |
+| `/blog/[slug]` | Public | Blog article (Neon + markdown) |
 | `/challanges` | Protected | List and start weekly AI challenges |
 | `/login` | Public | Email/password + Google sign-in |
 | `/signup` | Public | Google-only registration |
 | `/auth/complete-profile` | Semi-protected | Complete name, university, major; link password |
 | `/settings` | Protected | Edit profile, upload avatar, change password |
-| `/admin` | Admin | CRUD for resources, certificates, challenges, notebooks, submissions |
-| `/admin/submissions/[id]` | Admin | View and grade student notebook submissions |
-| `/notebook-demo` | Public | In-browser Python notebook (Pyodide + CodeMirror) |
+| `/admin` | Admin | CRUD for articles, resources, certificates, challenges, notebooks, submissions, contact |
+| `/admin/submissions/[submissionId]` | Admin | View and grade student notebook submissions |
 
-> There is no `/certificates` index page — only individual certificate detail routes. The challenges route is spelled `/challanges` (intentional in current codebase).
+> The challenges route is spelled `/challanges` (as in the current codebase). Resources and certificates are managed in admin and shown as homepage stats; there are no public browse pages for them.
 
 Protected routes use `components/ProtectedRoute.js`, which redirects unauthenticated users to `/login` and users with incomplete profiles to `/auth/complete-profile`.
+
+Admin access is `users.role === 'admin'` (from the API session and/or a Neon check via `checkAdminAction`).
 
 ---
 
@@ -298,31 +305,29 @@ sequenceDiagram
 Key files:
 
 - `lib/firebase.js` — Firebase initialization (client-only, lazy)
-- `contexts/AuthContext.js` — global auth state, session sync
+- `contexts/AuthContext.js` — global auth state, session sync, limited offline mode
 - `lib/googleSignIn.js` — Google popup with redirect fallback
 - `components/ProtectedRoute.js` — route guard
+- `lib/articles/auth.js` — server-side Firebase JWT verify for article admin
 
 ---
 
-## API Client Layer
+## API Client & Articles
 
-All client-side API calls go through `lib/api.js`:
+### Rust API (`lib/api.js`)
 
 ```js
 import { challengesApi, userApi } from "@/lib/api";
 
-// Authenticated request (Firebase token attached automatically)
 const challenges = await challengesApi.list();
 ```
-
-**Exported API groups:**
 
 | Group | Endpoints |
 |-------|-----------|
 | `authApi` | `/auth/session`, `/auth/complete-profile` |
 | `leaderboardApi` | `/leaderboards` |
-| `resourcesApi` | `/resources`, `/resources/{id}` |
-| `certificatesApi` | `/certificates`, `/certificates/{id}` |
+| `resourcesApi` | `/resources` (homepage stats) |
+| `certificatesApi` | `/certificates` (homepage stats) |
 | `challengesApi` | `/challenges/*` |
 | `userApi` | `/users/profile`, `/users/avatar` |
 | `contactApi` | `/contact` |
@@ -333,29 +338,37 @@ const challenges = await challengesApi.list();
 | `adminSubmissionsApi` | `/admin/submissions/*` |
 | `adminContactMessagesApi` | `/admin/contact-messages` |
 
-Server-side public fetches (for SEO/metadata) use `lib/server-api.js` with `next: { revalidate: 3600 }`.
+Image URLs from the API are resolved via `getImageUrl()`, which prepends `NEXT_PUBLIC_API_URL`.
 
-Image URLs from the API are resolved via `getImageUrl()` which prepends `NEXT_PUBLIC_API_URL`.
+### Blog / articles (server actions)
+
+| Piece | Role |
+|-------|------|
+| `app/actions/articles.js` | Create/update/delete/visibility + `checkAdminAction` |
+| `lib/articles/db.js` | Neon client + `articles` schema ensure |
+| `lib/articles/queries.js` | SQL helpers |
+| `lib/articles/auth.js` | Verify Firebase ID token; require `users.role = 'admin'` |
+| `components/MarkdownContent.js` | Render article body |
+
+Public blog pages read from Neon on the server. Admin article tabs call the server actions with the current Firebase ID token.
 
 ---
 
 ## Styling
 
-The UI uses a **custom CSS design system** defined in `app/uoj-styles.css`:
+The UI uses a **custom CSS design system** in `app/globals.css` (Tailwind v4 is imported at the top; the bulk of the UI is semantic classes):
 
 - CSS custom properties for the brand palette (navy, blue, orange)
-- Semantic class names: `.page`, `.btn`, `.auth-page`, `.stat-num`, etc.
-- Fonts: **Barlow** and **Barlow Condensed** via `next/font/google`
+- Semantic class names: `.page`, `.btn`, `.auth-page`, `.stat-num`, `.admin-page`, etc.
+- Fonts: **Barlow** and **Barlow Condensed** via `next/font/google`, plus local display fonts under `public/fonts/`
 
-Tailwind v4 is configured in `postcss.config.mjs` but only used in a few components (`ProtectedRoute`, `notebook-demo`). The main layout imports `uoj-styles.css`, not `globals.css`.
-
-Icons come from `lucide-react` and `@heroicons/react`.
+Icons come from `lucide-react`.
 
 ---
 
 ## SEO & Metadata
 
-- `app/sitemap.js` — dynamic sitemap generated from backend data
+- `app/sitemap.js` — dynamic sitemap (includes blog slugs from Neon)
 - `app/robots.js` — disallows `/admin`, `/auth`, `/settings`, etc.
 - `app/opengraph-image.js` and `app/twitter-image.js` — social preview images
 - `components/JsonLd.js` — structured data (JSON-LD)
@@ -367,14 +380,14 @@ Icons come from `lucide-react` and `@heroicons/react`.
 
 The frontend is designed to deploy on **Vercel** (or any Node.js host):
 
-1. Connect the Git repository.
-2. Set all `NEXT_PUBLIC_*` environment variables in the hosting dashboard.
+1. Connect the Git repository (this package or the monorepo with the correct root).
+2. Set all env vars in the hosting dashboard (no in-code fallbacks):
+   - `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_SITE_URL`, all `NEXT_PUBLIC_FIREBASE_*`
+   - Server-only `DATABASE_URL`
 3. Build command: `npm run build`
-4. Start command: `npm start`
+4. Start command: `npm start` (Vercel uses its own Next.js runtime)
 
-Ensure `NEXT_PUBLIC_API_URL` points to the production API (`https://api.uj-aiclub.com`) and `NEXT_PUBLIC_SITE_URL` matches your domain.
-
-`next.config.mjs` allows images from `https://api.uj-aiclub.com/**` and sets permissive CORS headers.
+`next.config.mjs` allows images from `https://api.uj-aiclub.com/**` and sets permissive CORS headers. Dev webpack polling is enabled for reliable HMR with Docker bind mounts on Windows/macOS.
 
 ---
 
@@ -382,12 +395,15 @@ Ensure `NEXT_PUBLIC_API_URL` points to the production API (`https://api.uj-aiclu
 
 | Problem | Likely cause | Fix |
 |---------|--------------|-----|
-| Firebase auth not working | Missing or wrong env vars | Verify all four `NEXT_PUBLIC_FIREBASE_*` vars in `.env.local` |
+| Firebase auth not working | Missing or wrong env vars | Verify all four `NEXT_PUBLIC_FIREBASE_*` vars in `.env.local`, then restart `npm run dev` |
 | API calls fail with CORS | Backend not running or wrong URL | Check `NEXT_PUBLIC_API_URL` and ensure backend is on port 8000 |
-| Redirected to `/login` immediately | Token expired or backend rejects session | Check backend logs; verify `FIREBASE_PROJECT_ID` matches on both sides |
-| Images not loading | Wrong API base URL | `getImageUrl()` prepends `NEXT_PUBLIC_API_URL` — ensure it has no trailing slash |
-| `401` on every request | Firebase project mismatch | Frontend `NEXT_PUBLIC_FIREBASE_PROJECT_ID` must equal backend `FIREBASE_PROJECT_ID` |
-| Build fails with Turbopack | Turbopack compatibility issue | Try `next build` without `--turbopack` (edit `package.json` script) |
+| Redirected to `/login` immediately | Token expired or backend rejects session | Check backend logs; verify Firebase project IDs match |
+| Blog empty / article admin errors | Missing `DATABASE_URL` | Set server-only `DATABASE_URL` in `.env.local` (and on Vercel) |
+| “Backend unreachable — limited mode” | Rust API down | Start the API; blog admin may still work if Neon + admin role are OK |
+| Images not loading | Wrong API base URL | `getImageUrl()` prepends `NEXT_PUBLIC_API_URL` — no trailing slash |
+| `401` on every request | Firebase project mismatch | Frontend project ID must equal backend `FIREBASE_PROJECT_ID` |
+| Build fails with Turbopack | Turbopack compatibility issue | Run `next build` without `--turbopack` (edit `package.json` `build` script) |
+| HMR flaky in Docker on Windows | FS events missed on bind mounts | Prefer `npm run dev` (webpack + polling in `next.config.mjs`) over Turbopack |
 
 ---
 
@@ -395,4 +411,4 @@ Ensure `NEXT_PUBLIC_API_URL` points to the production API (`https://api.uj-aiclu
 
 | Repo | Description |
 |------|-------------|
-| [uj-ai-club-backend](../uj-ai-club-backend/README.md) | Rust/Axum REST API, PostgreSQL, Firebase token verification |
+| [uj-ai-club-backend](../uj-ai-club-backend/README.md) | Rust/Axum REST API, PostgreSQL, Firebase token verification, challenges & grading |
