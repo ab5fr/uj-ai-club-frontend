@@ -1,23 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import { useAuth } from "@/contexts/AuthContext";
 import { adminSubmissionsApi } from "@/lib/api";
 
 export default function AdminSubmissionViewerPage() {
-  return (
-    <ProtectedRoute>
-      <AdminSubmissionViewer />
-    </ProtectedRoute>
-  );
-}
-
-function AdminSubmissionViewer() {
   const params = useParams();
   const router = useRouter();
-  const { user } = useAuth();
   const submissionId = params?.submissionId;
 
   const [notebook, setNotebook] = useState(null);
@@ -25,11 +14,6 @@ function AdminSubmissionViewer() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [downloading, setDownloading] = useState(false);
-
-  const isAdmin = useMemo(() => {
-    if (!user) return false;
-    return user.role === "admin" || user.isAdmin === true;
-  }, [user]);
 
   const getFilenameFromDisposition = (contentDisposition, fallback) => {
     if (!contentDisposition) return fallback;
@@ -107,20 +91,6 @@ function AdminSubmissionViewer() {
       setDownloading(false);
     }
   };
-
-  if (!isAdmin) {
-    return (
-      <main className="page admin-page">
-        <section className="section">
-          <div className="container">
-            <div className="admin-alert admin-alert--warning">
-              You must be an administrator to access this page.
-            </div>
-          </div>
-        </section>
-      </main>
-    );
-  }
 
   return (
     <main className="page admin-page">

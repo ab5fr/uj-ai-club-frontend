@@ -15,6 +15,13 @@ import {
 import { slugify } from "@/lib/articles/slug";
 
 const MAX_COVER_BYTES = 1_500_000;
+const MAX_BODY_CHARS = 100_000;
+const MAX_EXCERPT_CHARS = 500;
+const ALLOWED_COVER_MIMES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+]);
 
 function fail(message) {
   return { ok: false, error: message };
@@ -22,6 +29,24 @@ function fail(message) {
 
 function ok(data) {
   return { ok: true, ...data };
+}
+
+function validateCoverImageDataUrl(dataUrl) {
+  if (typeof dataUrl !== "string") {
+    return "Invalid cover image";
+  }
+  if (dataUrl.length > MAX_COVER_BYTES * 1.4) {
+    return "Cover image is too large (max ~1.5MB)";
+  }
+  const match = /^data:(image\/[a-z0-9.+-]+);base64,/i.exec(dataUrl);
+  if (!match) {
+    return "Cover image must be a base64 data URL";
+  }
+  const mime = match[1].toLowerCase();
+  if (!ALLOWED_COVER_MIMES.has(mime)) {
+    return "Cover image must be JPEG, PNG, or WebP";
+  }
+  return null;
 }
 
 function revalidateBlog(slug) {
@@ -38,8 +63,8 @@ export async function checkAdminAction(idToken) {
       SELECT role FROM users WHERE firebase_uid = ${claims.uid} LIMIT 1
     `;
     return ok({ isAdmin: rows[0]?.role === "admin" });
-  } catch (err) {
-    return fail(err.message || "Not authorized");
+  } catch {
+    return fail("Not authorized");
   }
 }
 
@@ -59,8 +84,15 @@ export async function adminCreateArticleAction(idToken, payload) {
 
     const title = String(payload.title || "").trim();
     const body = String(payload.body || "").trim();
+    const excerpt = String(payload.excerpt || "").trim();
     if (!title) return fail("Title is required");
     if (!body) return fail("Body is required");
+    if (body.length > MAX_BODY_CHARS) {
+      return fail(`Body must be at most ${MAX_BODY_CHARS} characters`);
+    }
+    if (excerpt.length > MAX_EXCERPT_CHARS) {
+      return fail(`Excerpt must be at most ${MAX_EXCERPT_CHARS} characters`);
+    }
 
     let slug = slugify(payload.slug || title);
     if (await slugExists(slug)) {
@@ -68,21 +100,14 @@ export async function adminCreateArticleAction(idToken, payload) {
     }
 
     if (payload.coverImageDataUrl) {
-      if (typeof payload.coverImageDataUrl !== "string") {
-        return fail("Invalid cover image");
-      }
-      if (payload.coverImageDataUrl.length > MAX_COVER_BYTES * 1.4) {
-        return fail("Cover image is too large (max ~1.5MB)");
-      }
-      if (!payload.coverImageDataUrl.startsWith("data:image/")) {
-        return fail("Cover image must be an image file");
-      }
+      const coverError = validateCoverImageDataUrl(payload.coverImageDataUrl);
+      if (coverError) return fail(coverError);
     }
 
     const item = await createArticle({
       title,
       slug,
-      excerpt: String(payload.excerpt || "").trim() || null,
+      excerpt: excerpt || null,
       body,
       coverImage: payload.coverImageDataUrl || null,
       visible: payload.visible !== false,
@@ -104,8 +129,15 @@ export async function adminUpdateArticleAction(idToken, id, payload) {
 
     const title = String(payload.title || "").trim();
     const body = String(payload.body || "").trim();
+    const excerpt = String(payload.excerpt || "").trim();
     if (!title) return fail("Title is required");
     if (!body) return fail("Body is required");
+    if (body.length > MAX_BODY_CHARS) {
+      return fail(`Body must be at most ${MAX_BODY_CHARS} characters`);
+    }
+    if (excerpt.length > MAX_EXCERPT_CHARS) {
+      return fail(`Excerpt must be at most ${MAX_EXCERPT_CHARS} characters`);
+    }
 
     const slug = slugify(payload.slug || title);
     if (await slugExists(slug, id)) {
@@ -116,19 +148,15 @@ export async function adminUpdateArticleAction(idToken, id, payload) {
     if (payload.clearCover) {
       coverImage = null;
     } else if (payload.coverImageDataUrl) {
-      if (!payload.coverImageDataUrl.startsWith("data:image/")) {
-        return fail("Cover image must be an image file");
-      }
-      if (payload.coverImageDataUrl.length > MAX_COVER_BYTES * 1.4) {
-        return fail("Cover image is too large (max ~1.5MB)");
-      }
+      const coverError = validateCoverImageDataUrl(payload.coverImageDataUrl);
+      if (coverError) return fail(coverError);
       coverImage = payload.coverImageDataUrl;
     }
 
     const item = await updateArticle(id, {
       title,
       slug,
-      excerpt: String(payload.excerpt || "").trim() || null,
+      excerpt: excerpt || null,
       body,
       coverImage,
       visible: payload.visible !== false,

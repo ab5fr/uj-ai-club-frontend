@@ -74,7 +74,8 @@ export function AuthProvider({ children }) {
             firebaseUid: firebaseUser.uid,
             offline: true,
           });
-          setNeedsProfileCompletion(false);
+          // Fail closed: do not clear profile-completion gating while offline.
+          setNeedsProfileCompletion(true);
           setAuthError("Signed in offline. Some features may be unavailable.");
         } else {
           setUser(null);
@@ -111,7 +112,12 @@ export function AuthProvider({ children }) {
   };
 
   const updateUser = (userData) => {
-    setUser(userData);
+    setUser((prev) => {
+      if (!userData || typeof userData !== "object") return prev;
+      const { role: _ignoredRole, isAdmin: _ignoredIsAdmin, ...safe } =
+        userData;
+      return { ...(prev || {}), ...safe };
+    });
   };
 
   const refreshSession = async () => {

@@ -1,4 +1,5 @@
 import { createPageMetadata } from "@/lib/metadata";
+import AdminGuard from "./AdminGuard";
 
 export const metadata = createPageMetadata({
   title: "Admin",
@@ -8,5 +9,5 @@ export const metadata = createPageMetadata({
 });
 
 export default function AdminLayout({ children }) {
-  return children;
+  return <AdminGuard>{children}</AdminGuard>;
 }
