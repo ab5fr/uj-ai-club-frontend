@@ -73,33 +73,6 @@ export function BreadcrumbJsonLd({ items }) {
   );
 }
 
-export function LearningResourceJsonLd({
-  title,
-  description,
-  url,
-  provider,
-  image,
-}) {
-  const data = {
-    "@context": "https://schema.org",
-    "@type": "LearningResource",
-    name: title,
-    description,
-    url,
-    ...(provider
-      ? { provider: { "@type": "Organization", name: provider } }
-      : {}),
-    ...(image ? { image } : {}),
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: safeJsonLd(data) }}
-    />
-  );
-}
-
 export function CourseJsonLd({ title, description, url }) {
   const absoluteUrl = url.startsWith("http") ? url : `${SITE_URL}${url}`;
   const data = {

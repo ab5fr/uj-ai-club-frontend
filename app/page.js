@@ -6,10 +6,8 @@ import { BarChart2, Clock, Cpu, Mail, MapPin, Users, Zap } from "lucide-react";
 import HeroNetworkSvg from "./components/uoj/HeroNetworkSvg";
 import {
   ApiError,
-  certificatesApi,
   contactApi,
   leaderboardApi,
-  resourcesApi,
 } from "@/lib/api";
 
 function initialsForName(name) {
@@ -20,8 +18,6 @@ function initialsForName(name) {
 
 export default function Home() {
   const [stats, setStats] = useState({
-    resources: "—",
-    certificates: "—",
     leaderboards: "—",
     topMembers: "—",
   });
@@ -38,17 +34,10 @@ export default function Home() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [resources, certificates, leaderboards] = await Promise.all([
-          resourcesApi.getAll().catch(() => []),
-          certificatesApi.getAll().catch(() => []),
-          leaderboardApi.getAll().catch(() => []),
-        ]);
-
+        const leaderboards = await leaderboardApi.getAll().catch(() => []);
         const entries = leaderboards[0]?.entries || [];
 
         setStats({
-          resources: resources.length,
-          certificates: certificates.length,
           leaderboards: leaderboards.length,
           topMembers: entries.length,
         });
@@ -177,14 +166,6 @@ export default function Home() {
 
       <div className="container">
         <div className="stat-bar">
-          <div className="stat-item">
-            <div className="stat-num">{stats.resources}</div>
-            <div className="stat-label">Resources</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-num">{stats.certificates}</div>
-            <div className="stat-label">Certificates</div>
-          </div>
           <div className="stat-item">
             <div className="stat-num">{stats.leaderboards}</div>
             <div className="stat-label">Leaderboards</div>

@@ -6,8 +6,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { getIdToken } from "@/lib/firebase";
 import { checkAdminAction } from "@/app/actions/articles";
 import { TabButton } from "./components/shared";
-import ResourcesAdmin from "./components/ResourcesAdmin";
-import CertificatesAdmin from "./components/CertificatesAdmin";
 import ArticlesAdmin from "./components/ArticlesAdmin";
 import ChallengesAdmin from "./components/ChallengesAdmin";
 import SubmissionsAdmin from "./components/SubmissionsAdmin";
@@ -73,8 +71,8 @@ function AdminContent() {
             Admin <span className="text-gradient">Dashboard</span>
           </h1>
           <p className="anim-2">
-            Manage resources, articles, challenges with notebooks, submissions,
-            and contact messages.
+            Manage articles, challenges with notebooks, submissions, and contact
+            messages.
           </p>
         </div>
       </div>
@@ -83,19 +81,9 @@ function AdminContent() {
         <div className="container">
           <div className="admin-tabs">
             <TabButton
-              label="Resources"
-              active={activeTab === "resources"}
-              onClick={() => setActiveTab("resources")}
-            />
-            <TabButton
               label="Articles"
               active={activeTab === "articles"}
               onClick={() => setActiveTab("articles")}
-            />
-            <TabButton
-              label="Certificates"
-              active={activeTab === "certificates"}
-              onClick={() => setActiveTab("certificates")}
             />
             <TabButton
               label="Challenges"
@@ -114,9 +102,7 @@ function AdminContent() {
             />
           </div>
 
-          {activeTab === "resources" && <ResourcesAdmin />}
           {activeTab === "articles" && <ArticlesAdmin />}
-          {activeTab === "certificates" && <CertificatesAdmin />}
           {activeTab === "challenges" && <ChallengesAdmin />}
           {activeTab === "submissions" && <SubmissionsAdmin />}
           {activeTab === "messages" && <ContactMessagesAdmin />}

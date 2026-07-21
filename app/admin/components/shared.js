@@ -82,42 +82,6 @@ export function FileInput({
   );
 }
 
-export function toResourcePayload(form) {
-  const payload = new FormData();
-  payload.append("title", form.title);
-  payload.append("provider", form.provider);
-  payload.append("notionUrl", form.notionUrl || "");
-  payload.append("instructorName", form.instructorName || "");
-  payload.append("visible", form.visible);
-
-  if (form.coverImage) {
-    payload.append("coverImage", form.coverImage);
-  }
-  if (form.instructorImage) {
-    payload.append("instructorImage", form.instructorImage);
-  }
-
-  return payload;
-}
-
-export function toCertificatePayload(form) {
-  const payload = new FormData();
-  payload.append("level", form.level);
-  payload.append("title", form.title);
-  payload.append("courseTitle", form.courseTitle || "");
-  payload.append("firstName", form.firstName || "");
-  payload.append("secondName", form.secondName || "");
-  payload.append("courseraUrl", form.courseraUrl || "");
-  payload.append("youtubeUrl", form.youtubeUrl || "");
-  payload.append("visible", form.visible);
-
-  if (form.coverImage) {
-    payload.append("coverImage", form.coverImage);
-  }
-
-  return payload;
-}
-
 export function fmtDate(value) {
   return formatBackendDate(value);
 }
