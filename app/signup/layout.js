@@ -2,7 +2,8 @@ import { createPageMetadata } from "@/lib/metadata";
 
 export const metadata = createPageMetadata({
   title: "Sign Up",
-  description: "Create your UJ AI Club account and start learning AI with challenges, resources, and a supportive community.",
+  description:
+    "Create your UJ AI Club account and start learning AI with challenges, resources, and a supportive community.",
   path: "/signup",
   noIndex: true,
 });

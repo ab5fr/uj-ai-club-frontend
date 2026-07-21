@@ -86,7 +86,10 @@ export default function RoadmapPage() {
                 </li>
               </ul>
 
-              <div className="card" style={{ marginTop: "2rem", padding: "1.25rem" }}>
+              <div
+                className="card"
+                style={{ marginTop: "2rem", padding: "1.25rem" }}
+              >
                 <div
                   style={{
                     fontSize: ".68rem",
@@ -178,16 +181,41 @@ export default function RoadmapPage() {
                 <p className="phase-desc">
                   No AI experience needed. You&apos;ll learn the basic math and
                   coding skills used in every area of AI. Estimated time:{" "}
-                  <strong style={{ color: "var(--c-light)" }}>4–6 weeks</strong>.
+                  <strong style={{ color: "var(--c-light)" }}>4–6 weeks</strong>
+                  .
                 </p>
                 <div className="phase-steps">
                   {[
-                    ["01", "Python Basics", "Variables, loops, functions, and classes. Work with data using NumPy and Pandas."],
-                    ["02", "Math for AI", "Learn the key math: linear algebra, basic calculus, probability, and statistics."],
-                    ["03", "Exploring Data", "Look at data, make charts, handle missing values, and pick useful features."],
-                    ["04", "Classic ML Models", "Linear regression, decision trees, k-NN, and k-means using scikit-learn on real data."],
-                    ["05", "Checking Your Model", "Split data for testing, use cross-validation, and learn accuracy scores like precision and recall."],
-                    ["06", "Your First Full Project", "Build a complete pipeline: load data → clean it → train a model → check results → submit."],
+                    [
+                      "01",
+                      "Python Basics",
+                      "Variables, loops, functions, and classes. Work with data using NumPy and Pandas.",
+                    ],
+                    [
+                      "02",
+                      "Math for AI",
+                      "Learn the key math: linear algebra, basic calculus, probability, and statistics.",
+                    ],
+                    [
+                      "03",
+                      "Exploring Data",
+                      "Look at data, make charts, handle missing values, and pick useful features.",
+                    ],
+                    [
+                      "04",
+                      "Classic ML Models",
+                      "Linear regression, decision trees, k-NN, and k-means using scikit-learn on real data.",
+                    ],
+                    [
+                      "05",
+                      "Checking Your Model",
+                      "Split data for testing, use cross-validation, and learn accuracy scores like precision and recall.",
+                    ],
+                    [
+                      "06",
+                      "Your First Full Project",
+                      "Build a complete pipeline: load data → clean it → train a model → check results → submit.",
+                    ],
                   ].map(([num, title, desc]) => (
                     <div key={num} className="step-card">
                       <div className="step-num">{num}</div>
@@ -217,7 +245,9 @@ export default function RoadmapPage() {
                   >
                     Start Beginner Challenges →
                   </Link>
-                  <span style={{ fontSize: ".8rem", color: "var(--text-muted)" }}>
+                  <span
+                    style={{ fontSize: ".8rem", color: "var(--text-muted)" }}
+                  >
                     6 challenges · 750 total pts
                   </span>
                 </div>
@@ -228,19 +258,46 @@ export default function RoadmapPage() {
                 <div className="phase-eyebrow">Phase 02 — Depth</div>
                 <h3 className="phase-title">Intermediate</h3>
                 <p className="phase-desc">
-                  Go deeper into neural networks, deep learning tools, and pick a
-                  focus area: Computer Vision, NLP, or Reinforcement Learning.
+                  Go deeper into neural networks, deep learning tools, and pick
+                  a focus area: Computer Vision, NLP, or Reinforcement Learning.
                   Estimated time:{" "}
-                  <strong style={{ color: "var(--c-light)" }}>8–12 weeks</strong>.
+                  <strong style={{ color: "var(--c-light)" }}>
+                    8–12 weeks
+                  </strong>
+                  .
                 </p>
                 <div className="phase-steps">
                   {[
-                    ["07", "Neural Networks In Depth", "How backpropagation works, choosing activation functions, weight setup, and batch normalization."],
-                    ["08", "PyTorch Basics", "Tensors, auto-gradients, training loops, GPU speed-up, and loading data."],
-                    ["09", "Computer Vision Track", "CNNs, ResNets, reusing trained models, object detection with YOLO, and image segmentation."],
-                    ["10", "NLP Track", "Tokenization, word vectors, RNNs, LSTMs, attention, and fine-tuning BERT."],
-                    ["11", "Reinforcement Learning", "MDPs, Q-learning, policy gradients, PPO, and DQN with Gym environments."],
-                    ["12", "MLOps Basics", "Track experiments with MLflow, save model versions, and build repeatable pipelines."],
+                    [
+                      "07",
+                      "Neural Networks In Depth",
+                      "How backpropagation works, choosing activation functions, weight setup, and batch normalization.",
+                    ],
+                    [
+                      "08",
+                      "PyTorch Basics",
+                      "Tensors, auto-gradients, training loops, GPU speed-up, and loading data.",
+                    ],
+                    [
+                      "09",
+                      "Computer Vision Track",
+                      "CNNs, ResNets, reusing trained models, object detection with YOLO, and image segmentation.",
+                    ],
+                    [
+                      "10",
+                      "NLP Track",
+                      "Tokenization, word vectors, RNNs, LSTMs, attention, and fine-tuning BERT.",
+                    ],
+                    [
+                      "11",
+                      "Reinforcement Learning",
+                      "MDPs, Q-learning, policy gradients, PPO, and DQN with Gym environments.",
+                    ],
+                    [
+                      "12",
+                      "MLOps Basics",
+                      "Track experiments with MLflow, save model versions, and build repeatable pipelines.",
+                    ],
                   ].map(([num, title, desc]) => (
                     <div key={num} className="step-card">
                       <div className="step-num">{num}</div>
@@ -270,7 +327,9 @@ export default function RoadmapPage() {
                   >
                     Start Intermediate Challenges →
                   </Link>
-                  <span style={{ fontSize: ".8rem", color: "var(--text-muted)" }}>
+                  <span
+                    style={{ fontSize: ".8rem", color: "var(--text-muted)" }}
+                  >
                     8 challenges · 1,820 total pts
                   </span>
                 </div>
@@ -281,19 +340,46 @@ export default function RoadmapPage() {
                 <div className="phase-eyebrow">Phase 03 — Mastery</div>
                 <h3 className="phase-title">Advanced</h3>
                 <p className="phase-desc">
-                  Learn the latest AI models, recreate research papers, and build
-                  real-world AI systems. This is where you go from learner to
-                  expert. Estimated time:{" "}
-                  <strong style={{ color: "var(--c-light)" }}>12–20 weeks</strong>.
+                  Learn the latest AI models, recreate research papers, and
+                  build real-world AI systems. This is where you go from learner
+                  to expert. Estimated time:{" "}
+                  <strong style={{ color: "var(--c-light)" }}>
+                    12–20 weeks
+                  </strong>
+                  .
                 </p>
                 <div className="phase-steps">
                   {[
-                    ["13", "Transformers & Attention", "Build the \"Attention is All You Need\" model from scratch. Learn about GPT, T5, and CLIP."],
-                    ["14", "Generative AI", "VAEs, GANs, and Diffusion Models. Train your own image generator and check the results."],
-                    ["15", "Large Language Models", "Fine-tune LLMs, use LoRA, RLHF, prompt tricks, RAG pipelines, and LangChain."],
-                    ["16", "Making Models Smaller", "Quantization (INT8/FP16), pruning, knowledge distillation, and deploying with TensorRT."],
-                    ["17", "Recreate a Research Paper", "Pick a recent AI paper, build it end-to-end, and present what you learned to the club."],
-                    ["18", "Final AI Project", "Design and launch a real AI app: build the API, add monitoring, and set up auto-deploy."],
+                    [
+                      "13",
+                      "Transformers & Attention",
+                      'Build the "Attention is All You Need" model from scratch. Learn about GPT, T5, and CLIP.',
+                    ],
+                    [
+                      "14",
+                      "Generative AI",
+                      "VAEs, GANs, and Diffusion Models. Train your own image generator and check the results.",
+                    ],
+                    [
+                      "15",
+                      "Large Language Models",
+                      "Fine-tune LLMs, use LoRA, RLHF, prompt tricks, RAG pipelines, and LangChain.",
+                    ],
+                    [
+                      "16",
+                      "Making Models Smaller",
+                      "Quantization (INT8/FP16), pruning, knowledge distillation, and deploying with TensorRT.",
+                    ],
+                    [
+                      "17",
+                      "Recreate a Research Paper",
+                      "Pick a recent AI paper, build it end-to-end, and present what you learned to the club.",
+                    ],
+                    [
+                      "18",
+                      "Final AI Project",
+                      "Design and launch a real AI app: build the API, add monitoring, and set up auto-deploy.",
+                    ],
                   ].map(([num, title, desc]) => (
                     <div key={num} className="step-card">
                       <div className="step-num">{num}</div>
@@ -314,7 +400,9 @@ export default function RoadmapPage() {
                   <Link href="/challanges" className="btn btn-orange">
                     Start Advanced Challenges →
                   </Link>
-                  <span style={{ fontSize: ".8rem", color: "var(--text-muted)" }}>
+                  <span
+                    style={{ fontSize: ".8rem", color: "var(--text-muted)" }}
+                  >
                     6 challenges · 2,600 total pts
                   </span>
                 </div>

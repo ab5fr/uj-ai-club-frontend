@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { getRedirectResult, onIdTokenChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { getFirebaseAuth } from "@/lib/firebase";

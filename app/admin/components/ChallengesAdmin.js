@@ -167,7 +167,12 @@ export default function ChallengesAdmin() {
   };
 
   const onDelete = async (id) => {
-    if (!confirm("Delete this challenge? This will also delete its notebook, submissions, and grading data.")) return;
+    if (
+      !confirm(
+        "Delete this challenge? This will also delete its notebook, submissions, and grading data.",
+      )
+    )
+      return;
     try {
       await adminChallengesApi.remove(id);
       await load();
@@ -212,13 +217,15 @@ export default function ChallengesAdmin() {
     <section>
       <h2 className="admin-section-title">Challenges & Notebooks</h2>
       <p className="admin-section-desc">
-        Create challenges with notebooks in one place. Upload the .ipynb, configure
-        limits, and enable auto-grading when ready. The assignment name is taken
-        from the notebook filename automatically.
+        Create challenges with notebooks in one place. Upload the .ipynb,
+        configure limits, and enable auto-grading when ready. The assignment
+        name is taken from the notebook filename automatically.
       </p>
 
       {error && <div className="admin-alert admin-alert--error">{error}</div>}
-      {success && <div className="admin-alert admin-alert--success">{success}</div>}
+      {success && (
+        <div className="admin-alert admin-alert--success">{success}</div>
+      )}
 
       <form onSubmit={onSubmit} className="card admin-form">
         <h3 className="admin-form-title">
@@ -299,7 +306,9 @@ export default function ChallengesAdmin() {
             <label className="form-label">Memory Limit</label>
             <select
               value={form.memoryLimit}
-              onChange={(e) => setForm({ ...form, memoryLimit: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, memoryLimit: e.target.value })
+              }
               className="form-select"
             >
               <option value="256M">256 MB</option>
@@ -310,7 +319,14 @@ export default function ChallengesAdmin() {
           </div>
         </div>
 
-        <div style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: ".5rem" }}>
+        <div
+          style={{
+            marginTop: "1rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: ".5rem",
+          }}
+        >
           <label className="admin-check">
             <input
               type="checkbox"
@@ -344,7 +360,11 @@ export default function ChallengesAdmin() {
         <div className="admin-form-footer">
           <div className="admin-form-actions">
             {editingId && (
-              <button type="button" onClick={resetForm} className="btn btn-outline">
+              <button
+                type="button"
+                onClick={resetForm}
+                className="btn btn-outline"
+              >
                 Cancel
               </button>
             )}
@@ -395,7 +415,10 @@ export default function ChallengesAdmin() {
                 </div>
               )}
               <div className="admin-item__actions">
-                <button onClick={() => onEdit(c)} className="btn btn-primary btn-sm">
+                <button
+                  onClick={() => onEdit(c)}
+                  className="btn btn-primary btn-sm"
+                >
                   Edit
                 </button>
                 <button
@@ -404,7 +427,10 @@ export default function ChallengesAdmin() {
                 >
                   {c.visible === false || c.isHidden ? "Show" : "Hide"}
                 </button>
-                <button onClick={() => onDelete(c.id)} className="btn btn-danger btn-sm">
+                <button
+                  onClick={() => onDelete(c.id)}
+                  className="btn btn-danger btn-sm"
+                >
                   Delete
                 </button>
               </div>

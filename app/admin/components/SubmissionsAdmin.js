@@ -83,27 +83,29 @@ export default function SubmissionsAdmin() {
 
     return Array.from(byChallenge.values())
       .map((challenge) => {
-        const students = Array.from(challenge.students.values()).map((student) => {
-          const attempts = [...student.attempts].sort(
-            (a, b) => (b.attemptNumber || 0) - (a.attemptNumber || 0),
-          );
-          const graded = attempts.filter((a) => a.status === "graded");
-          const bestPoints = graded.reduce(
-            (max, a) => Math.max(max, a.pointsAwarded || 0),
-            0,
-          );
-          const bestScore = graded.reduce(
-            (max, a) => Math.max(max, a.score ?? -1),
-            -1,
-          );
-          return {
-            ...student,
-            attempts,
-            bestPoints,
-            bestScore: bestScore < 0 ? null : bestScore,
-            attemptCount: attempts.length,
-          };
-        });
+        const students = Array.from(challenge.students.values()).map(
+          (student) => {
+            const attempts = [...student.attempts].sort(
+              (a, b) => (b.attemptNumber || 0) - (a.attemptNumber || 0),
+            );
+            const graded = attempts.filter((a) => a.status === "graded");
+            const bestPoints = graded.reduce(
+              (max, a) => Math.max(max, a.pointsAwarded || 0),
+              0,
+            );
+            const bestScore = graded.reduce(
+              (max, a) => Math.max(max, a.score ?? -1),
+              -1,
+            );
+            return {
+              ...student,
+              attempts,
+              bestPoints,
+              bestScore: bestScore < 0 ? null : bestScore,
+              attemptCount: attempts.length,
+            };
+          },
+        );
         students.sort((a, b) => a.userName.localeCompare(b.userName));
         return {
           challengeId: challenge.challengeId,
@@ -152,7 +154,9 @@ export default function SubmissionsAdmin() {
   };
 
   const handleDelete = async (submissionId) => {
-    if (!confirm("Delete this submission attempt? This frees an attempt slot.")) {
+    if (
+      !confirm("Delete this submission attempt? This frees an attempt slot.")
+    ) {
       return;
     }
     try {
@@ -230,15 +234,16 @@ export default function SubmissionsAdmin() {
           {s.status.replace("_", " ")}
         </span>
       </td>
-      <td>
-        {s.score !== null ? `${Math.round(s.score * 10) / 10}%` : "-"}
-      </td>
+      <td>{s.score !== null ? `${Math.round(s.score * 10) / 10}%` : "-"}</td>
       <td>
         <span className={s.pointsCredited ? "admin-points--credited" : ""}>
           {s.pointsAwarded} pts
         </span>
         {s.pointsCredited && (
-          <span className="admin-points--credited" title="Highest score credited">
+          <span
+            className="admin-points--credited"
+            title="Highest score credited"
+          >
             {" "}
             ✓ best
           </span>

@@ -2,10 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import {
-  reauthenticateWithPopup,
-  updatePassword,
-} from "firebase/auth";
+import { reauthenticateWithPopup, updatePassword } from "firebase/auth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 import { getFirebaseAuth, getGoogleProvider } from "@/lib/firebase";

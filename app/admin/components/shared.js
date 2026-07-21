@@ -1,10 +1,7 @@
 "use client";
 
 import { ApiError } from "@/lib/api";
-import {
-  formatBackendDate,
-  formatBackendDateTime,
-} from "@/lib/formatDate";
+import { formatBackendDate, formatBackendDateTime } from "@/lib/formatDate";
 
 export function TabButton({ label, active, onClick }) {
   return (

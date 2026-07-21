@@ -17,10 +17,7 @@ export default function ProtectedRoute({ children }) {
       return;
     }
 
-    if (
-      needsProfileCompletion &&
-      pathname !== "/auth/complete-profile"
-    ) {
+    if (needsProfileCompletion && pathname !== "/auth/complete-profile") {
       router.push("/auth/complete-profile");
     }
   }, [isAuthenticated, loading, needsProfileCompletion, pathname, router]);

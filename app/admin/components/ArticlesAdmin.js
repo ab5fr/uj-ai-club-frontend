@@ -216,11 +216,7 @@ export default function ArticlesAdmin() {
                 Cancel
               </button>
             )}
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={saving}
-            >
+            <button type="submit" className="btn btn-primary" disabled={saving}>
               {saving
                 ? "Saving…"
                 : editingId

@@ -265,7 +265,10 @@ function ChallengesContent() {
                       </span>
                       <span className="ch-meta-item">
                         <Repeat size={13} />
-                        {safeText(challenge.attemptsRemaining ?? challenge.allowedSubmissions)}{" "}
+                        {safeText(
+                          challenge.attemptsRemaining ??
+                            challenge.allowedSubmissions,
+                        )}{" "}
                         left / {safeText(challenge.allowedSubmissions)}
                       </span>
                     </div>
@@ -299,7 +302,13 @@ function ChallengesContent() {
                       >
                         {windowLabel} · {notebookLabel}
                       </span>
-                      <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: ".5rem",
+                          flexWrap: "wrap",
+                        }}
+                      >
                         {challenge.canContinue && (
                           <button
                             type="button"

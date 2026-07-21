@@ -15,8 +15,7 @@ export default function UojNavbar() {
   const pathname = usePathname();
   const { user, isAuthenticated, logout } = useAuth();
   const authed = isAuthenticated();
-  const isAdmin =
-    authed && (user?.role === "admin" || user?.isAdmin === true);
+  const isAdmin = authed && (user?.role === "admin" || user?.isAdmin === true);
 
   return (
     <nav className="nav">

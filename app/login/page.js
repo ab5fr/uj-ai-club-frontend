@@ -37,8 +37,12 @@ export default function LoginPage() {
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { user, needsProfileCompletion, authError, loading: authLoading } =
-    useAuth();
+  const {
+    user,
+    needsProfileCompletion,
+    authError,
+    loading: authLoading,
+  } = useAuth();
 
   useEffect(() => {
     if (!authLoading && user) {
@@ -178,7 +182,9 @@ export default function LoginPage() {
 
             <div className="auth-divider">or continue with</div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: ".7rem" }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: ".7rem" }}
+            >
               <button
                 type="button"
                 className="btn btn-outline btn-block social-btn"
@@ -214,7 +220,8 @@ export default function LoginPage() {
           </form>
 
           <p className="auth-switch">
-            Don&apos;t have an account? <Link href="/signup">Make one for free →</Link>
+            Don&apos;t have an account?{" "}
+            <Link href="/signup">Make one for free →</Link>
           </p>
         </div>
       </main>

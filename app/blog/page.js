@@ -61,7 +61,10 @@ export default async function BlogPage() {
                       className="blog-card__image"
                     />
                   ) : (
-                    <div className="blog-card__placeholder" aria-hidden="true" />
+                    <div
+                      className="blog-card__placeholder"
+                      aria-hidden="true"
+                    />
                   )}
                 </div>
                 <div className="blog-card__body">

@@ -180,7 +180,11 @@ export default function CertificatesAdmin() {
           </label>
           <div className="admin-form-actions">
             {editingId && (
-              <button type="button" onClick={resetForm} className="btn btn-outline">
+              <button
+                type="button"
+                onClick={resetForm}
+                className="btn btn-outline"
+              >
                 Cancel
               </button>
             )}
@@ -223,7 +227,10 @@ export default function CertificatesAdmin() {
               by {c.firstName} · by {c.secondName}
             </div>
             <div className="admin-item__actions">
-              <button onClick={() => onEdit(c)} className="btn btn-primary btn-sm">
+              <button
+                onClick={() => onEdit(c)}
+                className="btn btn-primary btn-sm"
+              >
                 Edit
               </button>
               <button
@@ -232,7 +239,10 @@ export default function CertificatesAdmin() {
               >
                 {c.visible === false || c.isHidden ? "Show" : "Hide"}
               </button>
-              <button onClick={() => onDelete(c.id)} className="btn btn-danger btn-sm">
+              <button
+                onClick={() => onDelete(c.id)}
+                className="btn btn-danger btn-sm"
+              >
                 Delete
               </button>
             </div>

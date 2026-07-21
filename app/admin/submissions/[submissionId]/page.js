@@ -154,7 +154,9 @@ function AdminSubmissionViewer() {
             </div>
           </div>
 
-          {error && <div className="admin-alert admin-alert--error">{error}</div>}
+          {error && (
+            <div className="admin-alert admin-alert--error">{error}</div>
+          )}
 
           {loading ? (
             <div className="card admin-empty">Loading notebook...</div>
@@ -193,7 +195,10 @@ function NotebookCellView({ cell, index }) {
 
         {Array.isArray(cell?.outputs) && cell.outputs.length > 0 && (
           <div style={{ marginTop: "1rem" }}>
-            <div className="admin-notebook-cell__label" style={{ marginBottom: ".5rem" }}>
+            <div
+              className="admin-notebook-cell__label"
+              style={{ marginBottom: ".5rem" }}
+            >
               Output
             </div>
             <div>

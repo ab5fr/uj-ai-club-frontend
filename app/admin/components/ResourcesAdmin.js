@@ -157,7 +157,11 @@ export default function ResourcesAdmin() {
           </label>
           <div className="admin-form-actions">
             {editingId && (
-              <button type="button" onClick={resetForm} className="btn btn-outline">
+              <button
+                type="button"
+                onClick={resetForm}
+                className="btn btn-outline"
+              >
                 Cancel
               </button>
             )}
@@ -194,7 +198,10 @@ export default function ResourcesAdmin() {
             </div>
             <div className="admin-item__meta">by {r.provider}</div>
             <div className="admin-item__actions">
-              <button onClick={() => onEdit(r)} className="btn btn-primary btn-sm">
+              <button
+                onClick={() => onEdit(r)}
+                className="btn btn-primary btn-sm"
+              >
                 Edit
               </button>
               <button
@@ -203,7 +210,10 @@ export default function ResourcesAdmin() {
               >
                 {r.visible === false || r.isHidden ? "Show" : "Hide"}
               </button>
-              <button onClick={() => onDelete(r.id)} className="btn btn-danger btn-sm">
+              <button
+                onClick={() => onDelete(r.id)}
+                className="btn btn-danger btn-sm"
+              >
                 Delete
               </button>
             </div>

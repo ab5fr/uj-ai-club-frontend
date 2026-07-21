@@ -133,7 +133,10 @@ export default function CompleteProfilePage() {
   if (authLoading || !user) {
     return (
       <main className="auth-page">
-        <div className="auth-card auth-card--wide" style={{ textAlign: "center" }}>
+        <div
+          className="auth-card auth-card--wide"
+          style={{ textAlign: "center" }}
+        >
           <p className="auth-sub" style={{ marginBottom: 0 }}>
             Loading...
           </p>

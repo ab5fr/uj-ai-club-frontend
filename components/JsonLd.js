@@ -1,4 +1,9 @@
-import { CONTACT_EMAIL, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import {
+  CONTACT_EMAIL,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/site";
 
 function safeJsonLd(data) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
@@ -54,7 +59,9 @@ export function BreadcrumbJsonLd({ items }) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: item.href.startsWith("http") ? item.href : `${SITE_URL}${item.href}`,
+      item: item.href.startsWith("http")
+        ? item.href
+        : `${SITE_URL}${item.href}`,
     })),
   };
 
@@ -66,14 +73,22 @@ export function BreadcrumbJsonLd({ items }) {
   );
 }
 
-export function LearningResourceJsonLd({ title, description, url, provider, image }) {
+export function LearningResourceJsonLd({
+  title,
+  description,
+  url,
+  provider,
+  image,
+}) {
   const data = {
     "@context": "https://schema.org",
     "@type": "LearningResource",
     name: title,
     description,
     url,
-    ...(provider ? { provider: { "@type": "Organization", name: provider } } : {}),
+    ...(provider
+      ? { provider: { "@type": "Organization", name: provider } }
+      : {}),
     ...(image ? { image } : {}),
   };
 

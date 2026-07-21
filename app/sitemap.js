@@ -14,12 +14,14 @@ export default async function sitemap() {
 
   const articles = await listVisibleArticles().catch(() => []);
 
-  const staticEntries = staticRoutes.map(({ path, priority, changeFrequency }) => ({
-    url: `${SITE_URL}${path}`,
-    lastModified: now,
-    changeFrequency,
-    priority,
-  }));
+  const staticEntries = staticRoutes.map(
+    ({ path, priority, changeFrequency }) => ({
+      url: `${SITE_URL}${path}`,
+      lastModified: now,
+      changeFrequency,
+      priority,
+    }),
+  );
 
   const articleEntries = (Array.isArray(articles) ? articles : []).map(
     (article) => ({
