@@ -245,7 +245,7 @@ export default function SubmissionsAdmin() {
             title="Highest score credited"
           >
             {" "}
-            ✓ best
+            best
           </span>
         )}
       </td>
@@ -316,7 +316,6 @@ export default function SubmissionsAdmin() {
     </tr>
   );
 
-  // Statistics — total points = sum of best credited attempt per user/challenge
   const stats = {
     total: submissions.length,
     graded: submissions.filter((s) => s.status === "graded").length,

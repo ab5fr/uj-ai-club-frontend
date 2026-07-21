@@ -105,7 +105,6 @@ function ChallengesContent() {
         .catch((err) => {
           autoSubmittedRef.current.delete(challenge.id);
           if (err instanceof ApiError && err.status === 400) {
-            // Already submitted by the expiry worker or a prior click.
             return loadChallenges();
           }
           setStatus(

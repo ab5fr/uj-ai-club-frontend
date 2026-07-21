@@ -33,7 +33,6 @@ function AdminContent() {
         const res = await checkAdminAction(token);
         if (!cancelled && res.ok) setDbAdmin(Boolean(res.isAdmin));
       } catch {
-        // Backend may be down; Neon admin check is best-effort.
       }
     })();
     return () => {

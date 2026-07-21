@@ -30,7 +30,6 @@ function revalidateBlog(slug) {
   revalidatePath("/sitemap.xml");
 }
 
-/** Works without the Rust API — checks Neon users.role directly. */
 export async function checkAdminAction(idToken) {
   try {
     const claims = await verifyFirebaseIdToken(idToken);

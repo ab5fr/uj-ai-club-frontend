@@ -178,18 +178,12 @@ main {
   background-color: #e74904;
   color: #ebebed;
 }
-/* ============================================================
-   Merged from uoj-styles.css — primary design system
-   ============================================================ */
-/* ============================================================
-   AI Club — Design System
-   Brand: #00072c · #030870 · #0470fc · #0c34e9 · #12bbfe · #e74904 · #ebebed
-   Fonts: Barlow Condensed (display) · Barlow (body)
-   ============================================================ */
 
-/* Custom Properties */
+
+
+
 :root {
-  /* Brand palette */
+  
   --c-navy: #00072c;
   --c-deep: #030870;
   --c-blue: #0470fc;
@@ -199,7 +193,7 @@ main {
   --c-light: #ebebed;
   --c-white: #ffffff;
 
-  /* Semantic */
+  
   --bg: var(--c-navy);
   --bg-card: rgba(3, 8, 112, 0.22);
   --border: rgba(18, 187, 254, 0.12);
@@ -208,11 +202,11 @@ main {
   --text-muted: rgba(235, 235, 237, 0.58);
   --text-dim: rgba(235, 235, 237, 0.28);
 
-  /* Typography */
+  
   --ff-display: var(--font-barlow-condensed), "Barlow Condensed", sans-serif;
   --ff-body: var(--font-barlow), "Barlow", sans-serif;
 
-  /* Layout */
+  
   --max-w: 1200px;
   --pad-x: clamp(1.25rem, 4vw, 2.5rem);
   --section-y: clamp(4.5rem, 9vw, 9rem);
@@ -220,17 +214,17 @@ main {
   --r-lg: 14px;
   --r-pill: 999px;
 
-  /* Shadows / Glows */
+  
   --glow-blue: 0 0 40px rgba(4, 112, 252, 0.32);
   --glow-cyan: 0 0 28px rgba(18, 187, 254, 0.26);
   --glow-orange: 0 0 32px rgba(231, 73, 4, 0.38);
 
-  /* Transitions */
+  
   --t: 170ms ease;
   --t-md: 320ms ease;
 }
 
-/* Reset */
+
 *,
 *::before,
 *::after {
@@ -283,7 +277,7 @@ select {
   font-family: var(--ff-body);
 }
 
-/* Global Background Texture */
+
 body::before {
   content: "";
   position: fixed;
@@ -314,7 +308,7 @@ body::before {
     38px 38px;
 }
 
-/* Container */
+
 .container {
   max-width: var(--max-w);
   margin-inline: auto;
@@ -323,7 +317,7 @@ body::before {
   z-index: 1;
 }
 
-/* Typography */
+
 h1,
 h2,
 h3,
@@ -363,7 +357,7 @@ p {
   color: var(--text-muted);
 }
 
-/* Layout Utilities */
+
 .section {
   padding: var(--section-y) 0;
   position: relative;
@@ -422,7 +416,7 @@ p {
   margin-bottom: 1.75rem;
 }
 
-/* Utility Classes */
+
 .hero__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -476,7 +470,7 @@ p {
   color: var(--c-cyan);
 }
 
-/* Section Header */
+
 .section-header {
   text-align: center;
   margin-bottom: 3.75rem;
@@ -522,7 +516,7 @@ p {
   margin: 1.4rem auto 0;
 }
 
-/* Navigation */
+
 .nav {
   position: fixed;
   top: 0;
@@ -547,7 +541,7 @@ p {
   gap: 1.5rem;
 }
 
-/* Logo */
+
 .logo {
   display: flex;
   align-items: center;
@@ -578,7 +572,7 @@ p {
   text-transform: uppercase;
 }
 
-/* Links */
+
 .nav__links {
   display: flex;
   align-items: center;
@@ -606,7 +600,7 @@ p {
   background: rgba(18, 187, 254, 0.07);
 }
 
-/* Nav actions */
+
 .nav__actions {
   display: flex;
   align-items: center;
@@ -614,7 +608,7 @@ p {
   flex-shrink: 0;
 }
 
-/* Buttons */
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -683,7 +677,7 @@ p {
   width: 100%;
 }
 
-/* Cards */
+
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -704,7 +698,7 @@ p {
   transform: translateY(-3px);
 }
 
-/* Badges */
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -736,7 +730,7 @@ p {
   border: 1px solid rgba(190, 80, 240, 0.28);
 }
 
-/* Progress */
+
 .progress-track {
   width: 100%;
   height: 4px;
@@ -750,7 +744,7 @@ p {
   background: linear-gradient(90deg, var(--c-blue), var(--c-cyan));
 }
 
-/* Forms */
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -810,7 +804,7 @@ p {
   color: var(--c-light);
 }
 
-/* Footer */
+
 .footer {
   border-top: 1px solid var(--border);
   padding: 4rem 0 2.5rem;
@@ -863,12 +857,12 @@ p {
   color: var(--text-dim);
 }
 
-/* Page wrapper */
+
 .page {
   padding-top: 72px;
 }
 
-/* Page Hero (short) */
+
 .page-hero {
   padding: 5.5rem 0 3.5rem;
   text-align: center;
@@ -910,7 +904,7 @@ p {
   margin-inline: auto;
 }
 
-/* Stat bar */
+
 .stat-bar {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -944,7 +938,7 @@ p {
   color: var(--text-muted);
 }
 
-/* Hero */
+
 .hero {
   min-height: 100vh;
   display: flex;
@@ -997,7 +991,7 @@ p {
   flex-wrap: wrap;
 }
 
-/* Hero visual (right side) */
+
 .hero__visual {
   position: absolute;
   right: -60px;
@@ -1013,7 +1007,7 @@ p {
   }
 }
 
-/* Leaderboard */
+
 .leaderboard-wrap {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -1119,7 +1113,7 @@ p {
   color: var(--text-muted);
 }
 
-/* Challenges */
+
 .filter-bar {
   display: flex;
   align-items: center;
@@ -1209,7 +1203,7 @@ p {
   gap: 0.3rem;
 }
 
-/* Roadmap */
+
 .roadmap-layout {
   display: grid;
   grid-template-columns: 220px 1fr;
@@ -1396,7 +1390,7 @@ p {
   line-height: 1.62;
 }
 
-/* Auth Pages */
+
 .auth-page {
   min-height: 100vh;
   display: flex;
@@ -1537,7 +1531,7 @@ p {
   max-width: 560px;
 }
 
-/* Keyframes */
+
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -1591,13 +1585,13 @@ p {
   animation: fadeUp 0.65s 0.62s ease both;
 }
 
-/* Lucide Icons */
-/* These styles apply after lucide.createIcons() replaces <i> tags with <svg> */
+
+
 [data-lucide] {
   display: inline-flex;
   flex-shrink: 0;
 }
-/* Sizes */
+
 .icon-xs svg,
 .icon-xs {
   width: 14px;
@@ -1623,39 +1617,39 @@ p {
   width: 32px;
   height: 32px;
 }
-/* ch-icon box: size the icon inside */
+
 .ch-icon svg {
   width: 22px;
   height: 22px;
 }
-/* Contact icon box */
+
 .contact-icon svg {
   width: 22px;
   height: 22px;
 }
-/* Feature card icon */
+
 .feature-icon svg {
   width: 28px;
   height: 28px;
 }
-/* ch-meta icons */
+
 .ch-meta-item svg {
   width: 13px;
   height: 13px;
   opacity: 0.7;
 }
-/* Filter bar icons */
+
 .filter-chip svg {
   width: 12px;
   height: 12px;
 }
-/* Benefit item icons */
+
 .benefit-item svg {
   width: 14px;
   height: 14px;
 }
 
-/* Auth page extras (from reference HTML inline styles) */
+
 .auth-bg-1 {
   position: fixed;
   top: -120px;
@@ -1790,7 +1784,7 @@ p {
   color: var(--c-light);
 }
 
-/* Admin Dashboard */
+
 .admin-page .admin-section {
   padding-top: 0;
 }
@@ -2404,7 +2398,7 @@ p {
   transform: translateY(-1px);
 }
 
-/* Blog */
+
 .blog-hero h1 {
   font-size: clamp(2.8rem, 7vw, 5rem);
 }
@@ -2637,7 +2631,7 @@ a.blog-card:hover .blog-card__link {
   line-height: 1.55;
 }
 
-/* Responsive */
+
 @media (max-width: 1024px) {
   .footer__grid {
     grid-template-columns: 1fr 1fr;

@@ -65,8 +65,6 @@ export function AuthProvider({ children }) {
         await syncSession(firebaseUser);
       } catch (error) {
         console.error("Failed to sync session with backend:", error);
-        // Keep Firebase identity so Neon-backed features (blog admin) still work
-        // when the Rust API is unreachable.
         if (firebaseUser) {
           setUser({
             email: firebaseUser.email || "",
@@ -77,15 +75,12 @@ export function AuthProvider({ children }) {
             offline: true,
           });
           setNeedsProfileCompletion(false);
-          setAuthError(
-            "Backend unreachable — signed in with limited mode. Blog admin still works if your account is admin in the database.",
-          );
+          setAuthError("Signed in offline. Some features may be unavailable.");
         } else {
           setUser(null);
           setNeedsProfileCompletion(false);
           setAuthError(
-            error?.message ||
-              "Could not connect to the server. Check that the backend is running.",
+            error?.message || "Could not connect to the server.",
           );
         }
       } finally {
@@ -107,7 +102,6 @@ export function AuthProvider({ children }) {
       try {
         await signOut(auth);
       } catch {
-        // ignore sign-out errors
       }
     }
     setUser(null);
